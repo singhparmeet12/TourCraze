@@ -2,7 +2,11 @@ import os
 import sys
 import django
 
-sys.path.insert(0, r'e:\Parmeet\TourCraze\tourCraze')
+# Dynamically resolve project directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tourCraze.settings')
 django.setup()
 
