@@ -751,8 +751,7 @@
                         </div>
 
                         <div class="cost-per-traveler-label">
-                            ≈ {{ per_person_cost }} per traveler (for {{ trip.travelers }} traveler{% if trip.travelers
-                            > 1 %}s{% endif %})
+                            ≈ {{ per_person_cost }} per traveler (for {{ trip.travelers }} traveler{{ trip.travelers|pluralize }})
                         </div>
                     </div>
 
