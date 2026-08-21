@@ -165,6 +165,22 @@
         padding-bottom: 18px;
         margin-bottom: 20px;
     }
+
+    /* Mobile Responsive Optimizations (< 991px & < 768px) */
+    @media (max-width: 991px) {
+        .hotel-gallery-mosaic { height: 320px; }
+        .hotel-title { font-size: 1.9rem; }
+    }
+
+    @media (max-width: 768px) {
+        .hotel-gallery-mosaic { grid-template-columns: 1fr; height: 240px; }
+        .gallery-side-imgs { display: none; }
+        .hotel-main-card { padding: 22px 18px; border-radius: 20px; }
+        .hotel-title { font-size: 1.65rem; }
+        .room-tier-card { grid-template-columns: 1fr; padding: 20px 16px; }
+        .room-price-box { text-align: left; min-width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 14px; margin-top: 10px; }
+        .booking-pass-card { padding: 20px 16px; border-radius: 20px; }
+    }
 </style>
 {% endblock %}
 

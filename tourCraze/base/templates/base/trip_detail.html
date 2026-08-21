@@ -386,6 +386,43 @@
         flex-shrink: 0;
     }
 
+    /* Mobile Responsive Optimizations (< 768px & < 576px) */
+    @media (max-width: 768px) {
+        .activity-slot-item {
+            flex-direction: column;
+            gap: 12px;
+            padding: 18px 16px;
+        }
+        .slot-timing-column {
+            width: 100%;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+        }
+        .itinerary-main-title {
+            font-size: 1.85rem !important;
+        }
+        .itinerary-hero-card {
+            padding: 24px 18px !important;
+        }
+        .day-header-band {
+            padding: 16px !important;
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 8px;
+        }
+        .top-action-bar {
+            flex-direction: column;
+            align-items: stretch !important;
+        }
+        .top-action-bar > div {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
     @media print {
 
         .navbar,

@@ -742,11 +742,54 @@
         .planner-hero-banner h1 { font-size: 2.3rem !important; }
     }
 
+    @media (max-width: 768px) {
+        .studio-mode-nav {
+            border-radius: 20px;
+            flex-direction: column;
+            width: 100%;
+            gap: 4px;
+        }
+        .studio-tab-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 10px 14px;
+        }
+        .studio-card-box, .quiz-card-wrapper, .radius-explorer-wrapper {
+            padding: 22px 16px !important;
+            border-radius: 20px !important;
+        }
+        .studio-preset-chip {
+            padding: 6px 12px;
+            font-size: 0.82rem;
+        }
+        .budget-mode-toggle {
+            width: 100%;
+            display: flex;
+        }
+        .budget-toggle-btn {
+            flex: 1;
+            text-align: center;
+            justify-content: center;
+        }
+        .radius-tiers-bar {
+            flex-direction: column;
+            width: 100%;
+        }
+        .radius-tier-pill {
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+        .radius-dest-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
     @media (max-width: 576px) {
-        .style-cards-grid { grid-template-columns: repeat(2, 1fr); }
-        .planner-hero-banner h1 { font-size: 1.9rem !important; }
-        .btn-studio-generate { width: 100%; padding: 18px 24px !important; font-size: 1.15rem !important; }
-        .studio-tab-btn { padding: 8px 16px; font-size: 0.85rem; }
+        .style-cards-grid { grid-template-columns: 1fr; }
+        .planner-hero-banner h1 { font-size: 1.85rem !important; }
+        .btn-studio-generate { width: 100%; padding: 16px 20px !important; font-size: 1.05rem !important; }
+        .quiz-choices-grid { grid-template-columns: 1fr !important; }
     }
 </style>
 {% endblock %}

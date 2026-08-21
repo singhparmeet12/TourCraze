@@ -170,6 +170,23 @@
         background-image: url("{% static 'images/mountain road.jpg' %}");
     }
 
+    /* Mobile Responsive Optimizations (< 991px & < 768px) */
+    @media (max-width: 991px) {
+        .hero-section .display-3 { font-size: 2.7rem !important; }
+        .masonry-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section { min-height: auto; padding-top: 40px; }
+        .hero-section .display-3 { font-size: 2.15rem !important; line-height: 1.25 !important; }
+        .hero-section p.lead { font-size: 1.02rem !important; }
+        .hero-buttons { flex-direction: column; width: 100%; }
+        .hero-buttons .btn { width: 100%; justify-content: center; }
+        .ai-planner-box { padding: 22px 16px !important; border-radius: 20px !important; }
+        .masonry-grid { grid-template-columns: 1fr !important; grid-auto-rows: 210px !important; gap: 1rem !important; }
+        .grid-item.tall { grid-row: span 1 !important; }
+    }
+
     .hero-vignette-overlay {
         position: absolute;
         inset: 0;

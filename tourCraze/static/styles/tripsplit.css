@@ -618,3 +618,21 @@
 .ts-input::placeholder {
     color: #94a3b8;
 }
+
+/* ==========================================================================
+   Mobile Responsive Optimizations (< 991px & < 768px)
+   ========================================================================== */
+@media (max-width: 991px) {
+    .ts-hero-title { font-size: 2.6rem !important; }
+    .ts-section-header { padding: 20px 22px; }
+}
+
+@media (max-width: 768px) {
+    .ts-hero-title { font-size: 2.1rem !important; }
+    .ts-card { padding: 20px 16px !important; border-radius: 18px !important; }
+    .ts-settle-card { padding: 18px 14px; flex-direction: column; align-items: stretch; gap: 14px; }
+    .ts-settle-card .ts-btn-settle { width: 100%; }
+    .ts-segmented-tabs { padding: 4px; gap: 4px; }
+    .ts-seg-tab { padding: 8px 14px; font-size: 0.85rem; }
+    .ts-ws-stat-card { padding: 16px 14px; }
+}

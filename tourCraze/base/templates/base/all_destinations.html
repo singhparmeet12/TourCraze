@@ -541,6 +541,22 @@
         0% { filter: brightness(1) drop-shadow(0 0 10px #F8C922); }
         100% { filter: brightness(1.3) drop-shadow(0 0 25px #F59E0B); }
     }
+
+    /* Mobile Responsive Optimizations (< 991px & < 768px) */
+    @media (max-width: 991px) {
+        .dest-hero-title { font-size: 2.3rem; }
+        .control-deck { padding: 20px; }
+    }
+
+    @media (max-width: 768px) {
+        .dest-hero-title { font-size: 1.95rem; }
+        .dest-hero-subtitle { font-size: 1rem; }
+        .control-deck { padding: 18px 14px; border-radius: 18px; }
+        .dest-grid { grid-template-columns: 1fr; gap: 18px; }
+        .dest-card { height: 490px; }
+        .category-pills-bar { padding-bottom: 8px; }
+        .cat-tab-btn { padding: 7px 14px; font-size: 0.86rem; }
+    }
 </style>
 {% endblock %}
 
