@@ -1,0 +1,1043 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block styles %}
+<style>
+    /* TourCraze Signature Stays & Sanctuaries Studio */
+    .stays-page-wrapper {
+        background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0c111f 100%);
+        min-height: 100vh;
+        color: #E2E8F0;
+        padding-bottom: 90px;
+    }
+
+    /* Hero Banner */
+    .stays-hero {
+        padding: 50px 0 35px 0;
+        text-align: center;
+        position: relative;
+    }
+
+    .stays-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(248, 201, 34, 0.15);
+        color: #F8C922;
+        border: 1px solid rgba(248, 201, 34, 0.35);
+        padding: 8px 22px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        letter-spacing: 0.5px;
+        margin-bottom: 18px;
+    }
+
+    .stays-hero-title {
+        font-size: 2.9rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+        letter-spacing: -0.5px;
+        margin-bottom: 14px;
+        line-height: 1.2;
+    }
+
+    .stays-hero-subtitle {
+        color: #94A3B8 !important;
+        font-size: 1.15rem;
+        max-width: 760px;
+        margin: 0 auto 28px auto;
+        line-height: 1.6;
+    }
+
+    .stays-actions-bar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .btn-stay-explore {
+        background: linear-gradient(135deg, #F8C922 0%, #F59E0B 100%);
+        color: #071021 !important;
+        font-weight: 700;
+        border: none;
+        border-radius: 9999px;
+        padding: 12px 28px;
+        box-shadow: 0 8px 25px rgba(248, 201, 34, 0.35);
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-stay-explore:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 12px 32px rgba(248, 201, 34, 0.5);
+        color: #071021 !important;
+    }
+
+    .btn-stay-wishlist {
+        background: rgba(255, 255, 255, 0.08);
+        color: #FFFFFF !important;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 9999px;
+        padding: 12px 24px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .btn-stay-wishlist:hover {
+        background: rgba(255, 255, 255, 0.16);
+        border-color: #F43F5E;
+        transform: translateY(-2px);
+    }
+
+    /* Interactive Search & Mood Command Dock */
+    .stay-search-dock {
+        background: rgba(15, 23, 42, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 26px;
+        padding: 26px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+        margin-bottom: 35px;
+    }
+
+    .dock-input-wrapper {
+        position: relative;
+    }
+
+    .dock-input-wrapper i.dock-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94A3B8;
+        font-size: 1.05rem;
+    }
+
+    .dock-input {
+        background: rgba(30, 41, 59, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+        border-radius: 14px !important;
+        color: #FFFFFF !important;
+        padding: 12px 42px 12px 46px !important;
+        font-size: 0.98rem !important;
+        transition: all 0.25s ease;
+    }
+
+    .dock-input:focus {
+        border-color: #F8C922 !important;
+        box-shadow: 0 0 0 3px rgba(248, 201, 34, 0.25) !important;
+        background: rgba(30, 41, 59, 1) !important;
+    }
+
+    /* Category Pill Navigation */
+    .stay-cat-pills {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scrollbar-width: thin;
+    }
+
+    .stay-cat-pills::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .stay-cat-pills::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+    }
+
+    .stay-tab-btn {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #94A3B8;
+        padding: 8px 18px;
+        border-radius: 9999px;
+        font-size: 0.92rem;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .stay-tab-btn:hover {
+        background: rgba(255, 255, 255, 0.14);
+        color: #FFFFFF;
+    }
+
+    .stay-tab-btn.active {
+        background: #F8C922;
+        color: #071021;
+        border-color: #F8C922;
+        font-weight: 700;
+        box-shadow: 0 4px 14px rgba(248, 201, 34, 0.35);
+    }
+
+    .stay-count-badge {
+        background: rgba(0, 0, 0, 0.18);
+        color: inherit;
+        padding: 2px 7px;
+        border-radius: 10px;
+        font-size: 0.78rem;
+    }
+
+    /* Vibe Quick Chips */
+    .stay-vibe-chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .stay-vibe-chip {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #CBD5E1;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-size: 0.84rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .stay-vibe-chip:hover {
+        border-color: #94A3B8;
+        color: #FFFFFF;
+    }
+
+    .stay-vibe-chip.active {
+        background: rgba(248, 201, 34, 0.2);
+        border-color: #F8C922;
+        color: #F8C922;
+        font-weight: 700;
+    }
+
+    /* Stays Grid */
+    .stays-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 26px;
+    }
+
+    .stay-card {
+        background: #1E293B;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 24px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 520px;
+        position: relative;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .stay-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(248, 201, 34, 0.6);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 25px rgba(248, 201, 34, 0.18);
+    }
+
+    .stay-media {
+        position: relative;
+        height: 240px;
+        width: 100%;
+        overflow: hidden;
+        background-color: #0F172A;
+    }
+
+    .stay-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .stay-card:hover .stay-media img {
+        transform: scale(1.08);
+    }
+
+    .stay-badge-vibe {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #F8C922;
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 5px 12px;
+        border-radius: 12px;
+        z-index: 2;
+    }
+
+    .stay-rating-box {
+        position: absolute;
+        top: 14px;
+        right: 54px;
+        background: #F8C922;
+        color: #071021;
+        font-weight: 800;
+        font-size: 0.82rem;
+        padding: 5px 10px;
+        border-radius: 12px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .stay-wishlist-toggle {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        z-index: 2;
+    }
+
+    .stay-wishlist-toggle:hover {
+        background: #FFFFFF;
+        color: #F43F5E;
+        transform: scale(1.15);
+    }
+
+    .stay-wishlist-toggle.saved {
+        background: #F43F5E;
+        color: #FFFFFF;
+        border-color: #F43F5E;
+    }
+
+    /* Stay Card Content */
+    .stay-card-body {
+        padding: 20px 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: #1E293B;
+    }
+
+    .stay-name {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+        margin-bottom: 2px;
+        line-height: 1.3;
+    }
+
+    .stay-location {
+        color: #F8C922 !important;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 10px;
+    }
+
+    .stay-highlights-box {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 14px;
+    }
+
+    .stay-highlight-pill {
+        font-size: 0.82rem;
+        color: #CBD5E1;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .stay-highlight-pill i {
+        color: #10B981;
+        font-size: 0.75rem;
+    }
+
+    /* Pricing & Actions */
+    .stay-pricing-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 14px;
+    }
+
+    .stay-price-val {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #FFFFFF;
+    }
+
+    .stay-price-orig {
+        text-decoration: line-through;
+        color: #94A3B8;
+        font-size: 0.85rem;
+        margin-left: 4px;
+    }
+
+    .stay-actions-grid {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+    }
+
+    .btn-reserve-stay {
+        background: #F8C922;
+        color: #071021 !important;
+        font-weight: 700;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 16px;
+        font-size: 0.92rem;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-reserve-stay:hover {
+        background: #F59E0B;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(248, 201, 34, 0.35);
+    }
+
+    .btn-details-stay {
+        background: rgba(255, 255, 255, 0.08);
+        color: #FFFFFF !important;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .btn-details-stay:hover {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: #FFFFFF;
+    }
+
+    /* Floating Wishlist Drawer Button */
+    .floating-stay-wishlist {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);
+        color: #FFFFFF !important;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 9999px;
+        padding: 13px 26px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        box-shadow: 0 12px 35px rgba(244, 63, 94, 0.55);
+        display: none;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        z-index: 1070;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        user-select: none;
+        text-decoration: none;
+    }
+
+    .floating-stay-wishlist:hover {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 16px 40px rgba(244, 63, 94, 0.7);
+        color: #FFFFFF !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="stays-page-wrapper">
+    <div class="container">
+
+        <!-- Hero Banner -->
+        <section class="stays-hero">
+            <span class="stays-hero-badge">
+                <i class="fa-solid fa-hotel"></i> HANDCRAFTED STAYS & LUXURY SANCTUARIES
+            </span>
+            <h1 class="stays-hero-title">Escape to Unique Living Architecture</h1>
+            <p class="stays-hero-subtitle mb-0">
+                From 250-year-old marble floating palaces and heated glass stargazing chalets to cliffside plunge villas and colonial tea estates.
+            </p>
+        </section>
+
+        <!-- Command Dock: Search, Category Pills & Vibe Chips -->
+        <div class="stay-search-dock" id="staySearchDock">
+            <div class="row g-3 align-items-center mb-3">
+                <!-- Search City / Sanctuary -->
+                <div class="col-lg-8 col-md-7">
+                    <div class="dock-input-wrapper">
+                        <i class="fa-solid fa-magnifying-glass dock-icon"></i>
+                        <input type="text" id="staySearchInput" class="form-control dock-input" 
+                               placeholder="Search by city (e.g. Udaipur, Goa, Manali, Munnar), palace, or vibe...">
+                    </div>
+                </div>
+
+                <!-- Sort Selector -->
+                <div class="col-lg-4 col-md-5 d-flex align-items-center justify-content-md-end gap-2">
+                    <label class="text-secondary small fw-semibold mb-0" style="white-space: nowrap;">Sort by:</label>
+                    <select id="staySortSelect" class="form-select bg-dark text-white border-secondary rounded-3" style="max-width: 220px;">
+                        <option value="rating_desc">⭐ Highest Guest Rating</option>
+                        <option value="price_asc">💰 Price: Low to High</option>
+                        <option value="price_desc">💎 Luxury: High to Low</option>
+                        <option value="reviews_desc">🔥 Most Popular</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="stay-cat-pills">
+                <button type="button" class="stay-tab-btn active" data-category="all" onclick="setStayCategoryFilter('all', this)">
+                    ✨ All Stays <span class="stay-count-badge">{{ counts.all }}</span>
+                </button>
+                <button type="button" class="stay-tab-btn" data-category="palace" onclick="setStayCategoryFilter('palace', this)">
+                    👑 Royal Palaces & Havelis <span class="stay-count-badge">{{ counts.palace }}</span>
+                </button>
+                <button type="button" class="stay-tab-btn" data-category="chalet" onclick="setStayCategoryFilter('chalet', this)">
+                    🌲 Alpine Chalets & Glass Domes <span class="stay-count-badge">{{ counts.chalet }}</span>
+                </button>
+                <button type="button" class="stay-tab-btn" data-category="beach" onclick="setStayCategoryFilter('beach', this)">
+                    🏖️ Cliffside & Ocean Villas <span class="stay-count-badge">{{ counts.beach }}</span>
+                </button>
+                <button type="button" class="stay-tab-btn" data-category="plantation" onclick="setStayCategoryFilter('plantation', this)">
+                    ☕ Tea Estate Bungalows <span class="stay-count-badge">{{ counts.plantation }}</span>
+                </button>
+                <button type="button" class="stay-tab-btn" data-category="glamping" onclick="setStayCategoryFilter('glamping', this)">
+                    ⛺ Luxury Desert Glamping <span class="stay-count-badge">{{ counts.glamping }}</span>
+                </button>
+                <button type="button" class="stay-tab-btn" data-category="spa" onclick="setStayCategoryFilter('spa', this)">
+                    🧘 Spa & Wellness Retreats <span class="stay-count-badge">{{ counts.spa }}</span>
+                </button>
+                <button type="button" class="stay-tab-btn" data-category="budget" onclick="setStayCategoryFilter('budget', this)">
+                    💎 Budget Chic (< ₹3,000) <span class="stay-count-badge">{{ counts.budget }}</span>
+                </button>
+            </div>
+
+            <!-- Vibe Quick Filter Chips -->
+            <div class="stay-vibe-chips">
+                <span class="text-secondary small me-2 align-self-center">Vibe Filter:</span>
+                <button type="button" class="stay-vibe-chip" data-vibe="pool" onclick="toggleStayVibe('pool', this)">🏊 Private Pool</button>
+                <button type="button" class="stay-vibe-chip" data-vibe="breakfast" onclick="toggleStayVibe('breakfast', this)">☕ Free Breakfast</button>
+                <button type="button" class="stay-vibe-chip" data-vibe="budget_low" onclick="toggleStayVibe('budget_low', this)">💰 Under ₹10,000</button>
+                <button type="button" class="stay-vibe-chip" data-vibe="luxury" onclick="toggleStayVibe('luxury', this)">👑 Luxury Tier (₹20K+)</button>
+                <button type="button" class="stay-vibe-chip" data-vibe="mountain" onclick="toggleStayVibe('mountain', this)">🏔️ Mountain Facing</button>
+            </div>
+
+            <!-- Live Status Row -->
+            <div class="d-flex justify-content-between align-items-center mt-3 pt-2 text-secondary small">
+                <div>
+                    Showing <strong class="text-white" id="visibleStaysCount">{{ total_count }}</strong> of {{ total_count }} handcrafted stays
+                </div>
+                <button type="button" id="resetStaysFilterBtn" class="btn btn-link btn-sm text-warning text-decoration-none p-0 d-none" onclick="resetAllStayFilters()">
+                    <i class="fa-solid fa-rotate-left me-1"></i> Reset All Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Stays Grid -->
+        <div class="stays-grid" id="staysGrid">
+            {% for item in hotels %}
+            <div class="stay-card"
+                 data-id="{{ item.id }}"
+                 data-name="{{ item.name|lower }}"
+                 data-city="{{ item.city|lower }}"
+                 data-state="{{ item.state|lower }}"
+                 data-category="{{ item.category }}"
+                 data-rating="{{ item.rating }}"
+                 data-price="{{ item.price_per_night }}"
+                 data-reviews="{{ item.review_count }}"
+                 data-amenities="{{ item.amenities|join:' '|lower }}">
+
+                <!-- Media -->
+                <div class="stay-media">
+                    <img src="{{ item.img }}" alt="{{ item.name }}" loading="lazy">
+                    <span class="stay-badge-vibe">{{ item.tag }}</span>
+                    <span class="stay-rating-box">
+                        <i class="fa-solid fa-star"></i> {{ item.rating }}
+                    </span>
+                    <button type="button" class="stay-wishlist-toggle" title="Save Stay" onclick="toggleStayWishlist('{{ item.name|escapejs }}', this)">
+                        <i class="fa-regular fa-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Body -->
+                <div class="stay-card-body">
+                    <div>
+                        <h4 class="stay-name">{{ item.name }}</h4>
+                        <div class="stay-location">
+                            <i class="fa-solid fa-location-dot"></i> {{ item.city }}, {{ item.state }}
+                        </div>
+                        <div class="stay-highlights-box">
+                            {% for h in item.highlights|slice:":2" %}
+                            <div class="stay-highlight-pill">
+                                <i class="fa-solid fa-circle-check"></i> <span>{{ h }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="stay-pricing-row">
+                            <div>
+                                <span class="small text-secondary d-block">Starting from</span>
+                                <span class="stay-price-val">₹{{ item.price_per_night|default:15000 }}</span>
+                                <span class="stay-price-orig">₹{{ item.original_price|default:20000 }}</span>
+                                <span class="small text-secondary">/ night</span>
+                            </div>
+                            <span class="badge bg-success bg-opacity-25 text-success rounded-pill px-3 py-2 small fw-bold">
+                                <i class="fa-solid fa-tag me-1"></i> Special Rate
+                            </span>
+                        </div>
+
+                        <div class="stay-actions-grid">
+                            <a href="{% url 'hotel_detail' item.id %}" class="btn-reserve-stay">
+                                <i class="fa-solid fa-bed"></i> View Rooms & Book
+                            </a>
+                            <a href="{% url 'hotel_detail' item.id %}" class="btn-details-stay" title="Property Details">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+            <!-- Empty Filter State -->
+            <div id="noStaysBox" class="p-5 text-center rounded-4 d-none" style="grid-column: 1 / -1; background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(255, 255, 255, 0.15);">
+                <i class="fa-solid fa-hotel fs-1 text-warning mb-3"></i>
+                <h3 class="text-white fw-bold mb-2">No Stays Found Matching Criteria</h3>
+                <p class="text-secondary mb-4 mx-auto" style="max-width: 460px;">
+                    Try adjusting your search location, price tier, or category filter to discover available sanctuaries.
+                </p>
+                <button type="button" class="btn btn-warning rounded-pill px-4 fw-bold text-dark" onclick="resetAllStayFilters()">
+                    <i class="fa-solid fa-rotate-left me-1"></i> Reset Filters & Show All
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Floating Stays Wishlist Trigger -->
+<button type="button" id="floatingStayWishlistBtn" class="floating-stay-wishlist" onclick="openStaysWishlistOffcanvas()" aria-label="Open Saved Stays">
+    <i class="fa-solid fa-heart"></i> Saved Stays (<span class="stay-wl-num">0</span>)
+</button>
+
+<!-- Stay Roulette Modal (Pick My Sanctuary) -->
+<div class="modal fade" id="stayRouletteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background: #0c111f; border: 2px solid #F8C922; border-radius: 28px; color: #FFFFFF; box-shadow: 0 0 50px rgba(248, 201, 34, 0.35);">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(248, 201, 34, 0.15); color: #F8C922; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fa-solid fa-dice"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold text-white mb-0">🎲 TourCraze Stay Roulette</h5>
+                        <span class="small text-warning">Let Wanderlust pick your dream luxury sanctuary!</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body py-4 text-center">
+                <div id="stayRouletteScreen" class="roulette-slot-box mb-4 position-relative" style="height: 270px; border-radius: 20px; overflow: hidden; border: 2px solid #F8C922;">
+                    <img id="stayRouletteImg" src="" style="width: 100%; height: 100%; object-fit: cover;" alt="">
+                    <div class="position-absolute bottom-0 start-0 end-0 p-4 text-start" style="background: linear-gradient(180deg, transparent 0%, rgba(7, 16, 33, 0.95) 80%);">
+                        <span id="stayRouletteTag" class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2">Tag</span>
+                        <h3 id="stayRouletteName" class="text-white fw-bold mb-1">Spinning the Reel...</h3>
+                        <p id="stayRouletteLocation" class="text-warning small mb-0"><i class="fa-solid fa-location-dot me-1"></i>Location</p>
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-4 mb-4" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <p id="stayRouletteDesc" class="text-light mb-3" style="font-size: 0.98rem; line-height: 1.6;"></p>
+                    <div class="d-flex justify-content-center gap-4 text-secondary small">
+                        <div><i class="fa-solid fa-indian-rupee-sign text-warning me-1"></i> <span id="stayRoulettePrice" class="text-white fw-bold">₹18,000 / night</span></div>
+                        <div><i class="fa-solid fa-star text-warning me-1"></i> <span id="stayRouletteRating" class="text-white fw-bold">4.95 Rating</span></div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <button type="button" id="staySpinAgainBtn" class="btn btn-outline-warning rounded-pill px-4 py-2 fw-bold" onclick="spinStayRoulette()">
+                        <i class="fa-solid fa-rotate me-1"></i> Spin Again!
+                    </button>
+                    <a id="stayRouletteBookLink" href="#" class="btn btn-warning rounded-pill px-5 py-2 fw-bold text-dark shadow" style="background: #F8C922; border: none;">
+                        <i class="fa-solid fa-bed me-1"></i> Reserve This Sanctuary
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Saved Stays Wishlist Offcanvas -->
+<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="staysWishlistOffcanvas" style="background: #0f172a !important; border-left: 1px solid rgba(255, 255, 255, 0.15); width: 380px;">
+    <div class="offcanvas-header border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-heart text-danger fs-5"></i>
+            <h5 class="offcanvas-title text-white fw-bold mb-0">Saved Sanctuaries</h5>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column justify-content-between p-3">
+        <div id="staysWishlistItemsContainer">
+            <!-- Rendered dynamically -->
+        </div>
+
+        <div class="pt-3 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+            <button type="button" class="btn btn-outline-danger btn-sm w-100 rounded-pill mb-2" onclick="clearStayWishlist()">
+                <i class="fa-solid fa-trash me-1"></i> Clear Saved Stays
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Embedded Hotels JSON -->
+{{ hotels_json|json_script:"hotels-data-json" }}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let rawCatalog = [];
+        try {
+            const rawJsonEl = document.getElementById('hotels-data-json');
+            if (rawJsonEl && rawJsonEl.textContent) {
+                rawCatalog = JSON.parse(rawJsonEl.textContent);
+                if (typeof rawCatalog === 'string') {
+                    rawCatalog = JSON.parse(rawCatalog);
+                }
+            }
+        } catch (e) {
+            console.error('Error parsing hotel catalog JSON:', e);
+            rawCatalog = [];
+        }
+        const catalogData = Array.isArray(rawCatalog) ? rawCatalog : [];
+        const searchInput = document.getElementById('staySearchInput');
+        const sortSelect = document.getElementById('staySortSelect');
+        const grid = document.getElementById('staysGrid');
+        const cards = Array.from(document.querySelectorAll('.stay-card'));
+        const visibleCountText = document.getElementById('visibleStaysCount');
+        const noResultsBox = document.getElementById('noStaysBox');
+        const resetFiltersBtn = document.getElementById('resetStaysFilterBtn');
+
+        let activeCategory = 'all';
+        let activeVibes = new Set();
+
+        // 1. Live Search
+        searchInput.addEventListener('input', filterAndSortStays);
+        sortSelect.addEventListener('change', filterAndSortStays);
+
+        // 2. Category Filter
+        window.setStayCategoryFilter = function (cat, btn) {
+            document.querySelectorAll('.stay-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeCategory = cat;
+            filterAndSortStays();
+        };
+
+        // 3. Vibe Filter Toggle
+        window.toggleStayVibe = function (vibe, btn) {
+            if (activeVibes.has(vibe)) {
+                activeVibes.delete(vibe);
+                btn.classList.remove('active');
+            } else {
+                activeVibes.add(vibe);
+                btn.classList.add('active');
+            }
+            filterAndSortStays();
+        };
+
+        // 4. Reset Filters
+        window.resetAllStayFilters = function () {
+            searchInput.value = '';
+            activeCategory = 'all';
+            activeVibes.clear();
+            document.querySelectorAll('.stay-tab-btn').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-category') === 'all');
+            });
+            document.querySelectorAll('.stay-vibe-chip').forEach(b => b.classList.remove('active'));
+            sortSelect.value = 'rating_desc';
+            filterAndSortStays();
+        };
+
+        function filterAndSortStays() {
+            const query = searchInput.value.trim().toLowerCase();
+            const sortVal = sortSelect.value;
+            let visibleCount = 0;
+
+            const isFiltered = query.length > 0 || activeCategory !== 'all' || activeVibes.size > 0;
+            resetFiltersBtn.classList.toggle('d-none', !isFiltered);
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                const city = card.getAttribute('data-city');
+                const state = card.getAttribute('data-state');
+                const cat = card.getAttribute('data-category');
+                const rating = parseFloat(card.getAttribute('data-rating')) || 0;
+                const price = parseInt(card.getAttribute('data-price'), 10) || 0;
+                const amenities = card.getAttribute('data-amenities') || '';
+
+                const matchesSearch = !query || name.includes(query) || city.includes(query) || state.includes(query);
+                const matchesCat = (activeCategory === 'all') || (cat === activeCategory);
+
+                let matchesVibes = true;
+                if (activeVibes.has('pool') && !amenities.includes('pool')) matchesVibes = false;
+                if (activeVibes.has('breakfast') && !amenities.includes('breakfast')) matchesVibes = false;
+                if (activeVibes.has('budget_low') && price > 10000) matchesVibes = false;
+                if (activeVibes.has('luxury') && price < 20000) matchesVibes = false;
+                if (activeVibes.has('mountain') && (!amenities.includes('mountain') && cat !== 'chalet')) matchesVibes = false;
+
+                const isVisible = matchesSearch && matchesCat && matchesVibes;
+                card.style.display = isVisible ? 'flex' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            // Sorting
+            const visibleCards = cards.filter(c => c.style.display !== 'none');
+            visibleCards.sort((a, b) => {
+                if (sortVal === 'rating_desc') {
+                    return parseFloat(b.getAttribute('data-rating')) - parseFloat(a.getAttribute('data-rating'));
+                } else if (sortVal === 'price_asc') {
+                    return parseInt(a.getAttribute('data-price'), 10) - parseInt(b.getAttribute('data-price'), 10);
+                } else if (sortVal === 'price_desc') {
+                    return parseInt(b.getAttribute('data-price'), 10) - parseInt(a.getAttribute('data-price'), 10);
+                } else if (sortVal === 'reviews_desc') {
+                    return parseInt(b.getAttribute('data-reviews'), 10) - parseInt(a.getAttribute('data-reviews'), 10);
+                }
+                return 0;
+            });
+
+            visibleCards.forEach(c => grid.appendChild(c));
+            visibleCountText.textContent = visibleCount;
+            noResultsBox.classList.toggle('d-none', visibleCount > 0);
+        }
+
+        // Wishlist
+        let stayWishlist = [];
+        try {
+            stayWishlist = JSON.parse(localStorage.getItem('tourcraze_stay_wishlist') || '[]');
+        } catch (e) {
+            stayWishlist = [];
+        }
+
+        function updateStayWishlistUI() {
+            const count = Array.isArray(stayWishlist) ? stayWishlist.length : 0;
+            const topBadge = document.getElementById('topStaysWishlistCount');
+            const floatPill = document.getElementById('floatingStayWishlistBtn');
+            const floatCount = floatPill ? floatPill.querySelector('.stay-wl-num') : null;
+
+            if (topBadge) topBadge.textContent = count;
+            if (floatCount) floatCount.textContent = count;
+
+            if (floatPill) {
+                floatPill.style.display = count > 0 ? 'inline-flex' : 'none';
+            }
+
+            document.querySelectorAll('.stay-wishlist-toggle').forEach(btn => {
+                const card = btn.closest('.stay-card');
+                const name = card ? card.querySelector('.stay-name').textContent.trim() : '';
+                const isSaved = stayWishlist.includes(name);
+                btn.classList.toggle('saved', isSaved);
+                btn.innerHTML = isSaved ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
+            });
+        }
+
+        window.toggleStayWishlist = function (name, btn) {
+            const idx = stayWishlist.indexOf(name);
+            if (idx > -1) {
+                stayWishlist.splice(idx, 1);
+            } else {
+                stayWishlist.push(name);
+            }
+            try {
+                localStorage.setItem('tourcraze_stay_wishlist', JSON.stringify(stayWishlist));
+            } catch (e) {}
+            updateStayWishlistUI();
+        };
+
+        window.clearStayWishlist = function () {
+            stayWishlist = [];
+            try {
+                localStorage.removeItem('tourcraze_stay_wishlist');
+            } catch (e) {}
+            updateStayWishlistUI();
+            renderStayWishlistDrawer();
+        };
+
+        window.openStaysWishlistOffcanvas = function () {
+            try {
+                renderStayWishlistDrawer();
+                const offcanvasEl = document.getElementById('staysWishlistOffcanvas');
+                if (offcanvasEl && window.bootstrap) {
+                    const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+                    bsOffcanvas.show();
+                }
+            } catch (err) {
+                console.error('Error opening stays wishlist offcanvas:', err);
+            }
+        };
+
+        const floatPill = document.getElementById('floatingStayWishlistBtn');
+        if (floatPill) {
+            floatPill.addEventListener('click', function (e) {
+                e.preventDefault();
+                openStaysWishlistOffcanvas();
+            });
+        }
+
+        function renderStayWishlistDrawer() {
+            const container = document.getElementById('staysWishlistItemsContainer');
+            if (!container) return;
+
+            if (!stayWishlist || stayWishlist.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5 text-secondary">
+                        <i class="fa-regular fa-heart fs-1 text-muted mb-3"></i>
+                        <h6 class="text-white">No Stays Saved Yet</h6>
+                        <p class="small mb-0">Click the ❤️ heart on any sanctuary card to save it for your next getaway!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="d-flex flex-column gap-3">';
+            stayWishlist.forEach(name => {
+                const item = (Array.isArray(catalogData) ? catalogData.find(h => (h.name || '').toLowerCase() === (name || '').toLowerCase()) : null) || {
+                    id: 1,
+                    name: name,
+                    img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400',
+                    city: 'India',
+                    price_per_night: 15000
+                };
+
+                const safeName = (item.name || '').replace(/'/g, "\\'");
+                html += `
+                    <div class="p-3 rounded-3 d-flex align-items-center justify-content-between" style="background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        <div class="d-flex align-items-center gap-3" style="min-width: 0;">
+                            <img src="${item.img || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400'}" style="width: 52px; height: 52px; object-fit: cover; border-radius: 12px; flex-shrink: 0;" alt="${item.name}">
+                            <div style="min-width: 0;">
+                                <h6 class="text-white mb-0 fw-bold text-truncate" style="font-size: 0.92rem; max-width: 170px;">${item.name}</h6>
+                                <span class="small text-warning" style="font-size: 0.8rem;"><i class="fa-solid fa-location-dot me-1"></i>${item.city || 'India'} • ₹${(item.price_per_night || 15000).toLocaleString()}/nt</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                            <a href="/hotels/${item.id}/" class="btn btn-sm btn-warning rounded-pill px-3 py-1 fw-bold text-dark" style="font-size: 0.8rem; background: #F8C922; border: none;">
+                                View
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger border-0 p-1" onclick="toggleStayWishlist('${safeName}', this); renderStayWishlistDrawer();" title="Remove from Saved">
+                                <i class="fa-solid fa-xmark fs-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        updateStayWishlistUI();
+
+        // Stay Roulette
+        const rouletteModalEl = document.getElementById('stayRouletteModal');
+        const rouletteModal = new bootstrap.Modal(rouletteModalEl);
+        let isSpinning = false;
+
+        window.openStayRoulette = function () {
+            rouletteModal.show();
+            spinStayRoulette();
+        };
+
+        window.spinStayRoulette = function () {
+            if (isSpinning) return;
+            isSpinning = true;
+
+            const img = document.getElementById('stayRouletteImg');
+            const name = document.getElementById('stayRouletteName');
+            const location = document.getElementById('stayRouletteLocation');
+            const tag = document.getElementById('stayRouletteTag');
+            const desc = document.getElementById('stayRouletteDesc');
+            const price = document.getElementById('stayRoulettePrice');
+            const rating = document.getElementById('stayRouletteRating');
+            const bookLink = document.getElementById('stayRouletteBookLink');
+            const spinBtn = document.getElementById('staySpinAgainBtn');
+
+            spinBtn.disabled = true;
+
+            let counter = 0;
+            const totalShuffles = 20;
+            const interval = setInterval(() => {
+                const randomItem = catalogData[Math.floor(Math.random() * catalogData.length)];
+                img.src = randomItem.img;
+                name.textContent = randomItem.name;
+                location.innerHTML = `<i class="fa-solid fa-location-dot me-1"></i>${randomItem.city}, ${randomItem.state}`;
+                tag.textContent = randomItem.tag;
+                counter++;
+
+                if (counter >= totalShuffles) {
+                    clearInterval(interval);
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+
+                    const winner = catalogData[Math.floor(Math.random() * catalogData.length)];
+                    img.src = winner.img;
+                    name.textContent = winner.name;
+                    location.innerHTML = `<i class="fa-solid fa-location-dot me-1"></i>${winner.city}, ${winner.state}`;
+                    tag.textContent = winner.tag;
+                    desc.textContent = winner.description;
+                    price.textContent = `₹${winner.price_per_night.toLocaleString()} / night`;
+                    rating.textContent = `${winner.rating} ★ Rating (${winner.review_count} reviews)`;
+                    bookLink.href = `/hotels/${winner.id}/`;
+                }
+            }, 75);
+        };
+
+    });
+</script>
+{% endblock %}

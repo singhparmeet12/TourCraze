@@ -1,0 +1,941 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/tripsplit.css' %}?v=2.4">
+<!-- Chart.js for Visual Analytics -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+/* Workspace Specific Premium Styling */
+.ts-ws-header {
+    background: rgba(15, 23, 42, 0.7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px 0;
+    backdrop-filter: blur(16px);
+}
+
+.ts-ws-stat-card {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.ts-ws-stat-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(248, 201, 34, 0.4);
+}
+
+.ts-ws-stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    background: rgba(248, 201, 34, 0.12);
+    border: 1px solid rgba(248, 201, 34, 0.25);
+    color: #F8C922;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.ts-ws-stat-val {
+    font-size: 1.65rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #FFFFFF;
+    margin-bottom: 2px;
+}
+
+.ts-ws-stat-label {
+    font-size: 0.82rem;
+    color: #94A3B8;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Linear-style Segmented Tab Pill Navigation */
+.ts-segmented-tabs {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 6px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-bottom: 25px;
+}
+
+.ts-segmented-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.ts-seg-tab {
+    background: transparent;
+    border: none;
+    color: #94A3B8;
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 10px 18px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.ts-seg-tab:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ts-seg-tab.active {
+    color: #071021;
+    background: #F8C922;
+    box-shadow: 0 4px 12px rgba(248, 201, 34, 0.35);
+}
+
+.ts-seg-tab.active .badge {
+    background: #071021 !important;
+    color: #F8C922 !important;
+}
+
+/* Category Filter Pills */
+.ts-filter-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #CBD5E1;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.ts-filter-pill:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.ts-filter-pill.active {
+    background: rgba(248, 201, 34, 0.15);
+    border-color: #F8C922;
+    color: #F8C922;
+    font-weight: 600;
+}
+
+/* Expense List Rows */
+.ts-expense-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.ts-expense-card:hover {
+    background: rgba(26, 38, 66, 0.85);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(3px);
+}
+
+.ts-exp-cat-badge {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: rgba(248, 201, 34, 0.1);
+    border: 1px solid rgba(248, 201, 34, 0.25);
+    color: #F8C922;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.ts-btn-delete-exp {
+    background: transparent;
+    border: none;
+    color: #64748B;
+    font-size: 1.1rem;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.ts-btn-delete-exp:hover {
+    color: #F43F5E;
+    background: rgba(244, 63, 94, 0.1);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tripsplit-page">
+
+    <!-- Workspace Top Header Bar -->
+    <div class="ts-ws-header">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <a href="{% url 'tripsplit_hub' %}" class="text-light opacity-75 text-decoration-none small">
+                            <i class="fa-solid fa-arrow-left me-1"></i> TripSplit Hub
+                        </a>
+                        <span class="text-light opacity-50">/</span>
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-1 fw-bold" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-location-dot me-1"></i> {{ trip.destination|default:"Group Adventure" }}
+                        </span>
+                    </div>
+                    <h2 class="fw-bold text-white mb-0 d-flex align-items-center gap-3">
+                        {{ trip.name }}
+                        {% if balances_info.is_fully_settled %}
+                        <span class="badge bg-success text-white fs-6 rounded-pill px-3 py-1">
+                            <i class="fa-solid fa-check-double me-1"></i> Fully Settled
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark fs-6 rounded-pill px-3 py-1">
+                            <i class="fa-solid fa-bolt me-1"></i> {{ settlements|length }} Pending Transfers
+                        </span>
+                        {% endif %}
+                    </h2>
+                </div>
+
+                <!-- Action Controls -->
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <button type="button" class="btn btn-ts-glass" data-bs-toggle="modal" data-bs-target="#inviteModal">
+                        <i class="fa-solid fa-user-plus text-warning"></i> Invite Friends
+                    </button>
+                    <button type="button" class="btn btn-ts-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+                        <i class="fa-solid fa-plus-circle"></i> Add Expense
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container py-4">
+
+        <!-- Flash Message Alerts -->
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show bg-dark text-white border-warning" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- 4 Top Metric Cards (Clean, Glassmorphic, Uniform) -->
+        <div class="row g-3 mb-4">
+            <!-- Total Group Spending -->
+            <div class="col-6 col-lg-3">
+                <div class="ts-ws-stat-card">
+                    <div class="ts-ws-stat-icon">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <div>
+                        <div class="ts-ws-stat-val text-warning">{{ trip.currency }}{{ balances_info.total_spending|floatformat:2 }}</div>
+                        <div class="ts-ws-stat-label">Total Spend</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fair Share / Person -->
+            <div class="col-6 col-lg-3">
+                <div class="ts-ws-stat-card">
+                    <div class="ts-ws-stat-icon" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.25); color: #38BDF8;">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <div>
+                        <div class="ts-ws-stat-val text-white">{{ trip.currency }}{{ balances_info.fair_share_per_person|floatformat:2 }}</div>
+                        <div class="ts-ws-stat-label">Fair Share / Person</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Group Members Count -->
+            <div class="col-6 col-lg-3">
+                <div class="ts-ws-stat-card">
+                    <div class="ts-ws-stat-icon" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.25); color: #10B981;">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="ts-ws-stat-val text-white">{{ balances_info.members_count }} <span class="fs-6 text-muted">/ 10</span></div>
+                        <div class="ts-ws-stat-label">Travelers</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settlement Status -->
+            <div class="col-6 col-lg-3">
+                <div class="ts-ws-stat-card">
+                    <div class="ts-ws-stat-icon" style="background: rgba(248, 201, 34, 0.12); border-color: rgba(248, 201, 34, 0.25); color: #F8C922;">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <div class="ts-ws-stat-val text-warning">{{ settlements|length }}</div>
+                        <div class="ts-ws-stat-label">Transfers Needed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Segmented Tab Navigation -->
+        <div class="ts-segmented-tabs">
+            <button class="ts-seg-tab active" onclick="switchTab('tab-expenses', this)">
+                <i class="fa-solid fa-receipt"></i> Expenses <span class="badge bg-dark text-warning rounded-pill ms-1">{{ expenses.count }}</span>
+            </button>
+            <button class="ts-seg-tab" onclick="switchTab('tab-settlements', this)">
+                <i class="fa-solid fa-bolt"></i> Smart Settlements <span class="badge bg-dark text-warning rounded-pill ms-1">{{ settlements|length }}</span>
+            </button>
+            <button class="ts-seg-tab" onclick="switchTab('tab-members', this)">
+                <i class="fa-solid fa-users"></i> Members & Balances <span class="badge bg-dark text-warning rounded-pill ms-1">{{ members.count }}</span>
+            </button>
+            <button class="ts-seg-tab" onclick="switchTab('tab-analytics', this)">
+                <i class="fa-solid fa-chart-pie"></i> Visual Analytics
+            </button>
+            <button class="ts-seg-tab" onclick="switchTab('tab-receipt', this)">
+                <i class="fa-solid fa-file-invoice"></i> Itemized Statement
+            </button>
+        </div>
+
+        <!-- =====================================================================
+             TAB 1: EXPENSES STREAM
+             ===================================================================== -->
+        <div id="tab-expenses" class="ts-tab-content">
+            <!-- Filter Bar -->
+            <div class="d-flex flex-wrap gap-2 mb-3" id="expenseFilters">
+                <button class="ts-filter-pill active" onclick="filterExpenses('ALL', this)">All ({{ expenses.count }})</button>
+                <button class="ts-filter-pill" onclick="filterExpenses('HOTEL', this)">🏨 Stays</button>
+                <button class="ts-filter-pill" onclick="filterExpenses('FOOD', this)">🍽️ Food</button>
+                <button class="ts-filter-pill" onclick="filterExpenses('TRANSPORT', this)">🚗 Transport</button>
+                <button class="ts-filter-pill" onclick="filterExpenses('ACTIVITIES', this)">🎟️ Activities</button>
+                <button class="ts-filter-pill" onclick="filterExpenses('SHOPPING', this)">🛍️ Shopping</button>
+            </div>
+
+            {% if expenses %}
+            <div class="d-flex flex-column gap-3" id="expensesList">
+                {% for exp in expenses %}
+                <div class="ts-expense-card" data-category="{{ exp.category }}" id="expense-row-{{ exp.id }}">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="ts-exp-cat-badge">
+                            <i class="fa-solid {{ exp.category_icon }}"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-white mb-1">{{ exp.title }}</h5>
+                            <div class="d-flex flex-wrap align-items-center gap-2 small text-light opacity-75">
+                                <span><i class="fa-regular fa-calendar me-1 text-warning"></i>{{ exp.expense_date|date:"M d, Y" }}</span>
+                                <span>•</span>
+                                <span>Paid by <strong class="text-white">{{ exp.paid_by.name }}</strong></span>
+                                {% if exp.notes %}
+                                <span>•</span>
+                                <span class="fst-italic text-light opacity-60">"{{ exp.notes }}"</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="text-end">
+                            <h4 class="fw-bold text-warning mb-0">{{ trip.currency }}{{ exp.amount|floatformat:2 }}</h4>
+                            <span class="badge bg-dark border border-secondary text-light small">{{ exp.get_category_display }}</span>
+                        </div>
+                        <button class="ts-btn-delete-exp" title="Delete Expense" onclick="deleteExpense('{{ exp.id }}')">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="ts-card p-5 text-center">
+                <i class="fa-solid fa-receipt text-warning mb-3" style="font-size: 3rem;"></i>
+                <h4 class="fw-bold text-white mb-2">No Expenses Recorded Yet</h4>
+                <p class="text-light opacity-75 mx-auto mb-4" style="max-width: 420px;">
+                    Keep track of hotel bookings, food bills, cab fares, and tickets so TripSplit can calculate your group settlement automatically.
+                </p>
+                <button type="button" class="btn btn-ts-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+                    <i class="fa-solid fa-plus"></i> Add First Expense
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- =====================================================================
+             TAB 2: SMART SETTLEMENTS MATRIX
+             ===================================================================== -->
+        <div id="tab-settlements" class="ts-tab-content d-none">
+            <div class="ts-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-1 fw-bold mb-1">
+                            <i class="fa-solid fa-bolt me-1"></i> AI Debt Simplifier
+                        </span>
+                        <h4 class="fw-bold text-white mb-1">Direct Settlement Plan</h4>
+                        <p class="text-light opacity-75 small mb-0">Our engine mathematically reduces all group receipts into the minimum number of direct payments.</p>
+                    </div>
+                </div>
+
+                {% if settlements %}
+                <div class="d-flex flex-column gap-3" id="settlementsContainer">
+                    {% for s in settlements %}
+                    <div class="ts-settle-card">
+                        <div class="d-flex align-items-center justify-content-between flex-grow-1 flex-wrap gap-3">
+                            <!-- Debtor (Payer) -->
+                            <div class="d-flex align-items-center gap-3" style="min-width: 160px;">
+                                <div class="ts-avatar" style="--avatar-bg: {{ s.from_color }};">
+                                    {{ s.from_initials }}
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-white mb-0">{{ s.from_name }}</h6>
+                                    <span class="badge bg-danger-subtle text-danger small mt-1">
+                                        <i class="fa-solid fa-arrow-up-right me-1"></i> Pays
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Transfer Flow Center -->
+                            <div class="d-flex flex-column align-items-center px-3 text-center" style="min-width: 180px;">
+                                <span class="text-light opacity-50 small mb-1">Direct Transfer</span>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="fs-4 fw-bold text-warning">{{ s.formatted_amount }}</span>
+                                    <i class="fa-solid fa-arrow-right text-warning fs-5"></i>
+                                </div>
+                                <span class="badge bg-dark border border-secondary text-light small mt-1">100% Math-Free</span>
+                            </div>
+
+                            <!-- Creditor (Receiver) -->
+                            <div class="d-flex align-items-center justify-content-end gap-3" style="min-width: 160px;">
+                                <div class="text-end">
+                                    <h6 class="fw-bold text-white mb-0">{{ s.to_name }}</h6>
+                                    <span class="badge bg-success-subtle text-success small mt-1">
+                                        <i class="fa-solid fa-arrow-down-left me-1"></i> Receives
+                                    </span>
+                                </div>
+                                <div class="ts-avatar" style="--avatar-bg: {{ s.to_color }};">
+                                    {{ s.to_initials }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Settle Button -->
+                        <div class="ms-md-3">
+                            <button type="button" class="btn btn-ts-settle" onclick="markSettlementPaid('{{ s.from_member_id }}', '{{ s.to_member_id }}', '{{ s.amount }}')">
+                                <i class="fa-solid fa-check me-1"></i> Mark as Paid
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="p-4 rounded-3 text-center" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25);">
+                    <i class="fa-solid fa-circle-check text-success mb-2" style="font-size: 2.5rem;"></i>
+                    <h5 class="fw-bold text-white mb-1">All Settled Up! 🎉</h5>
+                    <p class="text-light opacity-75 small mb-0">Everyone in the group has paid their exact fair share. No outstanding transfers remaining.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Settlement Payment History -->
+            {% if paid_settlements %}
+            <div class="ts-card p-4">
+                <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-clock-rotate-left text-info me-2"></i> Completed Payment History</h5>
+                <div class="d-flex flex-column gap-2">
+                    {% for p in paid_settlements %}
+                    <div class="d-flex justify-content-between align-items-center p-3 rounded-3" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-success"></i>
+                            <span class="text-white"><strong>{{ p.from_member.name }}</strong> paid <strong>{{ p.to_member.name }}</strong></span>
+                        </div>
+                        <div>
+                            <strong class="text-success me-3">{{ trip.currency }}{{ p.amount|floatformat:2 }}</strong>
+                            <span class="text-muted small">{{ p.paid_at|date:"M d, H:i" }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- =====================================================================
+             TAB 3: MEMBERS & INDIVIDUAL BALANCES
+             ===================================================================== -->
+        <div id="tab-members" class="ts-tab-content d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold text-white mb-1"><i class="fa-solid fa-users text-warning me-2"></i> Group Members & Live Balances</h4>
+                    <p class="text-light opacity-75 small mb-0">Total paid, individual fair share, and net money to receive or pay back.</p>
+                </div>
+                {% if can_add_member %}
+                <button type="button" class="btn btn-ts-glass btn-sm" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                    <i class="fa-solid fa-user-plus text-warning"></i> Add Member ({{ balances_info.members_count }}/10)
+                </button>
+                {% endif %}
+            </div>
+
+            <div class="row g-3">
+                {% for m in members_data %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="ts-card p-4 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="ts-avatar ts-avatar-lg" style="--avatar-bg: {{ m.avatar_color }};">
+                                        {{ m.initials }}
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold text-white mb-0">{{ m.name }}</h5>
+                                        {% if m.member.is_admin %}
+                                        <span class="badge bg-warning text-dark small">Admin</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if m.status == 'CREDITOR' or m.status == 'RECEIVES' %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1">Gets Back</span>
+                                {% elif m.status == 'DEBTOR' or m.status == 'OWES' %}
+                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-1">Owes</span>
+                                {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary border border-secondary rounded-pill px-3 py-1">Settled</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="p-3 rounded-3 mb-3" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-light opacity-75 small">Total Paid:</span>
+                                    <strong class="text-white">{{ trip.currency }}{{ m.total_paid|floatformat:2 }}</strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-light opacity-75 small">Fair Share:</span>
+                                    <span class="text-light opacity-75 small">{{ trip.currency }}{{ balances_info.fair_share_per_person|floatformat:2 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-25">
+                                <span class="text-light opacity-75 small fw-semibold">Net Balance:</span>
+                                {% if m.status == 'CREDITOR' or m.status == 'RECEIVES' %}
+                                <h5 class="fw-bold text-success mb-0">+{{ trip.currency }}{{ m.abs_balance|floatformat:2 }}</h5>
+                                {% elif m.status == 'DEBTOR' or m.status == 'OWES' %}
+                                <h5 class="fw-bold text-danger mb-0">-{{ trip.currency }}{{ m.abs_balance|floatformat:2 }}</h5>
+                                {% else %}
+                                <h5 class="fw-bold text-muted mb-0">{{ trip.currency }}0.00</h5>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- =====================================================================
+             TAB 4: VISUAL ANALYTICS
+             ===================================================================== -->
+        <div id="tab-analytics" class="ts-tab-content d-none">
+            <div class="row g-4">
+                <!-- Category Donut Chart -->
+                <div class="col-lg-6">
+                    <div class="ts-card p-4 h-100">
+                        <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-chart-pie text-warning me-2"></i> Spending by Category</h5>
+                        <div style="position: relative; height: 280px;">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member Contribution Chart -->
+                <div class="col-lg-6">
+                    <div class="ts-card p-4 h-100">
+                        <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-chart-column text-info me-2"></i> Member Payments vs Fair Share</h5>
+                        <div style="position: relative; height: 280px;">
+                            <canvas id="memberChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =====================================================================
+             TAB 5: ITEMIZED STATEMENT / SUMMARY
+             ===================================================================== -->
+        <div id="tab-receipt" class="ts-tab-content d-none">
+            <div class="ts-card p-4 p-md-5" style="max-width: 800px; margin: 0 auto;">
+                <div class="d-flex justify-content-between align-items-start border-bottom border-secondary border-opacity-25 pb-4 mb-4">
+                    <div>
+                        <h3 class="fw-bold text-white mb-1">{{ trip.name }}</h3>
+                        <p class="text-light opacity-75 mb-0"><i class="fa-solid fa-location-dot text-warning me-1"></i> {{ trip.destination|default:"Group Adventure" }} • {{ balances_info.members_count }} Travelers</p>
+                    </div>
+                    <button class="btn btn-ts-glass btn-sm" onclick="window.print()">
+                        <i class="fa-solid fa-print me-1"></i> Print Bill
+                    </button>
+                </div>
+
+                <div class="table-responsive mb-4">
+                    <table class="table table-dark table-hover align-middle mb-0" style="background: transparent;">
+                        <thead>
+                            <tr class="text-muted border-secondary">
+                                <th>Item</th>
+                                <th>Category</th>
+                                <th>Paid By</th>
+                                <th>Date</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exp in expenses %}
+                            <tr class="border-secondary">
+                                <td class="fw-semibold text-white">{{ exp.title }}</td>
+                                <td><span class="badge bg-secondary-subtle text-light small">{{ exp.get_category_display }}</span></td>
+                                <td>{{ exp.paid_by.name }}</td>
+                                <td class="text-light opacity-75 small">{{ exp.expense_date|date:"M d" }}</td>
+                                <td class="text-end fw-bold text-warning">{{ trip.currency }}{{ exp.amount|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="border-top border-warning">
+                                <td colspan="4" class="fw-bold text-white fs-5">Total Group Expenses</td>
+                                <td class="text-end fw-bold text-warning fs-5">{{ trip.currency }}{{ balances_info.total_spending|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="text-light opacity-75">Each Member's Fair Share ({{ balances_info.members_count }} travelers)</td>
+                                <td class="text-end fw-bold text-info">{{ trip.currency }}{{ balances_info.fair_share_per_person|floatformat:2 }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: ADD EXPENSE
+     ========================================================================= -->
+<div class="modal fade ts-modal" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="addExpenseForm" onsubmit="submitExpenseForm(event)">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <div>
+                        <span class="badge bg-warning text-dark rounded-pill mb-1">Receipt</span>
+                        <h4 class="modal-title fw-bold text-white" id="addExpenseModalLabel">Add an Expense</h4>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label text-white fw-semibold">Expense Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control ts-input" placeholder="e.g. Sea-View Villa, Dinner, Fuel" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white fw-semibold">Amount ({{ trip.currency }}) <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" name="amount" class="form-control ts-input" placeholder="0.00" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white fw-semibold">Category <span class="text-danger">*</span></label>
+                            <select name="category" class="form-select ts-input" required>
+                                <option value="HOTEL">🏨 Hotel / Stay</option>
+                                <option value="FOOD" selected>🍽️ Food & Drinks</option>
+                                <option value="TRANSPORT">🚗 Transport & Fuel</option>
+                                <option value="ACTIVITIES">🎟️ Activities & Sightseeing</option>
+                                <option value="SHOPPING">🛍️ Shopping</option>
+                                <option value="OTHER">📦 Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white fw-semibold">Paid By <span class="text-danger">*</span></label>
+                            <select name="paid_by_id" class="form-select ts-input" required>
+                                {% for m in members %}
+                                <option value="{{ m.id }}">{{ m.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white fw-semibold">Date</label>
+                            <input type="date" name="expense_date" class="form-control ts-input">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-white fw-semibold">Bill Notes / Description <span class="text-light opacity-50 fw-normal">(Optional)</span></label>
+                            <input type="text" name="notes" class="form-control ts-input" placeholder="e.g. Paid via GooglePay, includes tip">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ts-glass" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-ts-primary px-4">
+                        <i class="fa-solid fa-check"></i> Save Expense
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: INVITE FRIENDS
+     ========================================================================= -->
+<div class="modal fade ts-modal" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <span class="badge bg-warning text-dark rounded-pill mb-1">Share</span>
+                    <h4 class="modal-title fw-bold text-white" id="inviteModalLabel">Invite Trip Members</h4>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <p class="text-light opacity-75 mb-3">Share this invite link with your group. Friends can join and see live balances with 1 click without downloading any app.</p>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control ts-input text-center" id="inviteLinkInput" value="{{ request.scheme }}://{{ request.get_host }}{% url 'tripsplit_join' trip.invite_code %}" readonly>
+                    <button class="btn btn-warning fw-bold px-3" type="button" onclick="copyInviteLink()">
+                        <i class="fa-regular fa-copy me-1"></i> Copy
+                    </button>
+                </div>
+                <a href="https://api.whatsapp.com/send?text=Join%20our%20TripSplit%20group%20for%20{{ trip.name|urlencode }}%20to%20track%20and%20settle%20expenses%3A%20{{ request.scheme }}%3A%2F%2F{{ request.get_host }}{% url 'tripsplit_join' trip.invite_code %}" target="_blank" class="btn btn-success w-100 py-2 fw-semibold">
+                    <i class="fa-brands fa-whatsapp me-2"></i> Share via WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: ADD MEMBER
+     ========================================================================= -->
+<div class="modal fade ts-modal" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{% url 'tripsplit_api_add_member' trip.invite_code %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <div>
+                        <span class="badge bg-warning text-dark rounded-pill mb-1">Member</span>
+                        <h4 class="modal-title fw-bold text-white" id="addMemberModalLabel">Add a Traveler</h4>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label text-white fw-semibold">Member Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control ts-input" placeholder="e.g. Karan, Simran, Alex" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ts-glass" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-ts-primary px-4">
+                        <i class="fa-solid fa-check"></i> Add Member
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Tab Switcher
+function switchTab(tabId, btn) {
+    document.querySelectorAll('.ts-tab-content').forEach(el => el.classList.add('d-none'));
+    document.querySelectorAll('.ts-seg-tab').forEach(el => el.classList.remove('active'));
+    
+    const target = document.getElementById(tabId);
+    if (target) target.classList.remove('d-none');
+    if (btn) btn.classList.add('active');
+
+    if (tabId === 'tab-analytics') {
+        initAnalyticsCharts();
+    }
+}
+
+// Category Filter
+function filterExpenses(category, btn) {
+    document.querySelectorAll('.ts-filter-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    const rows = document.querySelectorAll('.ts-expense-card');
+    rows.forEach(row => {
+        if (category === 'ALL' || row.getAttribute('data-category') === category) {
+            row.style.display = 'flex';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// Copy Invite Link
+function copyInviteLink() {
+    const input = document.getElementById('inviteLinkInput');
+    if (input) {
+        input.select();
+        navigator.clipboard.writeText(input.value);
+        alert('Invite link copied to clipboard!');
+    }
+}
+
+// Delete Expense via AJAX
+function deleteExpense(expenseId) {
+    if (!confirm('Are you sure you want to delete this expense?')) return;
+    
+    fetch(`/tripsplit/api/expense/${expenseId}/delete/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.reload();
+        } else {
+            alert(data.message || 'Error deleting expense');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        window.location.reload();
+    });
+}
+
+// Submit Expense Form via AJAX
+function submitExpenseForm(e) {
+    e.preventDefault();
+    const form = document.getElementById('addExpenseForm');
+    const formData = new FormData(form);
+
+    fetch(`/tripsplit/api/{{ trip.invite_code }}/expense/add/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.reload();
+        } else {
+            alert(data.message || 'Error adding expense');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        window.location.reload();
+    });
+}
+
+// Mark Settlement as Paid via AJAX
+function markSettlementPaid(fromId, toId, amount) {
+    if (!confirm('Confirm marking this payment as settled?')) return;
+
+    fetch(`/tripsplit/api/{{ trip.invite_code }}/settle/mark-paid/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `from_member_id=${fromId}&to_member_id=${toId}&amount=${amount}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.reload();
+        } else {
+            alert(data.message || 'Error updating settlement');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        window.location.reload();
+    });
+}
+
+// Analytics Charts (Chart.js)
+let catChartInstance = null;
+let memberChartInstance = null;
+
+function initAnalyticsCharts() {
+    fetch(`/tripsplit/api/{{ trip.invite_code }}/analytics/`)
+    .then(res => res.json())
+    .then(data => {
+        const catCanvas = document.getElementById('categoryChart');
+        if (catCanvas && data.category_chart_labels.length > 0) {
+            if (catChartInstance) catChartInstance.destroy();
+            catChartInstance = new Chart(catCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: data.category_chart_labels,
+                    datasets: [{
+                        data: data.category_chart_values,
+                        backgroundColor: data.category_chart_colors,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#E2E8F0', font: { family: 'Poppins' } } }
+                    }
+                }
+            });
+        }
+
+        const memCanvas = document.getElementById('memberChart');
+        if (memCanvas && data.member_chart_labels.length > 0) {
+            if (memberChartInstance) memberChartInstance.destroy();
+            memberChartInstance = new Chart(memCanvas, {
+                type: 'bar',
+                data: {
+                    labels: data.member_chart_labels,
+                    datasets: [{
+                        label: 'Total Paid ({{ trip.currency }})',
+                        data: data.member_chart_values,
+                        backgroundColor: data.member_chart_colors,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    });
+}
+</script>
+{% endblock %}

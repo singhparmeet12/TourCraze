@@ -1,0 +1,594 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block styles %}
+<style>
+    .hotel-detail-wrapper {
+        background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0c111f 100%);
+        min-height: 100vh;
+        color: #E2E8F0;
+        padding-top: 30px;
+        padding-bottom: 90px;
+    }
+
+    /* Photo Mosaic */
+    .hotel-gallery-mosaic {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 12px;
+        height: 440px;
+        border-radius: 24px;
+        overflow: hidden;
+        margin-bottom: 30px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .gallery-main-img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.4s ease;
+    }
+
+    .gallery-side-imgs {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        gap: 12px;
+        height: 100%;
+    }
+
+    .gallery-sub-img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.4s ease;
+    }
+
+    .gallery-main-img:hover, .gallery-sub-img:hover {
+        transform: scale(1.03);
+    }
+
+    /* Property Header Box */
+    .hotel-main-card {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 24px;
+        padding: 32px;
+        backdrop-filter: blur(16px);
+        margin-bottom: 30px;
+    }
+
+    .hotel-badge-tier {
+        background: rgba(248, 201, 34, 0.15);
+        color: #F8C922;
+        border: 1px solid rgba(248, 201, 34, 0.35);
+        padding: 6px 16px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 0.84rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .hotel-title {
+        font-size: 2.3rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+        margin-bottom: 6px;
+    }
+
+    .hotel-loc-sub {
+        color: #94A3B8;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 20px;
+    }
+
+    .hotel-stat-pill {
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 14px 18px;
+        text-align: center;
+    }
+
+    /* Room Cards */
+    .room-tier-card {
+        background: #1E293B;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 20px;
+        align-items: center;
+        transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .room-tier-card:hover {
+        border-color: #F8C922;
+        transform: translateY(-3px);
+    }
+
+    .room-name {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+        margin-bottom: 8px;
+    }
+
+    .room-perks-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .room-perk-badge {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34D399;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .room-price-box {
+        text-align: right;
+        min-width: 220px;
+    }
+
+    /* Boarding Pass Booking Voucher Styling */
+    .booking-pass-card {
+        background: linear-gradient(135deg, #071021 0%, #0F172A 100%);
+        border: 2px solid #F8C922;
+        border-radius: 24px;
+        padding: 28px;
+        color: #FFFFFF;
+        box-shadow: 0 0 40px rgba(248, 201, 34, 0.3);
+        position: relative;
+    }
+
+    .pass-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px dashed rgba(248, 201, 34, 0.4);
+        padding-bottom: 18px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hotel-detail-wrapper">
+    <div class="container">
+
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home_page' %}" class="text-secondary text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'hotels_hub' %}" class="text-secondary text-decoration-none">Stays</a></li>
+                <li class="breadcrumb-item active text-warning" aria-current="page">{{ hotel.name }}</li>
+            </ol>
+        </nav>
+
+        <!-- Photo Mosaic -->
+        <div class="hotel-gallery-mosaic">
+            <img src="{{ hotel.img }}" class="gallery-main-img" alt="{{ hotel.name }}">
+            <div class="gallery-side-imgs">
+                {% if hotel.images|length > 1 %}
+                <img src="{{ hotel.images.1 }}" class="gallery-sub-img" alt="{{ hotel.name }}">
+                {% else %}
+                <img src="{{ hotel.img }}" class="gallery-sub-img" alt="{{ hotel.name }}">
+                {% endif %}
+
+                {% if hotel.images|length > 2 %}
+                <img src="{{ hotel.images.2 }}" class="gallery-sub-img" alt="{{ hotel.name }}">
+                {% else %}
+                <img src="{{ hotel.img }}" class="gallery-sub-img" alt="{{ hotel.name }}">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left 8 Cols: Overview & Room Matrix -->
+            <div class="col-lg-8">
+                <!-- Main Header Box -->
+                <div class="hotel-main-card">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                        <div>
+                            <span class="hotel-badge-tier">{{ hotel.tag }}</span>
+                            <h1 class="hotel-title">{{ hotel.name }}</h1>
+                            <div class="hotel-loc-sub">
+                                <i class="fa-solid fa-location-dot text-warning"></i>
+                                <span>{{ hotel.address|default:hotel.city }}</span>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold fs-6 mb-1">
+                                <i class="fa-solid fa-star"></i> {{ hotel.rating }} / 5.0
+                            </div>
+                            <div class="small text-secondary">{{ hotel.review_count }} Verified Reviews</div>
+                        </div>
+                    </div>
+
+                    <p class="text-light fs-6 mb-4" style="line-height: 1.7;">
+                        {{ hotel.description }}
+                    </p>
+
+                    <!-- Key Stats Grid -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4 col-sm-6">
+                            <div class="hotel-stat-pill">
+                                <div class="text-secondary small mb-1">Property Category</div>
+                                <strong class="text-white">{{ hotel.category|title }} Retreat</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <div class="hotel-stat-pill">
+                                <div class="text-secondary small mb-1">Cleanliness & Hygiene</div>
+                                <strong class="text-warning">4.98 / 5.0 ★</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <div class="hotel-stat-pill">
+                                <div class="text-secondary small mb-1">Check-in / Check-out</div>
+                                <strong class="text-white">2:00 PM / 11:00 AM</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Verified Amenities -->
+                    <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-sparkles text-warning me-2"></i>Curated Amenities & Perks</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for a in hotel.amenities %}
+                        <span class="badge px-3 py-2 rounded-pill" style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255, 255, 255, 0.12); color: #E2E8F0; font-size: 0.85rem;">
+                            <i class="fa-solid fa-circle-check text-warning me-1"></i> {{ a }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Room Selection Matrix -->
+                <div class="mb-4">
+                    <h3 class="fw-bold text-white mb-3">Available Room Tiers & Suites</h3>
+                    
+                    {% for room in hotel.rooms %}
+                    <div class="room-tier-card">
+                        <div>
+                            <h4 class="room-name">{{ room.name }}</h4>
+                            <div class="text-secondary small mb-2">
+                                <i class="fa-solid fa-bed text-warning me-1"></i> {{ room.bed }} &nbsp;•&nbsp; 
+                                <i class="fa-solid fa-maximize text-warning me-1"></i> {{ room.size }} &nbsp;•&nbsp; 
+                                <i class="fa-solid fa-users text-warning me-1"></i> Up to {{ room.capacity }} Guests
+                            </div>
+                            <div class="room-perks-list">
+                                {% for p in room.perks %}
+                                <span class="room-perk-badge">✓ {{ p }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="room-price-box">
+                            <div class="text-secondary small">Nightly Rate</div>
+                            <h3 class="fw-bold text-white mb-1">₹{{ room.price|default:15000 }}</h3>
+                            <div class="small text-secondary mb-3">+ ₹{{ room.price|default:15000 }} taxes & fees</div>
+                            <button type="button" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark w-100 shadow" 
+                                    style="background: #F8C922; border: none;"
+                                    data-hotel-id="{{ hotel.id }}"
+                                    data-room-id="{{ room.id }}"
+                                    data-room-name="{{ room.name }}"
+                                    data-room-price="{{ room.price|default:15000 }}"
+                                    onclick="openBookingCheckout(this.dataset.hotelId, this.dataset.roomId, this.dataset.roomName, Number(this.dataset.roomPrice))">
+                                <i class="fa-solid fa-bolt me-1"></i> Instant Reserve
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Right 4 Cols: Quick Reservation & Highlights Sidebar -->
+            <div class="col-lg-4">
+                <div class="p-4 rounded-4 position-sticky" style="top: 90px; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); backdrop-filter: blur(16px);">
+                    <h5 class="fw-bold text-white mb-3">✨ Why You'll Love This Sanctuary</h5>
+                    <ul class="list-unstyled mb-4">
+                        {% for h in hotel.highlights %}
+                        <li class="d-flex align-items-start gap-2 mb-3 text-light" style="font-size: 0.92rem; line-height: 1.5;">
+                            <i class="fa-solid fa-award text-warning mt-1"></i>
+                            <span>{{ h }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="p-3 rounded-3 mb-4" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);">
+                        <div class="small text-success fw-bold mb-1"><i class="fa-solid fa-shield-check me-1"></i> TourCraze Price Guarantee</div>
+                        <div class="small text-light">Book directly with instant room confirmation and 100% free cancellation support.</div>
+                    </div>
+
+                    <a href="{% url 'plan_trip' %}?destination={{ hotel.city|urlencode }}&budget={{ hotel.price_per_night }}&style=Luxury&auto=1" 
+                       class="btn btn-outline-warning w-100 rounded-pill py-2 fw-bold">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Craft Complete {{ hotel.city }} Trip
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Instant Booking Checkout Modal -->
+<div class="modal fade" id="bookingCheckoutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background: #0c111f; border: 2px solid #F8C922; border-radius: 28px; color: #FFFFFF;">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(248, 201, 34, 0.15); color: #F8C922; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fa-solid fa-ticket"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold text-white mb-0">Confirm Your Luxury Sanctuary Stay</h5>
+                        <span class="small text-warning" id="modalHotelSubtitle">{{ hotel.name }}</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4" id="bookingFormBody">
+                <form id="instantBookingForm" onsubmit="submitStayBooking(event)">
+                    {% csrf_token %}
+                    <input type="hidden" id="bookHotelId" value="{{ hotel.id }}">
+                    <input type="hidden" id="bookRoomId" value="">
+
+                    <div class="p-3 rounded-3 mb-4" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-secondary small d-block">Selected Room Tier:</span>
+                                <strong class="text-white fs-6" id="bookRoomName">Luxury Suite</strong>
+                            </div>
+                            <div class="text-end">
+                                <span class="text-secondary small d-block">Rate per night:</span>
+                                <strong class="text-warning fs-5" id="bookRoomPriceDisplay">₹32,000</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-secondary small fw-semibold">Primary Guest Name</label>
+                            <input type="text" id="guestName" class="form-control bg-dark text-white border-secondary rounded-3" 
+                                   value="{{ request.user.name|default:request.user.username|default:'Aditi Rao' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-secondary small fw-semibold">Email Address (for Voucher)</label>
+                            <input type="email" id="guestEmail" class="form-control bg-dark text-white border-secondary rounded-3" 
+                                   value="{{ request.user.email|default:'aditi.traveler@gmail.com' }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label text-secondary small fw-semibold">Check-in Date</label>
+                            <input type="date" id="checkInDate" class="form-control bg-dark text-white border-secondary rounded-3" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-secondary small fw-semibold">Check-out Date</label>
+                            <input type="date" id="checkOutDate" class="form-control bg-dark text-white border-secondary rounded-3" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-secondary small fw-semibold">Stay Duration</label>
+                            <select id="stayNights" class="form-select bg-dark text-white border-secondary rounded-3" onchange="updatePriceCalculation()">
+                                <option value="1">1 Night</option>
+                                <option value="2" selected>2 Nights</option>
+                                <option value="3">3 Nights</option>
+                                <option value="4">4 Nights</option>
+                                <option value="5">5 Nights</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-secondary small fw-semibold">Preferred Payment Method</label>
+                        <select id="paymentMethod" class="form-select bg-dark text-white border-secondary rounded-3">
+                            <option value="Pay at Property">💳 Pay at Property (Zero Deposit)</option>
+                            <option value="UPI / Instant NetBanking">⚡ Instant UPI / NetBanking (5% Club Off)</option>
+                            <option value="Credit / Debit Card">💎 Credit Card / EMI</option>
+                        </select>
+                    </div>
+
+                    <!-- Price Breakdown Box -->
+                    <div class="p-3 rounded-3 mb-4" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div class="d-flex justify-content-between text-secondary small mb-1">
+                            <span>Base Stay (<span id="calcNightsLabel">2</span> nights):</span>
+                            <span class="text-white" id="calcBaseRate">₹64,000</span>
+                        </div>
+                        <div class="d-flex justify-content-between text-secondary small mb-1">
+                            <span>Luxury Hospitality Tax & GST (12%):</span>
+                            <span class="text-white" id="calcTaxes">₹7,680</span>
+                        </div>
+                        <div class="d-flex justify-content-between text-success small mb-2">
+                            <span>TourCraze Member Perk Discount (5%):</span>
+                            <span id="calcDiscount">-₹3,200</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top border-secondary">
+                            <strong class="text-white">Estimated Final Total:</strong>
+                            <strong class="text-warning fs-4" id="calcTotal">₹68,480</strong>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="confirmBookingBtn" class="btn btn-warning w-100 rounded-pill py-3 fw-bold text-dark shadow" style="background: #F8C922; border: none;">
+                        <i class="fa-solid fa-check-circle me-1"></i> Confirm Reservation & Generate Stay Pass
+                    </button>
+                </form>
+            </div>
+
+            <!-- Booking Confirmation Voucher Result (Generated on success) -->
+            <div class="modal-body p-4 d-none" id="bookingVoucherResult">
+                <div class="booking-pass-card">
+                    <div class="pass-header">
+                        <div>
+                            <span class="badge bg-success px-3 py-1 rounded-pill fw-bold mb-1">✓ RESERVATION CONFIRMED</span>
+                            <h4 class="fw-bold text-white mb-0" id="resHotelName">Hotel Name</h4>
+                            <span class="small text-warning" id="resLocation">Udaipur, Rajasthan</span>
+                        </div>
+                        <div class="text-end">
+                            <span class="text-secondary small d-block">Booking Reference</span>
+                            <strong class="text-warning fs-5" id="resBookingRef">TC-STAY-94821</strong>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <span class="text-secondary small d-block">Primary Guest:</span>
+                            <strong class="text-white" id="resGuestName">Guest</strong>
+                        </div>
+                        <div class="col-6">
+                            <span class="text-secondary small d-block">Selected Room:</span>
+                            <strong class="text-white" id="resRoomName">Suite</strong>
+                        </div>
+                        <div class="col-6">
+                            <span class="text-secondary small d-block">Dates & Duration:</span>
+                            <strong class="text-white" id="resDates">2 Nights</strong>
+                        </div>
+                        <div class="col-6">
+                            <span class="text-secondary small d-block">Total Paid / Due:</span>
+                            <strong class="text-warning" id="resAmount">₹68,480</strong>
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded-3 d-flex align-items-center justify-content-between" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-qrcode fs-1 text-warning"></i>
+                            <div>
+                                <strong class="text-white d-block">Digital Stay Pass Active</strong>
+                                <span class="text-secondary small">Present this voucher at the front desk upon arrival.</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3" onclick="window.print()">
+                            <i class="fa-solid fa-print me-1"></i> Print Pass
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'my_trips' %}" class="btn btn-outline-warning rounded-pill px-4 me-2">View in My Trips</a>
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let currentRoomPrice = 15000;
+    const checkoutModalEl = document.getElementById('bookingCheckoutModal');
+    const checkoutModal = new bootstrap.Modal(checkoutModalEl);
+
+    // Set default check-in and check-out dates
+    document.addEventListener('DOMContentLoaded', () => {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const checkout = new Date(today);
+        checkout.setDate(checkout.getDate() + 3);
+
+        const formatDate = d => d.toISOString().split('T')[0];
+        const inInput = document.getElementById('checkInDate');
+        const outInput = document.getElementById('checkOutDate');
+        if (inInput) inInput.value = formatDate(tomorrow);
+        if (outInput) outInput.value = formatDate(checkout);
+    });
+
+    window.openBookingCheckout = function (hotelId, roomId, roomName, price) {
+        const numPrice = Number(price) || 15000;
+        document.getElementById('bookHotelId').value = hotelId;
+        document.getElementById('bookRoomId').value = roomId;
+        document.getElementById('bookRoomName').textContent = roomName;
+        document.getElementById('bookRoomPriceDisplay').textContent = `₹${numPrice.toLocaleString()}`;
+        currentRoomPrice = numPrice;
+
+        document.getElementById('bookingFormBody').classList.remove('d-none');
+        document.getElementById('bookingVoucherResult').classList.add('d-none');
+
+        updatePriceCalculation();
+        checkoutModal.show();
+    };
+
+    window.updatePriceCalculation = function () {
+        const nights = parseInt(document.getElementById('stayNights').value, 10) || 1;
+        const base = currentRoomPrice * nights;
+        const taxes = Math.round(base * 0.12);
+        const discount = Math.round(base * 0.05);
+        const total = base + taxes - discount;
+
+        document.getElementById('calcNightsLabel').textContent = nights;
+        document.getElementById('calcBaseRate').textContent = `₹${base.toLocaleString()}`;
+        document.getElementById('calcTaxes').textContent = `₹${taxes.toLocaleString()}`;
+        document.getElementById('calcDiscount').textContent = `-₹${discount.toLocaleString()}`;
+        document.getElementById('calcTotal').textContent = `₹${total.toLocaleString()}`;
+    };
+
+    window.submitStayBooking = function (e) {
+        e.preventDefault();
+        const btn = document.getElementById('confirmBookingBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Generating Voucher...';
+
+        const payload = {
+            hotel_id: parseInt(document.getElementById('bookHotelId').value, 10),
+            room_id: document.getElementById('bookRoomId').value,
+            guest_name: document.getElementById('guestName').value,
+            guest_email: document.getElementById('guestEmail').value,
+            check_in: document.getElementById('checkInDate').value,
+            check_out: document.getElementById('checkOutDate').value,
+            nights: parseInt(document.getElementById('stayNights').value, 10),
+            payment_method: document.getElementById('paymentMethod').value
+        };
+
+        fetch('/hotels/api/book/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-check-circle me-1"></i> Confirm Reservation & Generate Stay Pass';
+
+            if (data.status === 'success' && data.voucher) {
+                const v = data.voucher;
+                document.getElementById('bookingFormBody').classList.add('d-none');
+                document.getElementById('bookingVoucherResult').classList.remove('d-none');
+
+                document.getElementById('resHotelName').textContent = v.hotel_name;
+                document.getElementById('resLocation').textContent = `${v.hotel_city}, ${v.hotel_state}`;
+                document.getElementById('resBookingRef').textContent = v.booking_ref;
+                document.getElementById('resGuestName').textContent = v.guest_name;
+                document.getElementById('resRoomName').textContent = v.room_name;
+                document.getElementById('resDates').textContent = `${v.nights} Nights (${v.check_in} to ${v.check_out})`;
+                document.getElementById('resAmount').textContent = `₹${v.total_amount.toLocaleString()} (${v.payment_method})`;
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-check-circle me-1"></i> Confirm Reservation & Generate Stay Pass';
+            alert('Booking could not be processed. Please try again.');
+        });
+    };
+</script>
+{% endblock %}

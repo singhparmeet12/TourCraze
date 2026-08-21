@@ -1,0 +1,386 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}{{ category_title }} — Get Inspired • TourCraze{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/home_page.css' %}">
+<style>
+    .category-page-wrapper {
+        background-color: #0c111f !important;
+        min-height: 100vh;
+        padding: 40px 0 90px;
+        color: #E2E8F0 !important;
+    }
+
+    /* Category Switcher Tabs */
+    .cat-nav-pill {
+        background: #111827;
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        color: #94A3B8 !important;
+        padding: 10px 22px;
+        border-radius: 30px;
+        text-decoration: none !important;
+        font-weight: 700;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .cat-nav-pill:hover {
+        background: #1a2236;
+        border-color: rgba(255, 255, 255, 0.25);
+        color: #FFFFFF !important;
+        transform: translateY(-2px);
+    }
+
+    .cat-nav-pill.active {
+        background: rgba(248, 201, 34, 0.18) !important;
+        border-color: #F8C922 !important;
+        color: #F8C922 !important;
+        box-shadow: 0 4px 18px rgba(248, 201, 34, 0.35);
+    }
+
+    /* Cue Card Grid */
+    .cue-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 28px;
+        margin-top: 36px;
+    }
+
+    .cue-card {
+        position: relative;
+        height: 440px;
+        border-radius: 24px;
+        overflow: hidden;
+        background: #111827;
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .cue-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(248, 201, 34, 0.5);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 25px rgba(248, 201, 34, 0.25);
+    }
+
+    .cue-card-bg-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 1;
+    }
+
+    .cue-card:hover .cue-card-bg-img {
+        transform: scale(1.08);
+    }
+
+    .cue-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, 
+            rgba(12, 17, 31, 0.98) 0%, 
+            rgba(12, 17, 31, 0.75) 45%, 
+            rgba(12, 17, 31, 0.3) 100%);
+        z-index: 2;
+    }
+
+    .cue-card-content {
+        position: relative;
+        z-index: 3;
+        padding: 24px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .cue-card-top-badges {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .badge-rating-gold {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        color: #F8C922;
+        border: 1px solid rgba(248, 201, 34, 0.4);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .badge-state-pill {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .cue-card-title {
+        color: #FFFFFF !important;
+        font-size: 1.45rem !important;
+        font-weight: 800 !important;
+        margin: 0 0 8px;
+        line-height: 1.3;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .cue-card-desc {
+        color: #CBD5E1 !important;
+        font-size: 0.92rem;
+        line-height: 1.55;
+        margin-bottom: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .cue-card-meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 14px;
+        font-size: 0.85rem;
+    }
+
+    .cue-meta-item {
+        color: #94A3B8;
+    }
+
+    .cue-meta-item strong {
+        color: #FFFFFF;
+        font-weight: 700;
+    }
+
+    .btn-cue-plan {
+        background: linear-gradient(135deg, #F8C922 0%, #FFD84D 100%) !important;
+        color: #0f172a !important;
+        font-weight: 800 !important;
+        font-size: 0.95rem !important;
+        padding: 12px 20px !important;
+        border-radius: 14px !important;
+        text-decoration: none !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        transition: all 0.2s ease;
+        box-shadow: 0 6px 18px rgba(248, 201, 34, 0.35);
+    }
+
+    .btn-cue-plan:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(248, 201, 34, 0.55);
+        color: #000000 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="category-page-wrapper">
+    <div class="container">
+        
+        <!-- Navigation Back & Category Title -->
+        <div class="mb-4">
+            <a href="{% url 'home_page' %}#get-inspired" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                <i class="fas fa-arrow-left me-1"></i> Back to Homepage
+            </a>
+        </div>
+
+        <!-- Header Hero Banner -->
+        <div class="text-center mb-5">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-2">
+                {{ category_icon }} CURATED DESTINATION SUGGESTIONS
+            </span>
+            <h1 class="text-white fw-bold display-5 mb-3">{{ category_title }}</h1>
+            <p class="text-light fs-5 mx-auto" style="max-width: 760px; color: #94A3B8 !important;">
+                {{ category_description }}
+            </p>
+            
+            <!-- Category Switcher Pill Row -->
+            <div class="d-flex justify-content-center gap-2 gap-md-3 flex-wrap mt-4">
+                <a href="{% url 'category_view' 'mountains' %}" class="cat-nav-pill {% if current_category == 'mountains' %}active{% endif %}">
+                    🏔️ Mountains
+                </a>
+                <a href="{% url 'category_view' 'beach' %}" class="cat-nav-pill {% if current_category == 'beach' %}active{% endif %}">
+                    🏖️ Beach
+                </a>
+                <a href="{% url 'category_view' 'road-trip' %}" class="cat-nav-pill {% if current_category == 'road-trip' %}active{% endif %}">
+                    🚗 Road Trip
+                </a>
+                <a href="{% url 'category_view' 'waterfall' %}" class="cat-nav-pill {% if current_category == 'waterfall' %}active{% endif %}">
+                    🌊 Waterfall
+                </a>
+                <a href="{% url 'category_view' 'cafe' %}" class="cat-nav-pill {% if current_category == 'cafe' %}active{% endif %}">
+                    ☕ Cafes & Culture
+                </a>
+            </div>
+
+            <!-- Instant Search & Destination Count Bar -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 pt-3 border-top border-secondary gap-3" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+                <div class="text-start">
+                    <span class="fs-5 fw-bold text-white"><span id="visibleDestCount">{{ destinations|length }}</span> Curated Places Available</span>
+                    <span class="badge bg-dark text-warning border border-warning ms-2 px-2 py-1">100% Unique • No Duplicates</span>
+                </div>
+                <div style="max-width: 380px; width: 100%;">
+                    <div class="position-relative">
+                        <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                        <input type="text" 
+                               id="destFilterInput" 
+                               class="form-control rounded-pill ps-5 py-2 bg-dark text-white border-secondary" 
+                               placeholder="Filter these {{ destinations|length }} places..."
+                               style="background: #111827 !important; border-color: rgba(255, 255, 255, 0.2) !important;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cue Cards Responsive Grid -->
+        {% if destinations %}
+            <div class="cue-cards-grid" id="cueCardsGrid">
+                {% for dest in destinations %}
+                <div class="cue-card dest-card-item" 
+                     data-name="{{ dest.name|lower }}" 
+                     data-state="{{ dest.state|default:''|lower }}"
+                     data-desc="{{ dest.description|lower }}">
+                    <!-- High-Res Background Image -->
+                    <img src="{{ dest.img }}" alt="{{ dest.name }}" class="cue-card-bg-img" loading="lazy">
+                    
+                    <!-- Dark Gradient Overlay -->
+                    <div class="cue-card-overlay"></div>
+
+                    <!-- Card Interactive Content -->
+                    <div class="cue-card-content">
+                        
+                        <!-- Top Badges -->
+                        <div class="cue-card-top-badges">
+                            <span class="badge-rating-gold">
+                                <i class="fas fa-star"></i> {{ dest.rating }}
+                            </span>
+                            {% if dest.state %}
+                            <span class="badge-state-pill">
+                                📍 {{ dest.state }}
+                            </span>
+                            {% elif dest.tag %}
+                            <span class="badge-state-pill">
+                                {{ dest.tag }}
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Bottom Information & 1-Click Plan Button -->
+                        <div>
+                            <h3 class="cue-card-title">{{ dest.name }}</h3>
+                            <p class="cue-card-desc">{{ dest.description }}</p>
+                            
+                            <div class="cue-card-meta-row">
+                                <div class="cue-meta-item">
+                                    <i class="fas fa-calendar-day text-warning me-1"></i>
+                                    <strong>{{ dest.season }}</strong>
+                                </div>
+                                <div class="cue-meta-item">
+                                    <i class="fas fa-wallet text-success me-1"></i>
+                                    <strong>{{ dest.budget }}</strong>
+                                </div>
+                            </div>
+
+                            <!-- 1-Click Plan Itinerary Button -->
+                            <form action="{% url 'plan_trip' %}" method="POST" class="m-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="destination" value="{{ dest.name }}">
+                                <input type="hidden" name="days" value="{{ dest.days|default:4 }}">
+                                <input type="hidden" name="travelers" value="2">
+                                <input type="hidden" name="budget" value="25000">
+                                <input type="hidden" name="travel_style" value="{{ dest.style|default:'Relaxed' }}">
+                                <input type="hidden" name="interests" value="Nature, Food, Photography">
+                                
+                                <button type="submit" class="btn-cue-plan">
+                                    <i class="fas fa-wand-magic-sparkles"></i> Plan This Itinerary
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div id="noFilterResults" class="text-center py-5 d-none">
+                <h4 class="text-white">No matching destinations found</h4>
+                <p class="text-muted">Try searching for a different keyword or location.</p>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <h4 class="text-white">No destinations found in this collection</h4>
+                <a href="{% url 'home_page' %}" class="btn btn-warning rounded-pill px-4 mt-3">Back to Explore</a>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterInput = document.getElementById('destFilterInput');
+    const cards = document.querySelectorAll('.dest-card-item');
+    const countEl = document.getElementById('visibleDestCount');
+    const noResultsEl = document.getElementById('noFilterResults');
+
+    if (!filterInput || !cards.length) return;
+
+    filterInput.addEventListener('input', function() {
+        const query = this.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const name = card.getAttribute('data-name') || '';
+            const state = card.getAttribute('data-state') || '';
+            const desc = card.getAttribute('data-desc') || '';
+
+            if (!query || name.includes(query) || state.includes(query) || desc.includes(query)) {
+                card.style.display = 'flex';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        if (countEl) countEl.textContent = visibleCount;
+        if (noResultsEl) {
+            if (visibleCount === 0) {
+                noResultsEl.classList.remove('d-none');
+            } else {
+                noResultsEl.classList.add('d-none');
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

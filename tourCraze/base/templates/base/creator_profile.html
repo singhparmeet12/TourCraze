@@ -1,0 +1,323 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}{{ creator.name|default:creator.username }} (@{{ creator.username }}) • TourCraze Creator{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/community.css' %}">
+<style>
+    .creator-profile-header {
+        background: #111827;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 28px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        margin-bottom: 32px;
+    }
+    .creator-profile-avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3.5px solid #F8C922;
+        box-shadow: 0 8px 30px rgba(248, 201, 34, 0.35);
+    }
+    .creator-stat-box {
+        text-align: center;
+        padding: 0 18px;
+    }
+    .creator-stat-num {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #FFFFFF;
+    }
+    .creator-stat-lbl {
+        font-size: 0.85rem;
+        color: #94A3B8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .profile-tabs-nav {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 28px;
+        padding-bottom: 14px;
+    }
+    .profile-tab-btn {
+        background: transparent;
+        border: none;
+        color: #94A3B8;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 8px 24px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .profile-tab-btn.active, .profile-tab-btn:hover {
+        background: rgba(248, 201, 34, 0.15);
+        color: #F8C922;
+    }
+    .media-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+    .grid-media-item {
+        position: relative;
+        aspect-ratio: 1/1;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #1a2236;
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .grid-media-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .grid-media-item:hover img {
+        transform: scale(1.06);
+    }
+    .grid-media-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        color: #FFFFFF;
+        font-size: 1.1rem;
+        font-weight: 700;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    .grid-media-item:hover .grid-media-overlay {
+        opacity: 1;
+    }
+    @media (max-width: 768px) {
+        .media-grid-3 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .creator-profile-header { padding: 24px; }
+        .creator-profile-avatar { width: 100px; height: 100px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="community-wrapper">
+    <div class="container py-4" style="max-width: 980px;">
+
+        <!-- Back to Feed Link -->
+        <a href="{% url 'community_list' %}" class="btn btn-outline-light btn-sm rounded-pill mb-4 px-3">
+            <i class="fas fa-arrow-left me-1"></i> Back to Community Feed
+        </a>
+
+        <!-- Creator Profile Header -->
+        <div class="creator-profile-header">
+            <div class="row align-items-center">
+                <div class="col-md-auto text-center text-md-start mb-3 mb-md-0">
+                    <img src="{{ creator.get_avatar }}" alt="{{ creator.username }}" class="creator-profile-avatar">
+                </div>
+                <div class="col-md">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                        <div>
+                            <h3 class="text-white fw-bold mb-0 d-flex align-items-center gap-2">
+                                {{ creator.name|default:creator.username }}
+                                {% if creator.is_verified_creator %}
+                                <i class="fas fa-certificate text-primary" title="Verified Travel Creator"></i>
+                                {% endif %}
+                            </h3>
+                            <small class="text-warning fw-semibold">@{{ creator.username }}</small>
+                            {% if creator.home_city %}
+                            <small class="text-muted ms-2">• 📍 {{ creator.home_city }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            {% if not is_own_profile and user.is_authenticated %}
+                            <button class="btn btn-follow-toggle px-4 py-2 fw-bold {% if is_following %}following{% endif %}" 
+                                    data-user-id="{{ creator.id }}" style="font-size: 0.95rem;">
+                                {% if is_following %}Following{% else %}+ Follow{% endif %}
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Creator Bio -->
+                    <p class="text-light mb-3" style="line-height: 1.6; font-size: 0.98rem;">
+                        {{ creator.bio|default:"Passionate explorer creating memories across the globe with TourCraze." }}
+                    </p>
+
+                    <!-- Stats Row -->
+                    <div class="d-flex align-items-center gap-3 gap-md-4 pt-2 border-top border-secondary border-opacity-25 flex-wrap">
+                        <div class="creator-stat-box ps-0">
+                            <div class="creator-stat-num">{{ total_posts_count }}</div>
+                            <div class="creator-stat-lbl">Posts</div>
+                        </div>
+                        <div class="creator-stat-box">
+                            <div class="creator-stat-num" id="profile-followers-count">{{ creator.followers_count }}</div>
+                            <div class="creator-stat-lbl">Followers</div>
+                        </div>
+                        <div class="creator-stat-box">
+                            <div class="creator-stat-num">{{ creator.following_count }}</div>
+                            <div class="creator-stat-lbl">Following</div>
+                        </div>
+                        <div class="creator-stat-box">
+                            <div class="creator-stat-num text-warning">{{ total_likes }}</div>
+                            <div class="creator-stat-lbl">Likes Received</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tabs -->
+        <div class="profile-tabs-nav">
+            <button class="profile-tab-btn active" onclick="switchTab('posts')">
+                <i class="fas fa-table-cells"></i> Posts ({{ photo_posts|length }})
+            </button>
+            <button class="profile-tab-btn" onclick="switchTab('reels')">
+                <i class="fas fa-play"></i> Travel Reels ({{ video_reels|length }})
+            </button>
+            <button class="profile-tab-btn" onclick="switchTab('trips')">
+                <i class="fas fa-route"></i> Smart Itineraries ({{ shared_trips|length }})
+            </button>
+        </div>
+
+        <!-- Tab 1: Photos Grid -->
+        <div id="tab-posts" class="tab-content-pane">
+            {% if photo_posts %}
+            <div class="media-grid-3">
+                {% for post in photo_posts %}
+                <a href="{% url 'single_post' post.id %}" class="grid-media-item">
+                    <img src="{{ post.get_media_url }}" alt="Post Photo">
+                    <div class="grid-media-overlay">
+                        <span><i class="fas fa-heart text-danger me-1"></i> {{ post.likes.count }}</span>
+                        <span><i class="fas fa-comment text-info me-1"></i> {{ post.comments.count }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="fas fa-camera fs-1 mb-3 text-warning"></i>
+                <h5>No photo posts published yet.</h5>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Tab 2: Reels Grid -->
+        <div id="tab-reels" class="tab-content-pane d-none">
+            {% if video_reels %}
+            <div class="media-grid-3">
+                {% for reel in video_reels %}
+                <a href="{% url 'single_post' reel.id %}" class="grid-media-item" style="aspect-ratio: 9/16; max-height: 420px;">
+                    <img src="{{ reel.get_media_url|default:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800' }}" alt="Reel Thumbnail">
+                    <div style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 12px; color: #fff; font-size: 0.8rem;">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="grid-media-overlay">
+                        <span><i class="fas fa-heart text-danger me-1"></i> {{ reel.likes.count }}</span>
+                        <span><i class="fas fa-comment text-info me-1"></i> {{ reel.comments.count }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="fas fa-video fs-1 mb-3 text-danger"></i>
+                <h5>No video reels published yet.</h5>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Tab 3: Shared Itineraries Grid -->
+        <div id="tab-trips" class="tab-content-pane d-none">
+            {% if shared_trips %}
+            <div class="row g-3">
+                {% for p in shared_trips %}
+                <div class="col-md-6">
+                    <div class="linked-itinerary-banner m-0 p-3">
+                        <div class="linked-itinerary-left">
+                            <div class="itinerary-compass-icon">
+                                <i class="fas fa-compass"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-white fw-bold mb-0">{{ p.trip.title|default:p.trip.destination }}</h6>
+                                <small class="text-muted">{{ p.trip.days }} Days • {{ p.trip.travel_style }} • {{ p.trip.formatted_budget }}</small>
+                            </div>
+                        </div>
+                        <a href="{% url 'trip_detail' p.trip.id %}" class="btn-view-itinerary">
+                            View Plan <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="fas fa-route fs-1 mb-3 text-success"></i>
+                <h5>No shared TourCraze itineraries attached yet.</h5>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function switchTab(tabName) {
+    document.querySelectorAll('.profile-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content-pane').forEach(pane => pane.classList.add('d-none'));
+
+    if (tabName === 'posts') {
+        document.querySelector('.profile-tab-btn:nth-child(1)').classList.add('active');
+        document.getElementById('tab-posts').classList.remove('d-none');
+    } else if (tabName === 'reels') {
+        document.querySelector('.profile-tab-btn:nth-child(2)').classList.add('active');
+        document.getElementById('tab-reels').classList.remove('d-none');
+    } else if (tabName === 'trips') {
+        document.querySelector('.profile-tab-btn:nth-child(3)').classList.add('active');
+        document.getElementById('tab-trips').classList.remove('d-none');
+    }
+}
+
+// Follow toggle support on profile page
+document.querySelectorAll('.btn-follow-toggle').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const userId = this.getAttribute('data-user-id');
+        fetch(`/community/api/follow/${userId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                if (data.following) {
+                    btn.classList.add('following');
+                    btn.innerText = 'Following';
+                } else {
+                    btn.classList.remove('following');
+                    btn.innerText = '+ Follow';
+                }
+                const followersEl = document.getElementById('profile-followers-count');
+                if (followersEl) followersEl.innerText = data.followers_count;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

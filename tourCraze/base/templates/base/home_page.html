@@ -1,234 +1,985 @@
 {% extends 'main.html' %}
-
-{% block content %}
-
 {% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/home_page.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'styles/chatbot_styles.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts for Icons -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
-</head>
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/home_page.css' %}">
+<style>
+    /* Guarantee Full Visibility of Hero & Content */
+    .fade-in {
+        opacity: 1 !important;
+        transform: none !important;
+        visibility: visible !important;
+    }
 
-<body>
-    {% include 'navbar.html' %}
+    .hero-section {
+        position: relative;
+        z-index: 1;
+    }
 
-    <!-- Main Content Section -->
-    <div class="image-container">
-        <div class="main-heading">
-            Explore the sights<br>of
-            <span id="element"></span>
+    .hero-section .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-section h1 {
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-section p {
+        color: #E2E8F0 !important;
+        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .ai-planner-section {
+        background-color: #0c111f !important;
+        color: #E2E8F0 !important;
+    }
+
+    .ai-planner-box {
+        background: rgba(17, 24, 39, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+        border-radius: 24px !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+        backdrop-filter: blur(16px) !important;
+    }
+
+    /* Travel Gallery Masonry Layout (Cards placed beside each other) */
+    .gallery-section {
+        background-color: #0c111f !important;
+        padding: 60px 0 !important;
+    }
+
+    .masonry-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        grid-auto-rows: 240px !important;
+        grid-auto-flow: dense !important;
+        gap: 1.5rem !important;
+        max-width: 1100px !important;
+        margin: 0 auto !important;
+    }
+
+    .grid-item {
+        overflow: hidden !important;
+        border-radius: 18px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+        transition: transform 0.35s ease, box-shadow 0.35s ease !important;
+        position: relative !important;
+        display: block !important;
+    }
+
+    .grid-item:hover {
+        transform: translateY(-8px) !important;
+        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    .grid-item.tall {
+        grid-row: span 2 !important;
+    }
+
+    .grid-item a {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        text-decoration: none !important;
+    }
+
+    .grid-item img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    /* Scroller Layout */
+    .scroller {
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow: hidden !important;
+        position: relative !important;
+        -webkit-mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+        mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+    }
+
+    .scroller-inner {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        gap: 1.5rem !important;
+        width: max-content !important;
+        padding: 1rem 0 !important;
+        will-change: transform;
+    }
+
+    /* Dynamic Hero Scenery Background Slideshow */
+    .hero-section {
+        position: relative !important;
+        overflow: hidden !important;
+        background-color: #071021;
+    }
+
+    .hero-bg-container {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+    }
+
+    .hero-bg-slide {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        transform: scale(1.06);
+        transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1), transform 12s ease-out;
+        will-change: opacity, transform;
+    }
+
+    .hero-bg-slide.active {
+        opacity: 1;
+        transform: scale(1);
+        z-index: 2;
+    }
+
+    .hero-bg-slide.slide-1 {
+        background-image: url("{% static 'images/beach.jpg' %}");
+    }
+
+    .hero-bg-slide.slide-2 {
+        background-image: url("{% static 'images/huge mountain.jpg' %}");
+    }
+
+    .hero-bg-slide.slide-3 {
+        background-image: url("{% static 'images/landscape road.jpg' %}");
+    }
+
+    .hero-bg-slide.slide-4 {
+        background-image: url("{% static 'images/jaipur.jpg' %}");
+    }
+
+    .hero-bg-slide.slide-5 {
+        background-image: url("{% static 'images/mountain road.jpg' %}");
+    }
+
+    .hero-vignette-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: linear-gradient(90deg, rgba(7, 16, 33, 0.92) 0%, rgba(7, 16, 33, 0.68) 48%, rgba(7, 16, 33, 0.3) 100%);
+        pointer-events: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Dynamic Background Scenery Crossfade -->
+<section class="hero-section text-white position-relative">
+    <!-- Dynamic Background Scenery Slides (Auto-changes every 10-15s) -->
+    <div class="hero-bg-container" id="heroBgContainer">
+        <div class="hero-bg-slide slide-1 active"></div>
+        <div class="hero-bg-slide slide-2"></div>
+        <div class="hero-bg-slide slide-3"></div>
+        <div class="hero-bg-slide slide-4"></div>
+        <div class="hero-bg-slide slide-5"></div>
+    </div>
+    <!-- Dark Vignette Overlay for High-Contrast Readable Text -->
+    <div class="hero-vignette-overlay"></div>
+
+    <div class="container position-relative" style="z-index: 5;">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-7 text-start py-5">
+                <div class="mb-3 fade-in">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold shadow-sm"
+                        style="font-size: 0.85rem; letter-spacing: 0.5px;">
+                        ✨ SMART TRAVEL PLATFORM
+                    </span>
+                </div>
+                <h1 class="display-3 fw-bolder mb-4 fade-in" style="line-height: 1.18;">
+                    Plan Your Dream Journey <br>
+                    <span style="color: #F8C922; text-shadow: 0 0 25px rgba(248, 201, 34, 0.35);">In Seconds</span>
+                </h1>
+                <p class="lead fs-5 mb-5 fade-in text-light"
+                    style="max-width: 580px; line-height: 1.6; animation-delay: 0.2s;">
+                    Discover, plan, and customize your perfect trip with tailored day-by-day itineraries and real budget
+                    estimates.
+                </p>
+                <div class="hero-buttons fade-in d-flex flex-wrap gap-3" style="animation-delay: 0.3s;">
+                    <a href="#ai-planner" class="btn btn-warning btn-lg px-4 py-3 rounded-pill fw-bold text-dark shadow"
+                        style="background: #F8C922; border: none; box-shadow: 0 8px 25px rgba(248, 201, 34, 0.35);">
+                        <i class="fas fa-wand-magic-sparkles me-2"></i>Start Planning Now
+                    </a>
+                    <a href="#destinations" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold"
+                        style="background: rgba(255, 255, 255, 0.1); border: 1.5px solid rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px);">
+                        <i class="fas fa-compass me-2"></i>Explore Destinations
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
+</section>
 
-    <!-- Typed.js Script for Dynamic Text -->
-    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
-    <script>
-        var typed = new Typed('#element', {
-            strings: ['Manali', 'Mcleodganj', 'Nainital'],
-            typeSpeed: 50,
-            showCursor: false,
-        });
-    </script>
-
-    <!-- Features Section -->
-    <div class="features">
-        <h2>Top values for you</h2>
-        <p>Try variety of benefits when using our services</p>
-    </div>
-
-    <!-- Feature Content -->
-    <div class="feature-content">
-        <div class="custom-feature">
-			<span class="icon-circle"><i class="fa-solid fa-map fa-lg"></i></span>
-			<h5>Maps</h5>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae voluptates obcaecati placeat harum
-				voluptatem iusto, tempore veritatis assumenda officia, recusandae nam delectus ipsam nemo? Aliquid
-				delectus magnam possimus consequuntur voluptas?</p>
-		</div>
-		<div class="custom-feature">
-			<span class="icon-circle"><i class="fa-solid fa-plane"></i></span>
-			<h5>Tours and Plans</h5>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, quae corporis ex placeat saepe culpa
-				eligendi. Aliquam aspernatur, quos maxime blanditiis voluptate dolorem officia laborum incidunt
-				quibusdam ullam voluptatem nihil.</p>
-		</div>
-		<div class="custom-feature">
-			<span class="icon-circle"><i class="fa-solid fa-comments"></i></span>
-			<h5>Community</h5>
-			<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Omnis ratione explicabo distinctio dolor
-				dolore, amet totam vero error fugit iure corrupti quis sed ipsa ducimus perspiciatis, voluptatum
-				molestiae assumenda deleniti?</p>
-		</div>
-		<div class="custom-feature">
-			<span class="icon-circle"><i class="fa-solid fa-landmark"></i></span>
-			<h5>Famous Places</h5>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut adipisci consequuntur laborum, labore a ab
-				mollitia atque quibusdam blanditiis dicta eaque deserunt aut nostrum optio sunt, quidem iusto reiciendis
-				error.</p>
-		</div>    
-    </div>
-
-    <!-- Carousel Section -->
-    <div class="parent-slides">
-        <div class="slides">
-			<div id="carouselExample" class="carousel slide">
-				<div class="carousel-inner">
-					<div class="carousel-item active">
-						<img src="{% static 'images/mountains.jpg' %}" class="d-block w-100" alt="Mountains">
-					</div>
-					<div class="carousel-item">
-						<img src="{% static 'images/beach.jpg' %}" class="d-block w-100" alt="Beach">
-					</div>
-					<div class="carousel-item">
-						<img src="{% static 'images/jaipur.jpg' %}" class="d-block w-100" alt="Forts">
-					</div>
-				</div>
-				<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
-					data-bs-slide="prev">
-					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Previous</span>
-				</button>
-				<button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
-					data-bs-slide="next">
-					<span class="carousel-control-next-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Next</span>
-				</button>
-			</div>
-		</div>    
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Explore Button -->
-    <div class="explore">
-        <a href="{% url 'maps' %}" class="btn btn-primary btn-lg" style="background-color: #02529C;">
-            Find Location on Maps
-        </a>    
-    </div>
-
-    <!-- Footer -->
-    <div class="custom-footer">
-        <footer class="footer">All rights are reserved 2024</footer>
-    </div>
-
-    <!-- Chatbot HTML Structure -->
-    <button class="chatbot-toggler">
-        <span class="material-symbols-rounded">mode_comment</span>
-        <span class="material-symbols-outlined">close</span>
-    </button>
-    <div class="chatbot">
-        <header>
-            <h2>Chatbot</h2>
-            <span class="close-btn material-symbols-outlined">close</span>
-        </header>
-        <ul class="chatbox">
-            <li class="chat incoming">
-                <span class="material-symbols-outlined">smart_toy</span>
-                <p>Hi there 👋<br>How can I help you today?</p>
-            </li>
-        </ul>
-        <div class="chat-input">
-            <textarea placeholder="Enter a message..." spellcheck="false" required></textarea>
-            <span id="send-btn" class="material-symbols-rounded">send</span>
+<!-- AI Planner Section -->
+<section id="ai-planner" class="ai-planner-section py-5">
+    <div class="container fade-in">
+        <div class="text-center mb-4">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-2">✨ SMART ITINERARY ENGINE</span>
+            <h2 class="text-white fw-bold">Smart Trip Planner</h2>
+            <p style="color: #D1D5DB; font-size: 1.15rem;" class="mb-0">Tell us where you want to go and we'll craft an
+                optimized day-by-day itinerary in seconds.</p>
+        </div>
+        <div class="ai-planner-box p-4 p-md-5">
+            <form action="{% url 'plan_trip' %}" method="POST" id="homePlannerForm">
+                {% csrf_token %}
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-6">
+                        <label class="form-label text-white fw-semibold"><i
+                                class="fas fa-map-marker-alt text-warning me-2"></i>Destination</label>
+                        <div class="position-relative">
+                            <input type="text" name="destination" id="homeDestinationInput"
+                                class="form-control form-control-lg ai-input"
+                                placeholder="e.g. Spiti, Dawki, Gokarna, Manali, Kashmir, Paris..." required
+                                autocomplete="off">
+                            <div id="homeDestinationDropdown" class="destination-dropdown-menu d-none"
+                                style="position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7); z-index: 1050; max-height: 350px; overflow-y: auto; padding: 8px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="form-label text-white fw-semibold"><i
+                                class="fas fa-calendar-days text-warning me-2"></i>Duration (Days)</label>
+                        <input type="number" name="days" class="form-control form-control-lg ai-input" value="4" min="1"
+                            max="14" required>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="form-label text-white fw-semibold"><i
+                                class="fas fa-users text-warning me-2"></i>Travelers</label>
+                        <input type="number" name="travelers" class="form-control form-control-lg ai-input" value="2"
+                            min="1" max="20" required>
+                    </div>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-lg-4 col-md-6">
+                        <label class="form-label text-white fw-semibold"><i
+                                class="fas fa-wallet text-warning me-2"></i>Approx. Budget (₹)</label>
+                        <input type="text" name="budget" class="form-control form-control-lg ai-input"
+                            placeholder="e.g. 25000" value="25000" required>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <label class="form-label text-white fw-semibold"><i
+                                class="fas fa-compass text-warning me-2"></i>Travel Style</label>
+                        <select name="travel_style" class="form-select form-select-lg ai-input">
+                            <option value="Relaxed" selected>Relaxed 🌴</option>
+                            <option value="Adventure">Adventure 🧗</option>
+                            <option value="Luxury">Luxury ✨</option>
+                            <option value="Budget">Budget 🎒</option>
+                            <option value="Family">Family 👨‍👩‍👧‍👦</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <label class="form-label text-white fw-semibold"><i
+                                class="fas fa-heart text-warning me-2"></i>Interests</label>
+                        <input type="text" name="interests" class="form-control form-control-lg ai-input"
+                            placeholder="Food, Nature, Photography, History" value="Nature, Food">
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow">
+                        <i class="fas fa-wand-magic-sparkles me-2"></i> Generate My Itinerary <i
+                            class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                    <div class="mt-3">
+                        <a href="{% url 'plan_trip' %}" style="color: #D1D5DB; font-size: 0.95rem;"
+                            class="text-decoration-none fw-medium">
+                            <i class="fas fa-sliders me-1 text-warning"></i> Open Advanced Trip Studio
+                        </a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
+</section>
 
-    <!-- Chatbot JavaScript -->
-    <script type="importmap">
-        {
-            "imports": {
-                "@google/generative-ai": "https://esm.run/@google/generative-ai"
+
+<!-- Trending Destinations Section -->
+<section id="destinations" class="destinations-section py-5" style="background-color: #0c111f; overflow: hidden;">
+    <div class="container-fluid fade-in px-0">
+        <h2 class="text-center mb-5 text-white">Trending Destinations</h2>
+        <div class="scroller" style="width: 100%; max-width: 100vw; overflow: hidden; position: relative;">
+            <div class="scroller-inner"
+                style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 1.5rem; width: max-content; padding: 1rem 0; animation: scroll 120s linear infinite;">
+                {# We include the cards twice to create the seamless loop effect #}
+                {% with "" as _ %}
+                {% include "base/destination_cards.html" %}
+                {% include "base/destination_cards.html" %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Travel Gallery -->
+<section id="get-inspired" class="gallery-section py-5">
+    <div class="container fade-in">
+        <h2 class="display-6 fw-bold text-center text-white mb-2">Get Inspired</h2>
+        <p class="text-center mb-5 mx-auto fw-medium"
+            style="color: #FDE047; font-size: 1.05rem; max-width: 650px; letter-spacing: 0.2px;">
+            Click any mood or landscape below to explore curated destinations & itineraries
+        </p>
+        <div class="masonry-grid">
+            <div class="grid-item tall">
+                <a href="{% url 'category_view' 'mountains' %}"><img
+                        src="https://placehold.co/600x800/10b981/black?text=Mountains" alt="Mountains"></a>
+            </div>
+            <div class="grid-item">
+                <a href="{% url 'category_view' 'beach' %}"><img
+                        src="https://placehold.co/600x400/f8a922/black?text=Beach" alt="Beach"></a>
+            </div>
+            <div class="grid-item">
+                <a href="{% url 'category_view' 'road-trip' %}"><img
+                        src="https://placehold.co/800x400/212529/white?text=Road+Trip" alt="Road Trip"></a>
+            </div>
+            <div class="grid-item">
+                <a href="{% url 'category_view' 'waterfall' %}"><img
+                        src="https://placehold.co/600x400/02529C/white?text=Waterfall" alt="Waterfall"></a>
+            </div>
+            <div class="grid-item">
+                <a href="{% url 'category_view' 'cafe' %}"><img
+                        src="https://placehold.co/600x400/f43f5e/black?text=Cafe" alt="Cafe"></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- TripSplit Feature Section (Modern SaaS Redesign) -->
+<section class="tripsplit-section py-5"
+    style="background: radial-gradient(circle at 80% 20%, rgba(248, 201, 34, 0.08) 0%, transparent 60%), #080d1a; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);">
+    <div class="container fade-in">
+        <div class="row align-items-center g-5">
+
+            <!-- Left Content -->
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold shadow-sm"
+                        style="font-size: 0.82rem; letter-spacing: 0.5px;">
+                        <i class="fa-solid fa-bolt me-1"></i> SMART TRAVEL EXPENSE MANAGER
+                    </span>
+                </div>
+
+                <h2 class="display-5 fw-bolder text-white mb-3" style="line-height: 1.2;">
+                    Split Travel Expenses <br>
+                    <span style="color: #F8C922; text-shadow: 0 0 25px rgba(248, 201, 34, 0.35);">Fairly &
+                        Automatically</span>
+                </h2>
+
+                <p class="lead text-light opacity-75 mb-4" style="font-size: 1.15rem; line-height: 1.6;">
+                    No more awkward group math, messy spreadsheets, or unpaid debts. TripSplit tracks hotel stays,
+                    dining, and rental cars, then calculates the minimum peer-to-peer transfers needed.
+                </p>
+
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(248, 201, 34, 0.15); color: #F8C922; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <span class="text-light"><strong>Smart Debt Simplifier:</strong> Reduces 20 receipts into 2
+                            quick payments.</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); color: #10B981; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fa-solid fa-link"></i>
+                        </div>
+                        <span class="text-light"><strong>Instant Shareable Links:</strong> Friends join with one click
+                            via WhatsApp.</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); color: #3B82F6; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <span class="text-light"><strong>Visual Analytics & Statements:</strong> Category breakdowns and
+                            itemized bills.</span>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'tripsplit_hub' %}"
+                        class="btn btn-warning btn-lg px-4 py-3 rounded-pill fw-bold text-dark shadow"
+                        style="background: #F8C922; border: none; box-shadow: 0 8px 25px rgba(248, 201, 34, 0.35);">
+                        <i class="fa-solid fa-receipt me-2"></i> Explore TripSplit <i
+                            class="fa-solid fa-arrow-right ms-2"></i>
+                    </a>
+                    <a href="{% url 'tripsplit_demo' %}"
+                        class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold"
+                        style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(8px);">
+                        <i class="fa-solid fa-play me-2 text-warning"></i> Try Demo Trip
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Interactive Graphic -->
+            <div class="col-lg-6">
+                <div class="p-4 p-md-5 rounded-4 shadow-lg position-relative"
+                    style="background: rgba(17, 24, 39, 0.85); border: 1px solid rgba(255, 255, 255, 0.14); backdrop-filter: blur(16px);">
+
+                    <div
+                        class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+                        <div>
+                            <span class="badge bg-warning text-dark rounded-pill mb-1">🌴 Live Group Demo</span>
+                            <h4 class="fw-bold text-white mb-0">Goa Road Trip</h4>
+                        </div>
+                        <span
+                            class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 fw-bold">Active</span>
+                    </div>
+
+                    <!-- Live Expenses Preview -->
+                    <div class="d-flex flex-column gap-2 mb-4">
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded-3"
+                            style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);">
+                            <span class="text-white"><i class="fa-solid fa-hotel text-primary me-2"></i> Sea-View Villa
+                                (3 Nights)</span>
+                            <strong class="text-warning">₹16,000</strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded-3"
+                            style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);">
+                            <span class="text-white"><i class="fa-solid fa-car text-success me-2"></i> SUV Rental &
+                                Fuel</span>
+                            <strong class="text-warning">₹6,800</strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded-3"
+                            style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);">
+                            <span class="text-white"><i class="fa-solid fa-utensils text-warning me-2"></i> Beach Shack
+                                Dinner</span>
+                            <strong class="text-warning">₹4,800</strong>
+                        </div>
+                    </div>
+
+                    <!-- Total & Fair Share Box -->
+                    <div class="p-3 rounded-3 mb-4"
+                        style="background: rgba(248, 201, 34, 0.08); border: 1px solid rgba(248, 201, 34, 0.2);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="text-muted small">Total Group Spend:</span>
+                            <h4 class="fw-bold text-warning mb-0">₹27,600</h4>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Each Member's Fair Share (4 travelers):</span>
+                            <strong class="text-info">₹6,900 / person</strong>
+                        </div>
+                    </div>
+
+                    <!-- Smart Settlement Alert -->
+                    <div class="p-3 rounded-3 d-flex justify-content-between align-items-center"
+                        style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15)); border: 1px solid rgba(16, 185, 129, 0.3);">
+                        <div>
+                            <div class="small text-muted mb-0">Automated Settlement Generated:</div>
+                            <strong class="text-white">Priya pays Rahul <span
+                                    class="text-warning">₹1,666</span></strong>
+                        </div>
+                        <span class="badge bg-success rounded-pill px-3 py-2">
+                            <i class="fa-solid fa-check me-1"></i> Auto-Calculated
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Featured Luxury Sanctuaries & Stays Section (Directly Above Community Section) -->
+<section class="featured-stays-section py-5 position-relative"
+    style="background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0c111f 100%); border-top: 1px solid rgba(255, 255, 255, 0.08);">
+    <div class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-5">
+            <div>
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold shadow-sm mb-2"
+                    style="font-size: 0.85rem;">
+                    <i class="fa-solid fa-hotel me-1"></i> TOURCRAZE STAYS & SANCTUARIES
+                </span>
+                <h2 class="display-6 fw-bold text-white mb-2">Handcrafted Stays & Luxury Sanctuaries</h2>
+                <p class="text-secondary mb-0" style="font-size: 1.05rem;">
+                    Sleep under Himalayan stars in glass domes, wake up to 250-year-old marble palace lakes, or lounge
+                    in private cliffside pools.
+                </p>
+            </div>
+            <div>
+                <a href="{% url 'hotels_hub' %}" class="btn btn-outline-warning rounded-pill px-4 py-2 fw-bold">
+                    Explore All Stays <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for item in featured_hotels %}
+            <div class="col-lg-4 col-md-6">
+                <div class="rounded-4 overflow-hidden h-100 d-flex flex-column justify-content-between position-relative shadow-lg"
+                    style="background: #1E293B; border: 1px solid rgba(255, 255, 255, 0.12); transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                    <div>
+                        <div class="position-relative" style="height: 220px; overflow: hidden; background: #0F172A;">
+                            <img src="{{ item.img }}" alt="{{ item.name }}" loading="lazy"
+                                style="width: 100%; height: 100%; object-fit: cover;">
+                            <span
+                                class="position-absolute top-0 start-0 m-3 badge bg-dark bg-opacity-75 text-warning border border-warning border-opacity-50 px-3 py-1 rounded-pill fw-bold"
+                                style="font-size: 0.78rem;">
+                                {{ item.tag }}
+                            </span>
+                            <span
+                                class="position-absolute top-0 end-0 m-3 badge bg-warning text-dark px-2 py-1 rounded-pill fw-bold"
+                                style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-star"></i> {{ item.rating }}
+                            </span>
+                        </div>
+
+                        <div class="p-4">
+                            <h4 class="fw-bold text-white mb-1" style="font-size: 1.25rem;">{{ item.name }}</h4>
+                            <div class="text-warning small fw-semibold mb-3">
+                                <i class="fa-solid fa-location-dot me-1"></i> {{ item.city }}, {{ item.state }}
+                            </div>
+                            <p class="text-light opacity-75 small mb-3"
+                                style="line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ item.description }}
+                            </p>
+                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                {% for a in item.amenities|slice:":3" %}
+                                <span class="badge px-2 py-1 rounded-pill"
+                                    style="background: rgba(255,255,255,0.06); color: #CBD5E1; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.08);">
+                                    ✓ {{ a }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 pt-0">
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top"
+                            style="border-color: rgba(255, 255, 255, 0.1) !important;">
+                            <div>
+                                <span class="small text-secondary d-block">From</span>
+                                <strong class="text-white fs-5">₹{{ item.price_per_night|default:15000 }}</strong>
+                                <span class="small text-secondary">/ nt</span>
+                            </div>
+                            <a href="{% url 'hotel_detail' item.id %}"
+                                class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow"
+                                style="background: #F8C922; border: none;">
+                                View Sanctuary
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Community Preview Section (High-Contrast, Interactive White Background) -->
+<section class="community-preview-section py-5"
+    style="background-color: #FFFFFF !important; color: #1E293B !important; border-top: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0;">
+    <div class="container fade-in py-3">
+
+        <div class="text-center mb-5">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold shadow-sm mb-2"
+                style="font-size: 0.85rem;">
+                <i class="fa-solid fa-comments me-1"></i> TRAVELER STORIES
+            </span>
+            <h2 class="display-6 fw-bold mb-2" style="color: #0F172A !important;">Stories from Our Community</h2>
+            <p class="mx-auto" style="color: #64748B !important; max-width: 580px; font-size: 1.05rem;">
+                Real experiences and unforgettable itineraries shared by fellow travelers across India.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Card 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="p-4 rounded-4 h-100 d-flex flex-column justify-content-between home-comm-card"
+                    style="background: #F8FAFC; border: 1px solid #E2E8F0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;">
+                    <div>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
+                                class="rounded-circle shadow-sm"
+                                style="width: 56px; height: 56px; object-fit: cover; border: 2px solid #F8C922;"
+                                alt="Anjali Sharma">
+                            <div>
+                                <h5 class="fw-bold mb-0" style="color: #0F172A !important;">Anjali Sharma</h5>
+                                <span class="small" style="color: #64748B !important;">@anjali_travels • Spiti Solo
+                                    Trip</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 text-warning" style="font-size: 0.85rem;">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+
+                        <p class="mb-3"
+                            style="color: #334155 !important; font-size: 0.95rem; line-height: 1.6; font-style: italic;">
+                            "My solo trip to Spiti, planned through TourCraze, was completely flawless. The day-by-day
+                            route and hidden cafe recommendations made it truly unforgettable!"
+                        </p>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top"
+                        style="border-color: #E2E8F0 !important;">
+                        <button type="button"
+                            class="btn btn-sm btn-white border rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm"
+                            style="color: #334155 !important; background: #FFFFFF;" onclick="toggleHomeLike(this)">
+                            <i class="fa-regular fa-heart text-danger"></i> <span class="like-count">184</span>
+                        </button>
+                        <a href="{% url 'community_list' %}" class="small fw-bold text-decoration-none"
+                            style="color: #D97706 !important;">
+                            View Story <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="p-4 rounded-4 h-100 d-flex flex-column justify-content-between home-comm-card"
+                    style="background: #F8FAFC; border: 1px solid #E2E8F0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;">
+                    <div>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80"
+                                class="rounded-circle shadow-sm"
+                                style="width: 56px; height: 56px; object-fit: cover; border: 2px solid #F8C922;"
+                                alt="Rohan Mehta">
+                            <div>
+                                <h5 class="fw-bold mb-0" style="color: #0F172A !important;">Rohan Mehta</h5>
+                                <span class="small" style="color: #64748B !important;">@rohan_explorer • Rajasthan
+                                    Tour</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 text-warning" style="font-size: 0.85rem;">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+
+                        <p class="mb-3"
+                            style="color: #334155 !important; font-size: 0.95rem; line-height: 1.6; font-style: italic;">
+                            "Saved us hours of research for our family vacation to Jaipur & Jodhpur. The budget
+                            breakdown and heritage spot suggestions were spot on!"
+                        </p>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top"
+                        style="border-color: #E2E8F0 !important;">
+                        <button type="button"
+                            class="btn btn-sm btn-white border rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm"
+                            style="color: #334155 !important; background: #FFFFFF;" onclick="toggleHomeLike(this)">
+                            <i class="fa-regular fa-heart text-danger"></i> <span class="like-count">249</span>
+                        </button>
+                        <a href="{% url 'community_list' %}" class="small fw-bold text-decoration-none"
+                            style="color: #D97706 !important;">
+                            View Story <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="p-4 rounded-4 h-100 d-flex flex-column justify-content-between home-comm-card"
+                    style="background: #F8FAFC; border: 1px solid #E2E8F0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;">
+                    <div>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80"
+                                class="rounded-circle shadow-sm"
+                                style="width: 56px; height: 56px; object-fit: cover; border: 2px solid #F8C922;"
+                                alt="Priya Singh">
+                            <div>
+                                <h5 class="fw-bold mb-0" style="color: #0F172A !important;">Priya Singh</h5>
+                                <span class="small" style="color: #64748B !important;">@priya_travels • Old Manali
+                                    Cafes</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 text-warning" style="font-size: 0.85rem;">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+
+                        <p class="mb-3"
+                            style="color: #334155 !important; font-size: 0.95rem; line-height: 1.6; font-style: italic;">
+                            "Found the most aesthetic offbeat cafes and riverside sunset spots in Old Manali through the
+                            community. Everyone in our group loved it."
+                        </p>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top"
+                        style="border-color: #E2E8F0 !important;">
+                        <button type="button"
+                            class="btn btn-sm btn-white border rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 shadow-sm"
+                            style="color: #334155 !important; background: #FFFFFF;" onclick="toggleHomeLike(this)">
+                            <i class="fa-regular fa-heart text-danger"></i> <span class="like-count">312</span>
+                        </button>
+                        <a href="{% url 'community_list' %}" class="small fw-bold text-decoration-none"
+                            style="color: #D97706 !important;">
+                            View Story <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{% url 'community_list' %}"
+                class="btn btn-warning btn-lg px-5 py-3 rounded-pill fw-bold text-dark shadow"
+                style="background: #F8C922; border: none; box-shadow: 0 8px 25px rgba(248, 201, 34, 0.35);">
+                <i class="fa-solid fa-users me-2"></i> Join the Conversation
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Trusted Travel Badges (Clean White Section) -->
+<section class="partners-section py-4" style="background-color: #F8FAFC !important; border-bottom: 1px solid #E2E8F0;">
+    <div class="container text-center fade-in">
+        <h5 class="fw-bold mb-3" style="color: #0F172A !important;">Trusted by Travelers Across 50+ Scenic Destinations
+        </h5>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <span class="badge px-4 py-2 rounded-pill shadow-sm"
+                style="background: #FFFFFF; color: #334155 !important; border: 1px solid #CBD5E1; font-size: 0.9rem;">
+                🏔️ Himalayan Treks
+            </span>
+            <span class="badge px-4 py-2 rounded-pill shadow-sm"
+                style="background: #FFFFFF; color: #334155 !important; border: 1px solid #CBD5E1; font-size: 0.9rem;">
+                🏖️ Coastal Escapes
+            </span>
+            <span class="badge px-4 py-2 rounded-pill shadow-sm"
+                style="background: #FFFFFF; color: #334155 !important; border: 1px solid #CBD5E1; font-size: 0.9rem;">
+                🏰 Heritage Tours
+            </span>
+            <span class="badge px-4 py-2 rounded-pill shadow-sm"
+                style="background: #FFFFFF; color: #334155 !important; border: 1px solid #CBD5E1; font-size: 0.9rem;">
+                🚗 Highway Roadtrips
+            </span>
+            <span class="badge px-4 py-2 rounded-pill shadow-sm"
+                style="background: #FFFFFF; color: #334155 !important; border: 1px solid #CBD5E1; font-size: 0.9rem;">
+                ☕ Wanderlust Cafes
+            </span>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA & Footer -->
+<section class="final-cta-section text-white text-center py-5"
+    style="background: linear-gradient(180deg, #0c111f 0%, #071021 100%);">
+    <div class="container fade-in">
+        <h2 class="display-5 fw-bold mb-3" style="color: #FFFFFF !important;">Ready for Your Next Adventure?</h2>
+        <p class="lead mb-4 text-light opacity-75 mx-auto" style="max-width: 540px;">
+            Craft your personalized day-by-day itinerary in seconds. It's fast, free, and tailored to your travel style.
+        </p>
+        <a href="#ai-planner" class="btn btn-warning btn-lg px-5 py-3 rounded-pill fw-bold text-dark shadow"
+            style="background: #F8C922; border: none; box-shadow: 0 8px 25px rgba(248, 201, 34, 0.35);">
+            <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Plan Your Trip Now
+        </a>
+    </div>
+</section>
+
+<footer class="site-footer py-4" style="background-color: #071021; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+    <div class="container text-center">
+        <p class="text-light opacity-75 mb-0">&copy; 2026 TourCraze. All rights reserved. Plan smart, travel free.</p>
+    </div>
+</footer>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const destInput = document.getElementById('homeDestinationInput');
+        const dropdown = document.getElementById('homeDestinationDropdown');
+        const daysInput = document.querySelector('input[name="days"]');
+        const budgetInput = document.querySelector('input[name="budget"]');
+        const styleSelect = document.querySelector('select[name="travel_style"]');
+
+        if (!destInput || !dropdown) return;
+
+        let currentResults = [];
+        let activeIndex = -1;
+        let debounceTimer = null;
+
+        function hideDropdown() {
+            dropdown.classList.add('d-none');
+            dropdown.innerHTML = '';
+            activeIndex = -1;
+        }
+
+        function showDropdown(results, query) {
+            if (!results || results.length === 0) {
+                hideDropdown();
+                return;
             }
+
+            currentResults = results;
+            activeIndex = -1;
+            dropdown.innerHTML = '';
+
+            results.forEach((item, idx) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'dropdown-dest-item';
+                itemEl.style.cssText = 'padding: 10px 14px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; margin-bottom: 3px;';
+                itemEl.setAttribute('data-index', idx);
+
+                let highlightedName = item.name;
+                if (query) {
+                    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                    highlightedName = item.name.replace(regex, '<span style="color: #F8C922; font-weight: 800;">$1</span>');
+                }
+
+                itemEl.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(248, 201, 34, 0.15); color: #F8C922; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;">
+                        <i class="fas ${item.icon || 'fa-map-pin'}"></i>
+                    </div>
+                    <div>
+                        <div style="color: #FFFFFF; font-weight: 700; font-size: 0.95rem;">${highlightedName}</div>
+                        <div style="color: #94A3B8; font-size: 0.8rem;">${item.state || ''}</div>
+                    </div>
+                </div>
+                <span class="${item.badge_class || 'badge-top'}" style="font-size: 0.75rem; padding: 3px 8px; border-radius: 12px;">${item.tag || '⭐ Recommended'}</span>
+            `;
+
+                itemEl.addEventListener('mouseenter', () => {
+                    itemEl.style.background = 'rgba(255, 255, 255, 0.1)';
+                });
+                itemEl.addEventListener('mouseleave', () => {
+                    itemEl.style.background = 'transparent';
+                });
+
+                itemEl.addEventListener('mousedown', function (e) {
+                    e.preventDefault();
+                    destInput.value = item.name;
+                    if (item.days && daysInput) daysInput.value = item.days;
+                    if (item.budget && budgetInput) budgetInput.value = item.budget;
+                    if (item.style && styleSelect) styleSelect.value = item.style;
+                    hideDropdown();
+                });
+
+                dropdown.appendChild(itemEl);
+            });
+
+            dropdown.classList.remove('d-none');
         }
-    </script>
-    <script type="module">
-        import { GoogleGenerativeAI } from "@google/generative-ai";
 
-        const genAI = new GoogleGenerativeAI('AIzaSyAh-h1nJKCUO6kk_nloZmNa9E007K50HJg');
-
-        const chatbotToggler = document.querySelector(".chatbot-toggler");
-        const closeBtn = document.querySelector(".close-btn");
-        const chatbox = document.querySelector(".chatbox");
-        const chatInput = document.querySelector(".chat-input textarea");
-        const sendChatBtn = document.querySelector(".chat-input span");
-
-        let userMessage = null;
-        const inputInitHeight = chatInput.scrollHeight;
-
-        async function runModel(userPrompt) { // Renamed 'prompt' to 'userPrompt'
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            const result = await model.generateContent(userPrompt);
-            const response = await result.response;
-            const text = await response.text();
-            return text;
-        }
-
-        const createChatLi = (message, className) => {
-            const chatLi = document.createElement("li");
-            chatLi.classList.add("chat", `${className}`);
-            let chatContent = className === "outgoing" ? `<p></p>` : `<span class="material-symbols-outlined">smart_toy</span><p></p>`;
-            chatLi.innerHTML = chatContent;
-            chatLi.querySelector("p").textContent = message;
-            return chatLi;
-        }
-
-        const generateResponse = async (chatElement, userMessage) => {
-            const messageElement = chatElement.querySelector("p");
-            try {
-                const answer = await runModel(userMessage);
-                messageElement.textContent = answer;
-            } catch (error) {
-                console.log("Failed to generate response", error);
-                messageElement.textContent = "Sorry, something went wrong!";
+        destInput.addEventListener('input', function () {
+            const q = this.value.trim();
+            clearTimeout(debounceTimer);
+            if (q.length === 0) {
+                fetchDestinations('');
+                return;
             }
-            chatbox.scrollTo(0, chatbox.scrollHeight);
-        }
-
-        const handleChat = () => {
-            userMessage = chatInput.value.trim();
-            if (!userMessage) return;
-
-            chatInput.value = "";
-            chatInput.style.height = `${inputInitHeight}px`;
-
-            chatbox.appendChild(createChatLi(userMessage, "outgoing"));
-            chatbox.scrollTo(0, chatbox.scrollHeight);
-
-            setTimeout(() => {
-                const incomingChatLi = createChatLi("Thinking...", "incoming");
-                chatbox.appendChild(incomingChatLi);
-                chatbox.scrollTo(0, chatbox.scrollHeight);
-                generateResponse(incomingChatLi, userMessage);
-            }, 600);
-        }
-
-        chatInput.addEventListener("input", () => {
-            chatInput.style.height = `${inputInitHeight}px`;
-            chatInput.style.height = `${chatInput.scrollHeight}px`;
+            debounceTimer = setTimeout(() => {
+                fetchDestinations(q);
+            }, 180);
         });
 
-        chatInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
-                e.preventDefault();
-                handleChat();
+        destInput.addEventListener('focus', function () {
+            fetchDestinations(this.value.trim());
+        });
+
+        destInput.addEventListener('keydown', function (e) {
+            if (dropdown.classList.contains('d-none')) return;
+            if (e.key === 'Escape') hideDropdown();
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!destInput.contains(e.target) && !dropdown.contains(e.target)) {
+                hideDropdown();
             }
         });
 
-        sendChatBtn.addEventListener("click", handleChat);
-        closeBtn.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
-        chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
-    </script>
-</body>
+        function fetchDestinations(query) {
+            fetch(`/api/destination-autocomplete/?q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(data => {
+                    showDropdown(data.results, query);
+                })
+                .catch(() => hideDropdown());
+        }
 
+        // Infinite Continuous Horizontal Auto-Scroll (No user interaction needed)
+        const scroller = document.querySelector('.scroller');
+        const scrollerInner = document.querySelector('.scroller-inner');
+        if (scroller && scrollerInner) {
+            let scrollPos = 0;
+            const scrollSpeed = 0.9; // Smooth continuous ticker
+            let isPaused = false;
+
+            scroller.addEventListener('mouseenter', () => { isPaused = true; });
+            scroller.addEventListener('mouseleave', () => { isPaused = false; });
+
+            function animateTicker() {
+                if (!isPaused) {
+                    scrollPos += scrollSpeed;
+                    const halfWidth = scrollerInner.scrollWidth / 2;
+                    if (halfWidth > 0 && scrollPos >= halfWidth) {
+                        scrollPos = 0;
+                    }
+                    scrollerInner.style.transform = `translateX(-${scrollPos}px)`;
+                }
+                requestAnimationFrame(animateTicker);
+            }
+            // Switch from CSS to JS ticker for guaranteed 60fps continuous horizontal motion
+            scrollerInner.style.animation = 'none';
+            requestAnimationFrame(animateTicker);
+        }
+
+        // Hero Background Dynamic Slideshow (Swaps scenery every 10 seconds smoothly)
+        const heroSlides = document.querySelectorAll('.hero-bg-slide');
+        if (heroSlides && heroSlides.length > 1) {
+            let currentHeroIndex = 0;
+            setInterval(() => {
+                heroSlides[currentHeroIndex].classList.remove('active');
+                currentHeroIndex = (currentHeroIndex + 1) % heroSlides.length;
+                heroSlides[currentHeroIndex].classList.add('active');
+            }, 10000);
+        }
+    });
+
+    // Interactive Like toggle for Community Cards on Homepage
+    function toggleHomeLike(btn) {
+        const heart = btn.querySelector('i');
+        const countSpan = btn.querySelector('.like-count');
+        if (!heart || !countSpan) return;
+
+        let count = parseInt(countSpan.textContent, 10) || 0;
+        if (heart.classList.contains('fa-regular')) {
+            heart.classList.remove('fa-regular');
+            heart.classList.add('fa-solid');
+            heart.style.transform = 'scale(1.25)';
+            setTimeout(() => { heart.style.transform = 'scale(1)'; }, 200);
+            countSpan.textContent = count + 1;
+        } else {
+            heart.classList.remove('fa-solid');
+            heart.classList.add('fa-regular');
+            countSpan.textContent = Math.max(0, count - 1);
+        }
+    }
+</script>
 {% endblock %}

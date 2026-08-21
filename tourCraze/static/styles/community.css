@@ -1,102 +1,831 @@
-.navbar-brand-custom{
-    color: #ffffff !important;
-    font-weight: bold;
+/* ==========================================================================
+   TourCraze Social Travel Community (Instagram + Facebook Hybrid) CSS
+   ========================================================================== */
+
+:root {
+    --community-bg: #0c111f;
+    --card-bg: #111827;
+    --card-surface: #1a2236;
+    --card-border: rgba(255, 255, 255, 0.12);
+    --gold: #F8C922;
+    --sky: #38bdf8;
+    --pink-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    --gold-gradient: linear-gradient(135deg, #F8C922 0%, #FFD84D 100%);
+    --text-primary: #FFFFFF;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
 }
 
-body{
-    padding: 0%;
-    margin: 0%;
+body {
+    background-color: var(--community-bg) !important;
+    color: var(--text-primary);
 }
 
-.custom-toggler .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+.community-wrapper {
+    background-color: var(--community-bg);
+    min-height: 100vh;
+    padding-top: 24px;
+    padding-bottom: 80px;
 }
 
-.custom-toggler {
-    border-color: #ffffff !important;
+/* ==========================================================================
+   3-Column Layout
+   ========================================================================== */
+.community-layout-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr 320px;
+    gap: 28px;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 16px;
+    align-items: start;
 }
 
-.posts{
+/* ==========================================================================
+   Left Navigation Sidebar
+   ========================================================================== */
+.sidebar-sticky-box {
+    position: sticky;
+    top: 90px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 24px 18px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.user-mini-card {
     display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 18px;
+}
+
+.user-mini-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+}
+
+.nav-pill-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.98rem;
+    transition: all 0.2s ease;
+    margin-bottom: 6px;
+}
+
+.nav-pill-item i {
+    font-size: 1.15rem;
+    width: 24px;
+    text-align: center;
+}
+
+.nav-pill-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+}
+
+.nav-pill-item.active {
+    background: rgba(248, 201, 34, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(248, 201, 34, 0.3);
+}
+
+.btn-create-post-cta {
+    background: var(--gold-gradient) !important;
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-size: 1rem !important;
+    border: none !important;
+    border-radius: 16px !important;
+    padding: 14px 20px !important;
+    width: 100%;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    box-shadow: 0 8px 24px rgba(248, 201, 34, 0.35);
+    transition: all 0.25s ease !important;
+    cursor: pointer;
 }
 
-.main-posts{
-    width: 50%; 
-    height: 30%; 
-    background-color: #ffffff; 
-    border-radius: 15px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1); /* Shadow */
-    padding: 20px;
-    margin: 50px auto; 
-    /* text-align: center;  */
+.btn-create-post-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(248, 201, 34, 0.5);
 }
 
-.img-name{
+/* ==========================================================================
+   Center Feed: Stories Tray
+   ========================================================================== */
+.stories-tray-box {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+}
+
+.stories-scroll-container {
     display: flex;
-    align-items: center;
-    
+    gap: 18px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
 }
 
-h6{
-    padding-left: 10px;
+.stories-scroll-container::-webkit-scrollbar {
+    display: none;
 }
 
-.post-icon{
-    width: 50px; /* Adjust the size of the image icon */
-    height: 50px; /* Adjust the size of the image icon */
-    border-radius: 50%; /* Makes the image circular */
-    overflow: hidden; /* Ensures the image fits within the circular frame */
-    /* border: 5px solid #ffffff; Adds a white border/frame around the image */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1); /* Adds shadow */
-    object-fit: cover; /* Ensures the image covers the entire container without distortion */
-}
-
-.post-text{
-    padding-top: 10px;
-    text-align: left;
-}
-
-.post-image{
-    width: 90%;
-    height: 90%;
-    padding-top: 20px;
-}
-
-.post-react{
+.story-circle-item {
     display: flex;
-    gap: 4%;
-}
-
-.icons-react{
-    display: flex;
-    justify-content: end;
-    align-items: center;
     flex-direction: column;
-    gap: 8%;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    width: 76px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
 }
 
-.icon{
-    font-size: x-large;
+.story-circle-item:hover {
+    transform: scale(1.06);
 }
 
-.content-comment{
+.story-ring-wrapper {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: var(--pink-gradient);
+    padding: 3px;
     display: flex;
-    justify-content:flex-start !important;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(220, 39, 67, 0.3);
 }
 
-.button-color{
-    background-color: #02529C !important;
+.story-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--card-bg);
 }
 
-.custom-textarea{
-    width: 85% !important;
+.story-username-label {
+    font-size: 0.78rem;
+    color: #E2E8F0;
+    margin-top: 6px;
+    width: 74px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
 }
 
-.form-group{
+/* ==========================================================================
+   Center Feed: Quick Post Composer
+   ========================================================================== */
+.quick-composer-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 22px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+}
+
+.composer-top-row {
     display: flex;
-    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.composer-input-trigger {
+    flex: 1;
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
+    border-radius: 30px;
+    padding: 12px 20px;
+    color: var(--text-secondary);
+    font-size: 0.98rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.composer-input-trigger:hover {
+    background: #242e47;
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #FFFFFF;
+}
+
+.composer-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-top: 12px;
+    border-top: 1px solid var(--card-border);
+}
+
+.composer-action-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.composer-action-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+}
+
+/* ==========================================================================
+   Post Card (Instagram + Facebook Hybrid)
+   ========================================================================== */
+.post-social-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    margin-bottom: 28px;
+    overflow: hidden;
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.45);
+    transition: transform 0.2s ease;
+}
+
+.post-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+}
+
+.post-author-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+.post-author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.post-author-meta h6 {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.post-location-tag {
+    font-size: 0.82rem;
+    color: var(--sky);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-follow-toggle {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: var(--sky);
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-follow-toggle:hover, .btn-follow-toggle.following {
+    background: var(--sky);
+    color: #0f172a;
+}
+
+.btn-follow-toggle.following {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #E2E8F0;
+}
+
+/* Media Display Container */
+.post-media-container {
+    position: relative;
+    width: 100%;
+    background: #000000;
+    max-height: 580px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.post-media-img {
+    width: 100%;
+    height: auto;
+    max-height: 580px;
+    object-fit: cover;
+}
+
+.post-video-player {
+    width: 100%;
+    max-height: 580px;
+    object-fit: contain;
+    background: #000;
+}
+
+.post-type-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Double Tap Heart Burst Animation */
+.double-tap-heart {
+    position: absolute;
+    font-size: 5.5rem;
+    color: #ef4444;
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10;
+    text-shadow: 0 0 30px rgba(239, 68, 68, 0.8);
+}
+
+.double-tap-heart.animate {
+    opacity: 1;
+    transform: scale(1.2);
+    animation: heartBurst 0.8s ease forwards;
+}
+
+@keyframes heartBurst {
+    0% { opacity: 0; transform: scale(0.3); }
+    50% { opacity: 1; transform: scale(1.3); }
+    100% { opacity: 0; transform: scale(1.8) translateY(-30px); }
+}
+
+/* Post Action Buttons */
+.post-actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px 8px;
+}
+
+.post-actions-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.post-action-icon-btn {
+    background: transparent;
+    border: none;
+    color: #E2E8F0;
+    font-size: 1.45rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.post-action-icon-btn:hover {
+    transform: scale(1.15);
+    color: #FFFFFF;
+}
+
+.post-action-icon-btn.liked {
+    color: #ef4444 !important;
+}
+
+.post-action-icon-btn.saved {
+    color: var(--gold) !important;
+}
+
+/* Post Content & Captions */
+.post-body-container {
+    padding: 0 20px 16px;
+}
+
+.post-likes-counter {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.post-caption-text {
+    font-size: 0.95rem;
+    color: #E2E8F0;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.post-caption-text a.hashtag {
+    color: var(--sky);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.post-timestamp-tag {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Linked Smart Itinerary Card */
+.linked-itinerary-banner {
+    background: rgba(248, 201, 34, 0.08);
+    border: 1.5px solid rgba(248, 201, 34, 0.35);
+    border-radius: 18px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.linked-itinerary-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.itinerary-compass-icon {
+    width: 38px;
+    height: 38px;
+    background: rgba(248, 201, 34, 0.2);
+    border-radius: 10px;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.btn-view-itinerary {
+    background: var(--gold);
+    color: #0f172a !important;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-view-itinerary:hover {
+    background: #FFD84D;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(248, 201, 34, 0.4);
+}
+
+/* Comment Thread & Inline Composer */
+.comments-thread-box {
+    border-top: 1px solid var(--card-border);
+    padding: 14px 20px;
+}
+
+.comment-row-item {
+    display: flex;
+    align-items: flex-start;
     gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.comment-author-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.comment-author-name {
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-right: 6px;
+    text-decoration: none;
+}
+
+.comment-text-content {
+    color: #CBD5E1;
+    word-break: break-word;
+}
+
+.inline-comment-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.inline-comment-input {
+    flex: 1;
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 10px 18px;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+}
+
+.inline-comment-input:focus {
+    background: #242e47;
+    border-color: var(--gold);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(248, 201, 34, 0.2);
+}
+
+.btn-post-comment {
+    background: transparent;
+    border: none;
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0 8px;
+    transition: color 0.2s ease;
+}
+
+.btn-post-comment:hover {
+    color: #FFD84D;
+}
+
+/* ==========================================================================
+   Right Discovery Sidebar
+   ========================================================================== */
+.suggested-creators-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 22px 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+}
+
+.sidebar-heading {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.creator-suggestion-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.creator-suggestion-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+.creator-suggestion-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid var(--gold);
+}
+
+.creator-suggestion-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0;
+    color: #FFFFFF;
+}
+
+.creator-suggestion-bio {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Trending Tags Box */
+.trending-dest-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--card-surface);
+    border-radius: 14px;
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: #FFFFFF;
+    transition: all 0.2s ease;
+}
+
+.trending-dest-item:hover {
+    background: #242e47;
+    transform: translateX(4px);
+    color: var(--gold);
+}
+
+/* ==========================================================================
+   Create Post Modal
+   ========================================================================== */
+.custom-modal-dark .modal-content {
+    background: #111827 !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 28px !important;
+    color: #E2E8F0 !important;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.75) !important;
+}
+
+.custom-modal-dark .modal-header {
+    border-bottom: 1px solid var(--card-border);
+    padding: 20px 24px;
+}
+
+.custom-modal-dark .modal-body {
+    padding: 24px;
+}
+
+/* ==========================================================================
+   Full-Screen Instagram Story Viewer Modal
+   ========================================================================== */
+.story-viewer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(12px);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.story-viewer-overlay.active {
+    display: flex;
+}
+
+.story-box-phone {
+    width: 100%;
+    max-width: 420px;
+    height: 90vh;
+    max-height: 780px;
+    background: #000000;
+    border-radius: 28px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+}
+
+.story-progress-bar-container {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.story-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #FFFFFF;
+    transition: width linear;
+}
+
+.story-header-overlay {
+    position: absolute;
+    top: 24px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+.story-creator-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #FFFFFF;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.story-creator-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    object-fit: cover;
+}
+
+.story-media-view {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.story-close-btn {
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: #FFFFFF;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1100px) {
+    .community-layout-grid {
+        grid-template-columns: 220px 1fr;
+    }
+    .right-discovery-col {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .community-layout-grid {
+        grid-template-columns: 1fr;
+    }
+    .left-navigation-col {
+        display: none;
+    }
+    .post-social-card {
+        border-radius: 18px;
+    }
 }

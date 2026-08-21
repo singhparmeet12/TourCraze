@@ -1,64 +1,102 @@
-{% load static %}
-
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="{% static 'styles/navbar.css' %}">
-
-</head>
-
-<body>
-	<nav class="navbar navbar-expand-lg">
-		<div class="container-fluid">
-			<a class="navbar-brand navbar-brand-custom" href="{% url 'home_page' %}">TourCraze</a>
-			<button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item">
-						<a class="nav-link" aria-current="page" href="{% url 'home_page' %}">Home</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{% url 'community_display' 1 %}">Community</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Hotels & Restaurants</a>
-					</li>
-					{% comment %} <li class="nav-item">
-						<a class="nav-link" href="{% url 'hotel_details' %}">Hotels Registration</a>
-					</li> {% endcomment %}
-					<li class="nav-item">
-						<a class="nav-link" href="{% url 'tours_page' 1 %}">Tours & Plans</a>
-					</li>
-					{% comment %} <li class="nav-item">
-						<a class="nav-link" href="{% url 'tours_details' %}">Tour Registration</a>
-					</li> {% endcomment %}
-					<li class="nav-item">
-						<a class="nav-link" href="{% url 'post_content' %}">Post</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{% url 'company_registration' %}">Company Registration</a>
-					</li>
-				</ul>
-				<div class="style-search">
-					{% comment %} <form class="d-flex" role="search">
-						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-						<button class="btn btn-outline-success" type="submit">Search</button>
-					</form> {% endcomment %}
-					<a href="#">
-						<div class="avatar">
-							<img class="avatar1" src="{{request.user.avatar.url}}" />
-						</div>
-						<div>
-							<p>{{request.user.name}}</p>
-							<span class = "block-span">@{{request.user.username}}</span>
-						</div>
+<nav class="navbar navbar-expand-lg">
+	<div class="container-fluid">
+		<a class="navbar-brand navbar-brand-custom" href="{% url 'home_page' %}">
+			<i class="fa-solid fa-earth-americas"></i>
+			TourCraze
+		</a>
+		<button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse"
+			data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link" aria-current="page" href="{% url 'home_page' %}">
+						<i class="fa-solid fa-house"></i> Home
 					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'plan_trip' %}">
+						<i class="fa-solid fa-wand-magic-sparkles"></i> Trip Planner
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'my_trips' %}">
+						<i class="fa-solid fa-suitcase-rolling"></i> My Trips
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'all_destinations' %}">
+						<i class="fa-solid fa-compass"></i> Destinations
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'tripsplit_hub' %}">
+						<i class="fa-solid fa-receipt"></i> TripSplit
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'hotels_hub' %}">
+						<i class="fa-solid fa-hotel"></i> Stays
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'community_list' %}">
+						<i class="fa-solid fa-users"></i> Community
+					</a>
+				</li>
+			</ul>
+			<div class="style-search d-flex align-items-center gap-3">
+				{% if request.user.is_authenticated %}
+				<a href="#">
+					<div class="avatar">
+						<img class="avatar1" src="{{request.user.avatar.url}}" alt="{{request.user.username}}" />
+					</div>
+					<div>
+						<p>{{request.user.name|default:request.user.username}}</p>
+						<span class="block-span">@{{request.user.username}}</span>
+					</div>
+				</a>
+				{% else %}
+				<button type="button"
+					class="btn btn-sm btn-outline-warning rounded-pill d-none d-md-inline-flex align-items-center gap-2 px-3 py-1 fw-bold"
+					style="border: 1.5px solid #F8C922; color: #F8C922; transition: all 0.25s ease;"
+					data-bs-toggle="modal" data-bs-target="#authComingSoonModal">
+					<i class="fa-solid fa-arrow-right-to-bracket"></i> Login / Sign Up
+				</button>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</nav>
+
+<!-- Login / Sign Up Coming Soon Modal -->
+<div class="modal fade" id="authComingSoonModal" tabindex="-1" aria-labelledby="authComingSoonLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+		<div class="modal-content text-center p-4"
+			style="background: #0f172a; border: 1.5px solid rgba(248, 201, 34, 0.4); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); color: #FFFFFF;">
+			<div class="modal-header border-0 pb-0 justify-content-end">
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body pt-0">
+				<div
+					style="width: 64px; height: 64px; border-radius: 20px; background: rgba(248, 201, 34, 0.15); color: #F8C922; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+					<i class="fa-solid fa-user-astronaut"></i>
+				</div>
+				<h4 class="fw-bold text-white mb-2" id="authComingSoonLabel">Accounts & Sync Coming Soon!</h4>
+				<p class="text-secondary small mb-4" style="line-height: 1.6;">
+					We're preparing user accounts for the upcoming cloud launch. You will soon be able to log in, sync
+					your custom trip plans across devices, and collaborate live with your travel crew!
+				</p>
+				<div class="d-grid gap-2">
+					<button type="button" class="btn btn-warning fw-bold rounded-pill py-2 text-dark"
+						style="background: #F8C922; border: none;" data-bs-dismiss="modal">
+						<i class="fa-solid fa-check me-1"></i> Got It, Can't Wait!
+					</button>
 				</div>
 			</div>
 		</div>
-	</nav>	
-</body>
-
-</html>
+	</div>
+</div>

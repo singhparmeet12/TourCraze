@@ -1,0 +1,1177 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block styles %}
+<style>
+    /* Premium All Destinations Discovery Studio Styles */
+    .dest-page-wrapper {
+        background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0c111f 100%);
+        min-height: 100vh;
+        color: #E2E8F0;
+        padding-bottom: 80px;
+    }
+
+    /* Hero Banner */
+    .dest-hero-section {
+        padding: 50px 0 35px 0;
+        text-align: center;
+        position: relative;
+    }
+
+    .dest-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(248, 201, 34, 0.15);
+        color: #F8C922;
+        border: 1px solid rgba(248, 201, 34, 0.35);
+        padding: 8px 20px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        letter-spacing: 0.5px;
+        margin-bottom: 18px;
+    }
+
+    .dest-hero-title {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+        letter-spacing: -0.5px;
+        margin-bottom: 14px;
+    }
+
+    .dest-hero-subtitle {
+        color: #94A3B8 !important;
+        font-size: 1.15rem;
+        max-width: 720px;
+        margin: 0 auto 28px auto;
+        line-height: 1.6;
+    }
+
+    /* Interactive Action Bar */
+    .dest-action-bar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .btn-roulette {
+        background: linear-gradient(135deg, #F8C922 0%, #F59E0B 100%);
+        color: #071021 !important;
+        font-weight: 700;
+        border: none;
+        border-radius: 9999px;
+        padding: 12px 28px;
+        box-shadow: 0 8px 24px rgba(248, 201, 34, 0.35);
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .btn-roulette:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 12px 30px rgba(248, 201, 34, 0.5);
+    }
+
+    .btn-wishlist-trigger {
+        background: rgba(255, 255, 255, 0.08);
+        color: #FFFFFF !important;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 9999px;
+        padding: 12px 24px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .btn-wishlist-trigger:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #F43F5E;
+        transform: translateY(-2px);
+    }
+
+    /* Control Deck (Search & Filter Hub) */
+    .control-deck {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 24px;
+        padding: 24px;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        margin-bottom: 35px;
+    }
+
+    .search-wrapper {
+        position: relative;
+    }
+
+    .search-wrapper i.search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94A3B8;
+        font-size: 1.1rem;
+    }
+
+    .search-input-dest {
+        background: rgba(30, 41, 59, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+        border-radius: 14px !important;
+        color: #FFFFFF !important;
+        padding: 12px 45px 12px 48px !important;
+        font-size: 1rem !important;
+        transition: all 0.25s ease;
+    }
+
+    .search-input-dest:focus {
+        border-color: #F8C922 !important;
+        box-shadow: 0 0 0 3px rgba(248, 201, 34, 0.25) !important;
+        background: rgba(30, 41, 59, 1) !important;
+    }
+
+    .search-clear-btn {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: #94A3B8;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: none;
+    }
+
+    /* Category Pill Navigation */
+    .category-pills-bar {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scrollbar-width: thin;
+    }
+
+    .category-pills-bar::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .category-pills-bar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+    }
+
+    .cat-tab-btn {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #94A3B8;
+        padding: 8px 18px;
+        border-radius: 9999px;
+        font-size: 0.92rem;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .cat-tab-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #FFFFFF;
+    }
+
+    .cat-tab-btn.active {
+        background: #F8C922;
+        color: #071021;
+        border-color: #F8C922;
+        font-weight: 700;
+        box-shadow: 0 4px 14px rgba(248, 201, 34, 0.35);
+    }
+
+    .cat-badge-count {
+        background: rgba(0, 0, 0, 0.18);
+        color: inherit;
+        padding: 2px 7px;
+        border-radius: 10px;
+        font-size: 0.78rem;
+    }
+
+    .cat-tab-btn.active .cat-badge-count {
+        background: rgba(0, 0, 0, 0.15);
+        color: #071021;
+    }
+
+    /* Vibe Filter Chips */
+    .vibe-chips-bar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .vibe-chip {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #CBD5E1;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-size: 0.84rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .vibe-chip:hover {
+        border-color: #94A3B8;
+        color: #FFFFFF;
+    }
+
+    .vibe-chip.active {
+        background: rgba(59, 130, 246, 0.2);
+        border-color: #60A5FA;
+        color: #93C5FD;
+        font-weight: 700;
+    }
+
+    /* Destination Grid Matrix */
+    .dest-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+    }
+
+    .dest-card {
+        background: #1E293B;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 22px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 470px;
+        position: relative;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .dest-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(248, 201, 34, 0.6);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(248, 201, 34, 0.15);
+    }
+
+    /* Card Top Image */
+    .dest-card-media {
+        position: relative;
+        height: 220px;
+        width: 100%;
+        overflow: hidden;
+        background-color: #0F172A;
+    }
+
+    .dest-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dest-card:hover .dest-card-media img {
+        transform: scale(1.08);
+    }
+
+    .dest-badge-top-left {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #F8C922;
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        border-radius: 12px;
+        z-index: 2;
+    }
+
+    .dest-rating-badge {
+        position: absolute;
+        top: 14px;
+        right: 54px;
+        background: #F8C922;
+        color: #071021;
+        font-weight: 800;
+        font-size: 0.82rem;
+        padding: 4px 10px;
+        border-radius: 12px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .dest-wishlist-btn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        z-index: 2;
+    }
+
+    .dest-wishlist-btn:hover {
+        background: #FFFFFF;
+        color: #F43F5E;
+        transform: scale(1.15);
+    }
+
+    .dest-wishlist-btn.saved {
+        background: #F43F5E;
+        color: #FFFFFF;
+        border-color: #F43F5E;
+    }
+
+    /* Card Body */
+    .dest-card-body {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: #1E293B;
+    }
+
+    .dest-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 4px;
+    }
+
+    .dest-name {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+        margin-bottom: 2px;
+        line-height: 1.3;
+    }
+
+    .dest-state {
+        color: #F8C922 !important;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 8px;
+    }
+
+    .dest-desc-text {
+        color: #CBD5E1 !important;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 12px;
+    }
+
+    .dest-meta-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 8px 12px;
+        margin-bottom: 14px;
+        font-size: 0.82rem;
+    }
+
+    .dest-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #94A3B8;
+    }
+
+    .dest-meta-item strong {
+        color: #FFFFFF;
+    }
+
+    /* Card Action Footer */
+    .dest-card-actions {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+    }
+
+    .btn-plan-dest {
+        background: #F8C922;
+        color: #071021 !important;
+        font-weight: 700;
+        border: none;
+        border-radius: 12px;
+        padding: 9px 16px;
+        font-size: 0.9rem;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-plan-dest:hover {
+        background: #F59E0B;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(248, 201, 34, 0.35);
+    }
+
+    .btn-quick-view {
+        background: rgba(255, 255, 255, 0.08);
+        color: #FFFFFF !important;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 12px;
+        padding: 9px 12px;
+        font-size: 0.88rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-quick-view:hover {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: #FFFFFF;
+    }
+
+    /* Empty Filter State */
+    .empty-dest-box {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 60px 20px;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+    }
+
+    /* Floating Wishlist Drawer Button */
+    .floating-wishlist-pill {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);
+        color: #FFFFFF !important;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 9999px;
+        padding: 12px 24px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        box-shadow: 0 10px 30px rgba(244, 63, 94, 0.5);
+        display: none;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        z-index: 1040;
+        transition: all 0.3s ease;
+    }
+
+    .floating-wishlist-pill:hover {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 14px 35px rgba(244, 63, 94, 0.7);
+    }
+
+    /* Roulette Modal Animations */
+    .roulette-slot-box {
+        position: relative;
+        height: 260px;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 2px solid #F8C922;
+        box-shadow: 0 0 30px rgba(248, 201, 34, 0.4);
+        background: #071021;
+    }
+
+    .roulette-slot-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .roulette-overlay-data {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        background: linear-gradient(180deg, transparent 0%, rgba(7, 16, 33, 0.95) 80%);
+    }
+
+    .spinning-flash {
+        animation: neonPulse 0.15s infinite alternate;
+    }
+
+    @keyframes neonPulse {
+        0% { filter: brightness(1) drop-shadow(0 0 10px #F8C922); }
+        100% { filter: brightness(1.3) drop-shadow(0 0 25px #F59E0B); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dest-page-wrapper">
+    <div class="container">
+        
+        <!-- Hero Header -->
+        <section class="dest-hero-section">
+            <span class="dest-hero-badge">
+                <i class="fa-solid fa-compass"></i> 180+ HANDCRAFTED DESTINATIONS ACROSS INDIA
+            </span>
+            <h1 class="dest-hero-title">Discover Your Next Dream Journey</h1>
+            <p class="dest-hero-subtitle">
+                Explore snow-capped alpine passes, hidden golden beaches, scenic highway road trips, wild waterfalls, and heritage mountain cafes.
+            </p>
+
+            <!-- Action Bar -->
+            <div class="dest-action-bar">
+                <button type="button" class="btn-wishlist-trigger" onclick="openWishlistOffcanvas()">
+                    <i class="fa-solid fa-heart text-danger"></i> Saved Wishlist (<span id="topWishlistCount">0</span>)
+                </button>
+            </div>
+        </section>
+
+        <!-- Control Deck: Search, Filter Tabs & Sort -->
+        <div class="control-deck">
+            <div class="row g-3 align-items-center mb-3">
+                <!-- Search Input -->
+                <div class="col-lg-8 col-md-7">
+                    <div class="search-wrapper">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="destSearchInput" class="form-control search-input-dest" 
+                               placeholder="Search 180+ places by name, state (e.g. Himachal, Goa), vibe, or season...">
+                        <button type="button" id="searchClearBtn" class="search-clear-btn" onclick="clearDestSearch()">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sort Dropdown -->
+                <div class="col-lg-4 col-md-5 d-flex align-items-center justify-content-md-end gap-2">
+                    <label class="text-secondary small fw-semibold mb-0" style="white-space: nowrap;">Sort by:</label>
+                    <select id="destSortSelect" class="form-select bg-dark text-white border-secondary rounded-3" style="max-width: 220px;">
+                        <option value="rating_desc">⭐ Highest Rated</option>
+                        <option value="budget_asc">💰 Budget: Low to High</option>
+                        <option value="budget_desc">💎 Budget: High to Low</option>
+                        <option value="days_asc">⏳ Duration: Short to Long</option>
+                        <option value="days_desc">🗺️ Duration: Long to Short</option>
+                        <option value="name_asc">🔤 Alphabetical (A - Z)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="category-pills-bar">
+                <button type="button" class="cat-tab-btn active" data-category="all" onclick="setCategoryFilter('all', this)">
+                    ✨ All Destinations <span class="cat-badge-count">{{ counts.all }}</span>
+                </button>
+                <button type="button" class="cat-tab-btn" data-category="trending" onclick="setCategoryFilter('trending', this)">
+                    🔥 Trending <span class="cat-badge-count">{{ counts.trending }}</span>
+                </button>
+                <button type="button" class="cat-tab-btn" data-category="mountains" onclick="setCategoryFilter('mountains', this)">
+                    🏔️ Mountains <span class="cat-badge-count">{{ counts.mountains }}</span>
+                </button>
+                <button type="button" class="cat-tab-btn" data-category="beach" onclick="setCategoryFilter('beach', this)">
+                    🏖️ Beaches <span class="cat-badge-count">{{ counts.beach }}</span>
+                </button>
+                <button type="button" class="cat-tab-btn" data-category="road-trip" onclick="setCategoryFilter('road-trip', this)">
+                    🚗 Road Trips <span class="cat-badge-count">{{ counts.road_trip }}</span>
+                </button>
+                <button type="button" class="cat-tab-btn" data-category="waterfall" onclick="setCategoryFilter('waterfall', this)">
+                    🌊 Waterfalls <span class="cat-badge-count">{{ counts.waterfall }}</span>
+                </button>
+                <button type="button" class="cat-tab-btn" data-category="cafe" onclick="setCategoryFilter('cafe', this)">
+                    ☕ Cafes & Bistros <span class="cat-badge-count">{{ counts.cafe }}</span>
+                </button>
+            </div>
+
+            <!-- Vibe Quick Filter Chips -->
+            <div class="vibe-chips-bar">
+                <span class="text-secondary small me-2 align-self-center">Quick Vibes:</span>
+                <button type="button" class="vibe-chip" data-vibe="budget" onclick="toggleVibeFilter('budget', this)">💰 Under ₹15,000</button>
+                <button type="button" class="vibe-chip" data-vibe="weekend" onclick="toggleVibeFilter('weekend', this)">⚡ Weekend (≤ 3 Days)</button>
+                <button type="button" class="vibe-chip" data-vibe="expedition" onclick="toggleVibeFilter('expedition', this)">🗺️ Long Trip (≥ 5 Days)</button>
+                <button type="button" class="vibe-chip" data-vibe="toprated" onclick="toggleVibeFilter('toprated', this)">⭐ Top Rated (4.9★)</button>
+                <button type="button" class="vibe-chip" data-vibe="luxury" onclick="toggleVibeFilter('luxury', this)">💎 Luxury & Scenic</button>
+            </div>
+
+            <!-- Live Status Row -->
+            <div class="d-flex justify-content-between align-items-center mt-3 pt-2 text-secondary small">
+                <div>
+                    Showing <strong class="text-white" id="visibleCountText">{{ total_count }}</strong> of {{ total_count }} destinations
+                </div>
+                <button type="button" id="resetFiltersBtn" class="btn btn-link btn-sm text-warning text-decoration-none p-0 d-none" onclick="resetAllFilters()">
+                    <i class="fa-solid fa-rotate-left me-1"></i> Reset All Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Destinations Grid -->
+        <div class="dest-grid" id="destinationsGrid">
+            {% for item in destinations %}
+            <div class="dest-card" 
+                 data-id="{{ forloop.counter0 }}"
+                 data-name="{{ item.name|lower }}"
+                 data-state="{{ item.state|default:''|lower }}"
+                 data-category="{{ item.category }}"
+                 data-rating="{{ item.rating_float }}"
+                 data-budget="{{ item.budget_num }}"
+                 data-days="{{ item.days }}"
+                 data-style="{{ item.style|lower }}"
+                 data-tags="{{ item.tag|lower }}">
+
+                <!-- Media -->
+                <div class="dest-card-media">
+                    <img src="{{ item.img }}" alt="{{ item.name }}" loading="lazy">
+                    <span class="dest-badge-top-left">{{ item.tag }}</span>
+                    <span class="dest-rating-badge">
+                        <i class="fa-solid fa-star"></i> {{ item.rating }}
+                    </span>
+                    <button type="button" class="dest-wishlist-btn" title="Save to Wishlist" onclick="toggleWishlist('{{ item.name|escapejs }}', this)">
+                        <i class="fa-regular fa-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Body -->
+                <div class="dest-card-body">
+                    <div>
+                        <h4 class="dest-name">{{ item.name }}</h4>
+                        {% if item.state %}
+                        <div class="dest-state">
+                            <i class="fa-solid fa-location-dot"></i> {{ item.state }}
+                        </div>
+                        {% endif %}
+                        <p class="dest-desc-text">{{ item.description }}</p>
+                    </div>
+
+                    <div>
+                        <div class="dest-meta-row">
+                            <div class="dest-meta-item">
+                                <i class="fa-regular fa-clock text-warning"></i>
+                                <span><strong>{{ item.days }}</strong> Days</span>
+                            </div>
+                            <div class="dest-meta-item">
+                                <i class="fa-regular fa-sun text-warning"></i>
+                                <span>{{ item.season }}</span>
+                            </div>
+                            <div class="dest-meta-item">
+                                <i class="fa-solid fa-indian-rupee-sign text-warning"></i>
+                                <span><strong>₹{{ item.budget_num|default:15000 }}</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="dest-card-actions">
+                            <a href="{% url 'plan_trip' %}?destination={{ item.name|urlencode }}&days={{ item.days }}&budget={{ item.budget_num }}&style={{ item.style }}&auto=1" 
+                               class="btn-plan-dest">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Craft Itinerary
+                            </a>
+                            <button type="button" class="btn-quick-view" title="Quick Insights" onclick="openQuickView('{{ forloop.counter0 }}')">
+                                <i class="fa-regular fa-eye"></i> Look
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+            <!-- Empty Filter State -->
+            <div id="noResultsBox" class="empty-dest-box d-none">
+                <i class="fa-solid fa-compass-drafting fs-1 text-warning mb-3"></i>
+                <h3 class="text-white fw-bold mb-2">No Destinations Match Your Filter</h3>
+                <p class="text-secondary mb-4 mx-auto" style="max-width: 480px;">
+                    We couldn't find any places matching your selected criteria. Try adjusting your search keyword or clearing vibe filters!
+                </p>
+                <button type="button" class="btn btn-warning rounded-pill px-4 fw-bold text-dark" onclick="resetAllFilters()">
+                    <i class="fa-solid fa-rotate-left me-1"></i> Reset Filters & Show All
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Floating Wishlist Trigger Button -->
+<div id="floatingWishlistBtn" class="floating-wishlist-pill" onclick="openWishlistOffcanvas()">
+    <i class="fa-solid fa-heart"></i> Saved Wishlist (<span class="wl-count-num">0</span>)
+</div>
+
+<!-- Travel Roulette Modal (Slot Machine Animation) -->
+<div class="modal fade" id="travelRouletteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background: #0c111f; border: 2px solid #F8C922; border-radius: 28px; color: #FFFFFF; box-shadow: 0 0 50px rgba(248, 201, 34, 0.3);">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(248, 201, 34, 0.15); color: #F8C922; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fa-solid fa-dice-d20"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold text-white mb-0">🎲 TourCraze Travel Roulette</h5>
+                        <span class="small text-warning">Where will your wanderlust take you next?</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body py-4 text-center">
+                <!-- Roulette Slot Screen -->
+                <div id="rouletteScreen" class="roulette-slot-box mb-4">
+                    <img id="rouletteImg" src="" alt="Mystery Destination">
+                    <div class="roulette-overlay-data text-start">
+                        <span id="rouletteTag" class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2">🏔️ Scenic Gem</span>
+                        <h3 id="rouletteName" class="text-white fw-bold mb-1">Spinning the Wheel...</h3>
+                        <p id="rouletteState" class="text-warning small mb-0"><i class="fa-solid fa-location-dot me-1"></i>India</p>
+                    </div>
+                </div>
+
+                <div id="rouletteDetailsBox" class="p-3 rounded-4 mb-4" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <p id="rouletteDesc" class="text-light mb-3" style="font-size: 0.98rem; line-height: 1.6;">
+                        Press <strong>"Spin the Wheel"</strong> to let TourCraze randomly curate an epic mystery destination from 180+ handcrafted Indian locations!
+                    </p>
+                    <div class="d-flex justify-content-center gap-4 text-secondary small">
+                        <div><i class="fa-regular fa-clock text-warning me-1"></i> <span id="rouletteDays" class="text-white fw-bold">4 Days</span></div>
+                        <div><i class="fa-solid fa-indian-rupee-sign text-warning me-1"></i> <span id="rouletteBudget" class="text-white fw-bold">₹16,000</span></div>
+                        <div><i class="fa-solid fa-star text-warning me-1"></i> <span id="rouletteRating" class="text-white fw-bold">4.9</span></div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <button type="button" id="spinAgainBtn" class="btn btn-outline-warning rounded-pill px-4 py-2 fw-bold" onclick="spinRouletteAnimation()">
+                        <i class="fa-solid fa-rotate me-1"></i> Spin Again!
+                    </button>
+                    <a id="roulettePlanLink" href="#" class="btn btn-warning rounded-pill px-5 py-2 fw-bold text-dark shadow" style="background: #F8C922; border: none;">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Craft Itinerary Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick View Modal -->
+<div class="modal fade" id="destinationQuickViewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 26px; color: #FFFFFF; overflow: hidden;">
+            <div class="position-relative" style="height: 250px; background: #000;">
+                <img id="qvImg" src="" style="width: 100%; height: 100%; object-fit: cover;" alt="">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="position-absolute bottom-0 start-0 end-0 p-4" style="background: linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0.95) 100%);">
+                    <span id="qvTag" class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-1">Tag</span>
+                    <h3 id="qvName" class="fw-bold text-white mb-0">Destination Name</h3>
+                    <span id="qvState" class="text-warning small"><i class="fa-solid fa-location-dot me-1"></i>State</span>
+                </div>
+            </div>
+
+            <div class="modal-body p-4">
+                <p id="qvDesc" class="text-light mb-4" style="font-size: 1.05rem; line-height: 1.6;"></p>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-4 text-center p-3 rounded-3" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div class="text-secondary small mb-1">Recommended Duration</div>
+                        <div id="qvDays" class="text-white fw-bold fs-5">5 Days</div>
+                    </div>
+                    <div class="col-4 text-center p-3 rounded-3" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div class="text-secondary small mb-1">Best Season</div>
+                        <div id="qvSeason" class="text-warning fw-bold fs-6">Oct - Jun</div>
+                    </div>
+                    <div class="col-4 text-center p-3 rounded-3" style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div class="text-secondary small mb-1">Estimated Budget</div>
+                        <div id="qvBudget" class="text-white fw-bold fs-5">₹18,000</div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-2">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4 text-light" data-bs-dismiss="modal">Close</button>
+                    <a id="qvPlanLink" href="#" class="btn btn-warning rounded-pill px-5 py-2 fw-bold text-dark shadow" style="background: #F8C922; border: none;">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Craft Day-by-Day Itinerary
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Wishlist Offcanvas Drawer -->
+<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="wishlistOffcanvas" style="background: #0f172a !important; border-left: 1px solid rgba(255, 255, 255, 0.15); width: 380px;">
+    <div class="offcanvas-header border-bottom" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-heart text-danger fs-5"></i>
+            <h5 class="offcanvas-title text-white fw-bold mb-0">My Travel Wishlist</h5>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column justify-content-between p-3">
+        <div id="wishlistItemsContainer">
+            <!-- Rendered dynamically -->
+        </div>
+
+        <div class="pt-3 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+            <button type="button" class="btn btn-outline-danger btn-sm w-100 rounded-pill mb-2" onclick="clearWishlist()">
+                <i class="fa-solid fa-trash me-1"></i> Clear Wishlist
+            </button>
+            <a href="{% url 'plan_trip' %}" class="btn btn-warning w-100 rounded-pill fw-bold text-dark py-2" style="background: #F8C922; border: none;">
+                <i class="fa-solid fa-plus me-1"></i> Plan a Custom Trip
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Embedded Catalog JSON for Instant Operations -->
+{{ destinations_json|json_script:"destinations-data-json" }}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const catalogData = JSON.parse(document.getElementById('destinations-data-json').textContent);
+        const searchInput = document.getElementById('destSearchInput');
+        const clearBtn = document.getElementById('searchClearBtn');
+        const sortSelect = document.getElementById('destSortSelect');
+        const grid = document.getElementById('destinationsGrid');
+        const cards = Array.from(document.querySelectorAll('.dest-card'));
+        const visibleCountText = document.getElementById('visibleCountText');
+        const noResultsBox = document.getElementById('noResultsBox');
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+
+        let activeCategory = 'all';
+        let activeVibes = new Set();
+
+        // 1. Live Search Handler
+        searchInput.addEventListener('input', function () {
+            const val = this.value.trim();
+            clearBtn.style.display = val ? 'block' : 'none';
+            filterAndSortGrid();
+        });
+
+        // 2. Sort Handler
+        sortSelect.addEventListener('change', filterAndSortGrid);
+
+        // 3. Category Filter
+        window.setCategoryFilter = function (cat, btn) {
+            document.querySelectorAll('.cat-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeCategory = cat;
+            filterAndSortGrid();
+        };
+
+        // 4. Vibe Filters
+        window.toggleVibeFilter = function (vibe, btn) {
+            if (activeVibes.has(vibe)) {
+                activeVibes.delete(vibe);
+                btn.classList.remove('active');
+            } else {
+                activeVibes.add(vibe);
+                btn.classList.add('active');
+            }
+            filterAndSortGrid();
+        };
+
+        // 5. Clear Search
+        window.clearDestSearch = function () {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            filterAndSortGrid();
+        };
+
+        // 6. Reset All Filters
+        window.resetAllFilters = function () {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            activeCategory = 'all';
+            activeVibes.clear();
+            document.querySelectorAll('.cat-tab-btn').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-category') === 'all');
+            });
+            document.querySelectorAll('.vibe-chip').forEach(b => b.classList.remove('active'));
+            sortSelect.value = 'rating_desc';
+            filterAndSortGrid();
+        };
+
+        // Core Filter & Sort Function
+        function filterAndSortGrid() {
+            const query = searchInput.value.trim().toLowerCase();
+            const sortVal = sortSelect.value;
+            let visibleCount = 0;
+
+            const isFiltered = query.length > 0 || activeCategory !== 'all' || activeVibes.size > 0;
+            resetFiltersBtn.classList.toggle('d-none', !isFiltered);
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                const state = card.getAttribute('data-state');
+                const cat = card.getAttribute('data-category');
+                const rating = parseFloat(card.getAttribute('data-rating')) || 0;
+                const budget = parseInt(card.getAttribute('data-budget'), 10) || 0;
+                const days = parseInt(card.getAttribute('data-days'), 10) || 0;
+                const style = card.getAttribute('data-style');
+                const tags = card.getAttribute('data-tags');
+
+                // Search matching
+                const matchesSearch = !query || 
+                    name.includes(query) || 
+                    state.includes(query) || 
+                    style.includes(query) || 
+                    tags.includes(query);
+
+                // Category matching
+                const matchesCat = (activeCategory === 'all') || (cat === activeCategory);
+
+                // Vibe matching
+                let matchesVibes = true;
+                if (activeVibes.has('budget') && budget > 15000) matchesVibes = false;
+                if (activeVibes.has('weekend') && days > 3) matchesVibes = false;
+                if (activeVibes.has('expedition') && days < 5) matchesVibes = false;
+                if (activeVibes.has('toprated') && rating < 4.9) matchesVibes = false;
+                if (activeVibes.has('luxury') && style !== 'luxury') matchesVibes = false;
+
+                const isVisible = matchesSearch && matchesCat && matchesVibes;
+                card.style.display = isVisible ? 'flex' : 'none';
+                if (isVisible) visibleCount++;
+            });
+
+            // Sorting visible cards
+            const visibleCards = cards.filter(c => c.style.display !== 'none');
+            visibleCards.sort((a, b) => {
+                if (sortVal === 'rating_desc') {
+                    return parseFloat(b.getAttribute('data-rating')) - parseFloat(a.getAttribute('data-rating'));
+                } else if (sortVal === 'budget_asc') {
+                    return parseInt(a.getAttribute('data-budget'), 10) - parseInt(b.getAttribute('data-budget'), 10);
+                } else if (sortVal === 'budget_desc') {
+                    return parseInt(b.getAttribute('data-budget'), 10) - parseInt(a.getAttribute('data-budget'), 10);
+                } else if (sortVal === 'days_asc') {
+                    return parseInt(a.getAttribute('data-days'), 10) - parseInt(b.getAttribute('data-days'), 10);
+                } else if (sortVal === 'days_desc') {
+                    return parseInt(b.getAttribute('data-days'), 10) - parseInt(a.getAttribute('data-days'), 10);
+                } else if (sortVal === 'name_asc') {
+                    return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+                }
+                return 0;
+            });
+
+            // Re-append sorted cards
+            visibleCards.forEach(c => grid.appendChild(c));
+
+            visibleCountText.textContent = visibleCount;
+            noResultsBox.classList.toggle('d-none', visibleCount > 0);
+        }
+
+        // Wishlist System (Client-side localStorage)
+        let wishlist = JSON.parse(localStorage.getItem('tourcraze_wishlist') || '[]');
+
+        function updateWishlistUI() {
+            const count = wishlist.length;
+            const topBadge = document.getElementById('topWishlistCount');
+            const floatPill = document.getElementById('floatingWishlistBtn');
+            const floatCount = floatPill.querySelector('.wl-count-num');
+
+            if (topBadge) topBadge.textContent = count;
+            if (floatCount) floatCount.textContent = count;
+
+            floatPill.style.display = count > 0 ? 'inline-flex' : 'none';
+
+            // Update card heart buttons
+            document.querySelectorAll('.dest-wishlist-btn').forEach(btn => {
+                const card = btn.closest('.dest-card');
+                const name = card ? card.querySelector('.dest-name').textContent.trim() : '';
+                const isSaved = wishlist.includes(name);
+                btn.classList.toggle('saved', isSaved);
+                btn.innerHTML = isSaved ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>';
+            });
+        }
+
+        window.toggleWishlist = function (destName, btn) {
+            const idx = wishlist.indexOf(destName);
+            if (idx > -1) {
+                wishlist.splice(idx, 1);
+            } else {
+                wishlist.push(destName);
+            }
+            localStorage.setItem('tourcraze_wishlist', JSON.stringify(wishlist));
+            updateWishlistUI();
+        };
+
+        window.clearWishlist = function () {
+            wishlist = [];
+            localStorage.removeItem('tourcraze_wishlist');
+            updateWishlistUI();
+            renderWishlistDrawer();
+        };
+
+        window.openWishlistOffcanvas = function () {
+            renderWishlistDrawer();
+            const offcanvasEl = document.getElementById('wishlistOffcanvas');
+            const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+            bsOffcanvas.show();
+        };
+
+        function renderWishlistDrawer() {
+            const container = document.getElementById('wishlistItemsContainer');
+            if (!wishlist || wishlist.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5 text-secondary">
+                        <i class="fa-regular fa-heart fs-1 text-muted mb-3"></i>
+                        <h6 class="text-white">Your Wishlist is Empty</h6>
+                        <p class="small mb-0">Click the ❤️ heart on any destination card to pin places you'd love to visit!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="d-flex flex-column gap-3">';
+            wishlist.forEach(name => {
+                const item = catalogData.find(d => d.name.toLowerCase() === name.toLowerCase()) || {
+                    name: name,
+                    img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400',
+                    state: 'India',
+                    days: 3,
+                    budget_num: 15000,
+                    style: 'Adventure'
+                };
+
+                html += `
+                    <div class="p-2 rounded-3 d-flex align-items-center justify-content-between" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${item.img}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 10px;" alt="${item.name}">
+                            <div>
+                                <h6 class="text-white mb-0 fw-bold" style="font-size: 0.92rem;">${item.name}</h6>
+                                <span class="small text-warning" style="font-size: 0.78rem;">${item.state || 'India'}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-1">
+                            <a href="/plan-trip/?destination=${encodeURIComponent(item.name)}&days=${item.days}&budget=${item.budget_num}&style=${item.style}&auto=1" class="btn btn-sm btn-warning rounded-pill px-2 py-1" style="font-size: 0.78rem; font-weight: 700; color: #071021;">
+                                Plan
+                            </a>
+                            <button class="btn btn-sm btn-link text-danger p-1" onclick="toggleWishlist('${item.name.replace(/'/g, "\\'")}', this); renderWishlistDrawer();">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        updateWishlistUI();
+
+        // 7. Travel Roulette Functionality
+        const rouletteModalEl = document.getElementById('travelRouletteModal');
+        const rouletteModal = new bootstrap.Modal(rouletteModalEl);
+        let isSpinning = false;
+
+        window.openTravelRoulette = function () {
+            rouletteModal.show();
+            spinRouletteAnimation();
+        };
+
+        window.spinRouletteAnimation = function () {
+            if (isSpinning) return;
+            isSpinning = true;
+
+            const screen = document.getElementById('rouletteScreen');
+            const img = document.getElementById('rouletteImg');
+            const name = document.getElementById('rouletteName');
+            const state = document.getElementById('rouletteState');
+            const tag = document.getElementById('rouletteTag');
+            const desc = document.getElementById('rouletteDesc');
+            const days = document.getElementById('rouletteDays');
+            const budget = document.getElementById('rouletteBudget');
+            const rating = document.getElementById('rouletteRating');
+            const planLink = document.getElementById('roulettePlanLink');
+            const spinBtn = document.getElementById('spinAgainBtn');
+
+            spinBtn.disabled = true;
+            screen.classList.add('spinning-flash');
+
+            let counter = 0;
+            const totalShuffles = 24;
+            const interval = setInterval(() => {
+                const randomItem = catalogData[Math.floor(Math.random() * catalogData.length)];
+                img.src = randomItem.img;
+                name.textContent = randomItem.name;
+                state.innerHTML = `<i class="fa-solid fa-location-dot me-1"></i>${randomItem.state || 'India'}`;
+                tag.textContent = randomItem.tag || '✨ Curated';
+                counter++;
+
+                if (counter >= totalShuffles) {
+                    clearInterval(interval);
+                    screen.classList.remove('spinning-flash');
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+
+                    // Final Winner Destination
+                    const winner = catalogData[Math.floor(Math.random() * catalogData.length)];
+                    img.src = winner.img;
+                    name.textContent = winner.name;
+                    state.innerHTML = `<i class="fa-solid fa-location-dot me-1"></i>${winner.state || 'India'}`;
+                    tag.textContent = winner.tag || '✨ Vibe Match';
+                    desc.textContent = winner.description;
+                    days.textContent = `${winner.days} Days`;
+                    budget.textContent = `₹${winner.budget_num}`;
+                    rating.textContent = winner.rating || '4.9';
+                    planLink.href = `/plan-trip/?destination=${encodeURIComponent(winner.name)}&days=${winner.days}&budget=${winner.budget_num}&style=${winner.style}&auto=1`;
+                }
+            }, 75);
+        };
+
+        // 8. Quick View Modal
+        const qvModalEl = document.getElementById('destinationQuickViewModal');
+        const qvModal = new bootstrap.Modal(qvModalEl);
+
+        window.openQuickView = function (index) {
+            const idx = Number(index);
+            const item = catalogData[idx];
+            if (!item) return;
+
+            document.getElementById('qvImg').src = item.img;
+            document.getElementById('qvTag').textContent = item.tag || '✨ Curated';
+            document.getElementById('qvName').textContent = item.name;
+            document.getElementById('qvState').innerHTML = `<i class="fa-solid fa-location-dot me-1"></i>${item.state || 'India'}`;
+            document.getElementById('qvDesc').textContent = item.description;
+            document.getElementById('qvDays').textContent = `${item.days} Days`;
+            document.getElementById('qvSeason').textContent = item.season || 'Year-Round';
+            document.getElementById('qvBudget').textContent = `₹${item.budget_num}`;
+            document.getElementById('qvPlanLink').href = `/plan-trip/?destination=${encodeURIComponent(item.name)}&days=${item.days}&budget=${item.budget_num}&style=${item.style}&auto=1`;
+
+            qvModal.show();
+        };
+
+    });
+</script>
+{% endblock %}

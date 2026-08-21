@@ -1,0 +1,797 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/trip_planner.css' %}">
+<style>
+    /* ==========================================================================
+       Professional Luxury Itinerary Layout Styles
+       ========================================================================== */
+    .planner-page {
+        background-color: #0c111f !important;
+        color: #E2E8F0 !important;
+        min-height: 100vh;
+        padding-bottom: 80px;
+    }
+
+    /* Action Nav Bar */
+    .top-action-bar {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 12px 20px;
+        margin-bottom: 28px;
+    }
+
+    /* Hero Header Card */
+    .itinerary-hero-card {
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.25) 0%, rgba(15, 23, 42, 0.8) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 24px;
+        padding: 36px 40px;
+        margin-bottom: 32px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .itinerary-main-title {
+        font-size: 2.85rem !important;
+        font-weight: 800 !important;
+        color: #FFFFFF !important;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+        margin: 12px 0 16px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .itinerary-hero-desc {
+        color: #CBD5E1 !important;
+        font-size: 1.15rem !important;
+        line-height: 1.75 !important;
+        max-width: 860px;
+        margin: 0;
+    }
+
+    /* 4-Column Stat Cards */
+    .stat-box {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        padding: 20px 22px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        height: 100%;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .stat-box:hover {
+        transform: translateY(-3px);
+        border-color: rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .stat-box-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: rgba(248, 201, 34, 0.15);
+        color: #F8C922;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+
+    .stat-box-number {
+        font-size: 1.35rem !important;
+        font-weight: 800 !important;
+        color: #FFFFFF !important;
+        margin: 0 0 2px;
+        line-height: 1.2;
+    }
+
+    .stat-box-label {
+        font-size: 0.85rem !important;
+        font-weight: 600 !important;
+        color: #94A3B8 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+
+    /* Section Headers */
+    .section-heading-custom {
+        font-size: 1.85rem !important;
+        font-weight: 800 !important;
+        color: #FFFFFF !important;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Day Card Container */
+    .timeline-day-card {
+        background: #111827;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 22px;
+        margin-bottom: 32px;
+        overflow: hidden;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+        transition: border-color 0.3s ease;
+    }
+
+    .timeline-day-card:hover {
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Day Header */
+    .timeline-day-header {
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .day-pill-badge {
+        background: #F8C922;
+        color: #0f172a !important;
+        font-weight: 800 !important;
+        font-size: 0.95rem;
+        padding: 6px 14px;
+        border-radius: 10px;
+        letter-spacing: 0.5px;
+        display: inline-block;
+    }
+
+    .day-header-title {
+        color: #FFFFFF !important;
+        font-size: 1.25rem !important;
+        font-weight: 700 !important;
+        margin: 0;
+    }
+
+    .day-est-cost {
+        background: rgba(34, 197, 94, 0.18);
+        color: #4ade80 !important;
+        border: 1px solid rgba(34, 197, 94, 0.35);
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    /* Slot Item */
+    .activity-slot-item {
+        padding: 24px 28px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        gap: 24px;
+        transition: background 0.2s ease;
+    }
+
+    .activity-slot-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-slot-item:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .slot-timing-column {
+        width: 120px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 2px;
+    }
+
+    .slot-badge-tag {
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .slot-badge-morning {
+        background: rgba(249, 115, 22, 0.2);
+        color: #fb923c !important;
+        border: 1px solid rgba(249, 115, 22, 0.4);
+    }
+
+    .slot-badge-afternoon {
+        background: rgba(248, 201, 34, 0.2);
+        color: #F8C922 !important;
+        border: 1px solid rgba(248, 201, 34, 0.4);
+    }
+
+    .slot-badge-evening {
+        background: rgba(192, 132, 252, 0.2);
+        color: #c084fc !important;
+        border: 1px solid rgba(192, 132, 252, 0.4);
+    }
+
+    .slot-clock-text {
+        color: #94A3B8 !important;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .slot-details-column {
+        flex: 1;
+    }
+
+    .slot-headline-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 6px;
+    }
+
+    .slot-activity-title {
+        color: #FFFFFF !important;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        margin: 0;
+        line-height: 1.35;
+    }
+
+    .slot-cost-chip {
+        color: #F8C922 !important;
+        font-weight: 700;
+        font-size: 0.95rem;
+        background: rgba(248, 201, 34, 0.12);
+        border: 1px solid rgba(248, 201, 34, 0.25);
+        padding: 4px 12px;
+        border-radius: 8px;
+        white-space: nowrap;
+    }
+
+    .slot-geo-pin {
+        color: #38bdf8 !important;
+        font-size: 0.95rem !important;
+        font-weight: 600;
+        margin: 6px 0 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .slot-description-text {
+        color: #CBD5E1 !important;
+        font-size: 1.02rem !important;
+        line-height: 1.7 !important;
+        margin: 0;
+    }
+
+    /* Tip Banner */
+    .pro-tip-banner {
+        background: rgba(56, 189, 248, 0.08);
+        border-top: 1px solid rgba(56, 189, 248, 0.18);
+        padding: 16px 28px;
+        color: #F1F5F9 !important;
+        font-size: 0.98rem;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        line-height: 1.6;
+    }
+
+    .pro-tip-banner i {
+        color: #38bdf8;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    /* Sticky Sidebar */
+    .sticky-sidebar-wrapper {
+        position: sticky;
+        top: 90px;
+    }
+
+    .sidebar-card-box {
+        background: #111827;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 22px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .sidebar-card-title {
+        color: #FFFFFF !important;
+        font-size: 1.25rem !important;
+        font-weight: 800 !important;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .breakdown-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #94A3B8 !important;
+        font-size: 1rem !important;
+        font-weight: 500;
+        padding: 11px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .breakdown-row strong {
+        color: #FFFFFF !important;
+        font-size: 1.05rem !important;
+        font-weight: 700;
+    }
+
+    .total-cost-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #FFFFFF !important;
+        font-size: 1.15rem !important;
+        font-weight: 800 !important;
+        padding-top: 14px;
+    }
+
+    .total-cost-row .total-amount {
+        color: #F8C922 !important;
+        font-size: 1.6rem !important;
+        font-weight: 800;
+    }
+
+    .cost-per-traveler-label {
+        color: #94A3B8 !important;
+        font-size: 0.92rem;
+        font-weight: 500;
+        margin-top: 8px;
+    }
+
+    .checklist-row-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        color: #CBD5E1 !important;
+        font-size: 0.96rem !important;
+        line-height: 1.55;
+        margin-bottom: 14px;
+    }
+
+    .checklist-row-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .checklist-row-item i {
+        color: #22c55e;
+        font-size: 1.1rem;
+        margin-top: 3px;
+        flex-shrink: 0;
+    }
+
+    @media print {
+
+        .navbar,
+        .top-action-bar,
+        .site-footer,
+        .btn-print,
+        .modal,
+        .sticky-sidebar-wrapper .btn {
+            display: none !important;
+        }
+
+        body {
+            background: #ffffff !important;
+            color: #000000 !important;
+        }
+
+        .timeline-day-card,
+        .sidebar-card-box,
+        .stat-box,
+        .itinerary-hero-card {
+            background: #ffffff !important;
+            border: 1px solid #ccc !important;
+            color: #000 !important;
+            box-shadow: none !important;
+        }
+
+        .itinerary-main-title,
+        .day-header-title,
+        .slot-activity-title,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            color: #000 !important;
+            text-shadow: none !important;
+        }
+
+        .slot-description-text,
+        .itinerary-hero-desc,
+        .breakdown-row {
+            color: #333 !important;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .itinerary-main-title {
+            font-size: 2.2rem !important;
+        }
+
+        .itinerary-hero-card {
+            padding: 26px;
+        }
+
+        .timeline-day-header {
+            padding: 16px 20px;
+        }
+
+        .activity-slot-item {
+            padding: 20px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .itinerary-main-title {
+            font-size: 1.85rem !important;
+        }
+
+        .activity-slot-item {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .slot-timing-column {
+            width: 100%;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slot-headline-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="planner-page">
+    <div class="container py-4">
+
+        <!-- Top Action Navigation Bar -->
+        <div class="top-action-bar d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <a href="{% url 'my_trips' %}" class="btn btn-outline-light btn-sm rounded-pill px-3 fw-semibold">
+                <i class="fas fa-arrow-left me-1"></i> Back to My Trips
+            </a>
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <button type="button" class="btn btn-outline-light btn-sm rounded-pill px-3 fw-semibold btn-print"
+                    onclick="window.print()">
+                    <i class="fas fa-print me-1"></i> Print / Save PDF
+                </button>
+                <a href="{% url 'plan_trip' %}?destination={{ trip.destination|urlencode }}"
+                    class="btn btn-warning btn-sm rounded-pill px-3 fw-bold text-dark">
+                    <i class="fas fa-wand-magic-sparkles me-1"></i> Customize / Clone
+                </a>
+                {% if is_owner %}
+                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-semibold"
+                    data-bs-toggle="modal" data-bs-target="#deleteTripModal">
+                    <i class="fas fa-trash me-1"></i> Delete
+                </button>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center justify-content-between shadow-lg"
+                style="background: linear-gradient(135deg, #064E3B 0%, #047857 100%); border: 1px solid #10B981; border-radius: 16px; color: #FFFFFF !important; padding: 16px 20px;"
+                role="alert">
+                <div class="d-flex align-items-center gap-2">
+                    <span style="font-size: 1.25rem;">✨</span>
+                    <span class="fw-semibold"
+                        style="color: #FFFFFF !important; font-size: 1.05rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">{{
+                        message }}</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Hero Title & Summary Card -->
+        <div class="itinerary-hero-card">
+            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <span class="badge-style {{ trip.get_style_badge_class }}">
+                    <i class="fas fa-tag me-1"></i> {{ trip.travel_style }}
+                </span>
+                {% if trip.start_date %}
+                <span class="badge bg-secondary rounded-pill px-3 py-1 text-white">
+                    <i class="fas fa-calendar-alt me-1"></i> Starts {{ trip.start_date|date:"M d, Y" }}
+                </span>
+                {% endif %}
+                <span style="color: #94A3B8; font-size: 0.9rem; font-weight: 500;">
+                    <i class="fas fa-clock me-1"></i> Created {{ trip.created_at|timesince }} ago
+                </span>
+            </div>
+            <h1 class="itinerary-main-title">{{ trip.title|default:trip.destination }}</h1>
+            <p class="itinerary-hero-desc">{{ trip.summary }}</p>
+        </div>
+
+        <!-- 4-Column Quick Stat Grid -->
+        <div class="row row-cols-2 row-cols-lg-4 g-3 mb-5">
+            <div class="col">
+                <div class="stat-box">
+                    <div class="stat-box-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div>
+                        <div class="stat-box-number">{{ total_days }} Days</div>
+                        <div class="stat-box-label">Duration</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-box">
+                    <div class="stat-box-icon"><i class="fas fa-user-group"></i></div>
+                    <div>
+                        <div class="stat-box-number">{{ trip.travelers }} Guest{% if trip.travelers > 1 %}s{% endif %}
+                        </div>
+                        <div class="stat-box-label">Group Size</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-box">
+                    <div class="stat-box-icon"><i class="fas fa-wallet"></i></div>
+                    <div>
+                        <div class="stat-box-number">{{ trip.formatted_budget }}</div>
+                        <div class="stat-box-label">Target Budget</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-box">
+                    <div class="stat-box-icon"><i class="fas fa-chart-pie"></i></div>
+                    <div>
+                        <div class="stat-box-number">{{ trip.formatted_cost }}</div>
+                        <div class="stat-box-label">Est. Total Cost</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area: Timeline (Left 8 cols) & Sidebar (Right 4 cols) -->
+        <div class="row g-4">
+
+            <!-- Left Column: Day-by-Day Timeline Breakdown -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <h3 class="section-heading-custom">
+                        <i class="fas fa-route text-warning"></i> Day-by-Day Itinerary
+                    </h3>
+                    <span class="badge bg-dark border border-secondary text-white px-3 py-2 rounded-pill fw-semibold">
+                        <i class="fas fa-sparkles text-warning me-1"></i> {{ total_days }} Curated Days
+                    </span>
+                </div>
+
+                {% for day in itinerary_days %}
+                <div class="timeline-day-card" id="day-{{ day.day }}">
+                    <!-- Day Header Bar -->
+                    <div class="timeline-day-header">
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <span class="day-pill-badge">DAY {{ day.day }}</span>
+                            <h4 class="day-header-title">{{ day.theme }}</h4>
+                        </div>
+                        <div class="day-est-cost">
+                            <i class="fas fa-coins me-1"></i> ~₹{{ day.day_cost|default:'1,500' }} / day
+                        </div>
+                    </div>
+
+                    <!-- Morning Activity Slot -->
+                    <div class="activity-slot-item">
+                        <div class="slot-timing-column">
+                            <span class="slot-badge-tag slot-badge-morning">
+                                <i class="fas fa-sun"></i> Morning
+                            </span>
+                            <span class="slot-clock-text">08:30 AM</span>
+                        </div>
+                        <div class="slot-details-column">
+                            <div class="slot-headline-row">
+                                <h5 class="slot-activity-title">{{ day.morning.title }}</h5>
+                                <span class="slot-cost-chip">~₹{{ day.morning.cost }}</span>
+                            </div>
+                            <div class="slot-geo-pin">
+                                <i class="fas fa-location-dot"></i> {{ day.morning.location }}
+                            </div>
+                            <p class="slot-description-text">{{ day.morning.activity }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Afternoon Activity Slot -->
+                    <div class="activity-slot-item">
+                        <div class="slot-timing-column">
+                            <span class="slot-badge-tag slot-badge-afternoon">
+                                <i class="fas fa-cloud-sun"></i> Afternoon
+                            </span>
+                            <span class="slot-clock-text">01:30 PM</span>
+                        </div>
+                        <div class="slot-details-column">
+                            <div class="slot-headline-row">
+                                <h5 class="slot-activity-title">{{ day.afternoon.title }}</h5>
+                                <span class="slot-cost-chip">~₹{{ day.afternoon.cost }}</span>
+                            </div>
+                            <div class="slot-geo-pin">
+                                <i class="fas fa-location-dot"></i> {{ day.afternoon.location }}
+                            </div>
+                            <p class="slot-description-text">{{ day.afternoon.activity }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Evening Activity Slot -->
+                    <div class="activity-slot-item">
+                        <div class="slot-timing-column">
+                            <span class="slot-badge-tag slot-badge-evening">
+                                <i class="fas fa-moon"></i> Evening
+                            </span>
+                            <span class="slot-clock-text">06:30 PM</span>
+                        </div>
+                        <div class="slot-details-column">
+                            <div class="slot-headline-row">
+                                <h5 class="slot-activity-title">{{ day.evening.title }}</h5>
+                                <span class="slot-cost-chip">~₹{{ day.evening.cost }}</span>
+                            </div>
+                            <div class="slot-geo-pin">
+                                <i class="fas fa-location-dot"></i> {{ day.evening.location }}
+                            </div>
+                            <p class="slot-description-text">{{ day.evening.activity }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Pro Travel Tip Box -->
+                    {% if day.tip %}
+                    <div class="pro-tip-banner">
+                        <i class="fas fa-lightbulb"></i>
+                        <div><strong class="text-white">Insider Tip:</strong> {{ day.tip }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="alert alert-warning text-dark">No day-by-day itinerary data available for this trip.</div>
+                {% endfor %}
+            </div>
+
+            <!-- Right Column: Sticky Breakdown & Checklist Sidebar -->
+            <div class="col-lg-4">
+                <div class="sticky-sidebar-wrapper">
+
+                    <!-- Budget Breakdown Card -->
+                    <div class="sidebar-card-box">
+                        <h4 class="sidebar-card-title">
+                            <i class="fas fa-calculator text-warning"></i> Budget Breakdown
+                        </h4>
+
+                        <div class="breakdown-row">
+                            <span><i class="fas fa-ticket text-info me-2"></i> Activities & Entry</span>
+                            <strong>{{ cost_breakdown.activities }}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span><i class="fas fa-utensils text-warning me-2"></i> Dining & Street Food</span>
+                            <strong>{{ cost_breakdown.dining }}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span><i class="fas fa-taxi text-success me-2"></i> Local Transport & Cabs</span>
+                            <strong>{{ cost_breakdown.transport }}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span><i class="fas fa-hotel text-primary me-2"></i> Stay & Logistics Est.</span>
+                            <strong>{{ cost_breakdown.stay }}</strong>
+                        </div>
+
+                        <div class="total-cost-row">
+                            <span>Est. Group Total:</span>
+                            <span class="total-amount">{{ trip.formatted_cost }}</span>
+                        </div>
+
+                        <div class="cost-per-traveler-label">
+                            ≈ {{ per_person_cost }} per traveler (for {{ trip.travelers }} traveler{% if trip.travelers
+                            > 1 %}s{% endif %})
+                        </div>
+                    </div>
+
+                    <!-- Trip Highlights Card -->
+                    <div class="sidebar-card-box">
+                        <h4 class="sidebar-card-title">
+                            <i class="fas fa-star text-warning"></i> Trip Highlights
+                        </h4>
+                        {% for hl in highlights %}
+                        <div class="checklist-row-item">
+                            <i class="fas fa-circle-check"></i>
+                            <span>{{ hl }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Packing & Preparation Checklist -->
+                    <div class="sidebar-card-box">
+                        <h4 class="sidebar-card-title">
+                            <i class="fas fa-suitcase text-warning"></i> Travel Checklist
+                        </h4>
+                        {% for item in packing_essentials %}
+                        <div class="checklist-row-item">
+                            <i class="fas fa-check"></i>
+                            <span>{{ item }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- CTA Card -->
+                    <div class="sidebar-card-box text-center">
+                        <h5 class="text-white fw-bold mb-2">Want to explore more?</h5>
+                        <p style="color: #94A3B8; font-size: 0.95rem;" class="mb-3">Create custom variations with
+                            different budgets or travel styles.</p>
+                        <a href="{% url 'plan_trip' %}"
+                            class="btn btn-warning w-100 rounded-pill fw-bold text-dark py-2 shadow">
+                            <i class="fas fa-plus me-1"></i> Plan Another Trip
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Delete Trip Confirmation Modal -->
+{% if is_owner %}
+<div class="modal fade" id="deleteTripModal" tabindex="-1" aria-labelledby="deleteTripModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-custom">
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title text-danger" id="deleteTripModalLabel">
+                    <i class="fas fa-triangle-exclamation me-2"></i> Delete Trip
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="mb-1 text-white">Are you sure you want to permanently delete your saved trip to <strong>{{
+                        trip.destination }}</strong>?</p>
+                <p style="color: #94A3B8; font-size: 0.9rem;" class="mb-0">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer modal-footer-custom">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                    data-bs-dismiss="modal">Cancel</button>
+                <form action="{% url 'delete_trip' trip.id %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">
+                        <i class="fas fa-trash me-1"></i> Confirm Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,266 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/trip_planner.css' %}">
+<style>
+    .planner-page {
+        color: #E5E7EB !important;
+        background-color: #0c111f !important;
+        min-height: 100vh;
+    }
+    .trips-dashboard-hero h1 {
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+    }
+    .trip-card {
+        background: rgba(255, 255, 255, 0.06) !important;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    }
+    .trip-card-title {
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+        font-size: 1.35rem !important;
+    }
+    .trip-card-dest {
+        color: #F8C922 !important;
+        font-weight: 700 !important;
+    }
+    .trip-card-desc {
+        color: #D1D5DB !important;
+        font-size: 0.95rem !important;
+    }
+    .trip-card-meta {
+        color: #E5E7EB !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+    }
+    .trip-card-meta-item span {
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="planner-page">
+    <div class="container">
+        <!-- Dashboard Hero -->
+        <div class="trips-dashboard-hero">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <div>
+                    <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2">
+                        <i class="fas fa-suitcase-rolling me-1"></i> TRIP VAULT
+                    </span>
+                    <h1 class="text-white fw-bold mb-1">My Saved Trips</h1>
+                    <p style="color: #D1D5DB; font-size: 1.1rem;" class="mb-0">Revisit, organize, or manage all your custom AI-generated itineraries.</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    {% if trips %}
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-3 py-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#deleteAllTripsModal">
+                        <i class="fas fa-trash-can me-1"></i> Delete All Trips
+                    </button>
+                    {% endif %}
+                    <a href="{% url 'plan_trip' %}" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow" style="background: #F8C922; border: none; box-shadow: 0 6px 20px rgba(248, 201, 34, 0.35);">
+                        <i class="fas fa-plus me-1"></i> Plan a New Trip
+                    </a>
+                </div>
+            </div>
+
+            <!-- Messages alerts (High Contrast & Readable) -->
+            {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show d-flex align-items-center justify-content-between shadow-lg" 
+                     style="background: linear-gradient(135deg, #064E3B 0%, #047857 100%); border: 1px solid #10B981; border-radius: 16px; color: #FFFFFF !important; padding: 16px 20px;" role="alert">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-check fs-5 text-warning"></i>
+                        <span class="fw-semibold" style="color: #FFFFFF !important; font-size: 1.02rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">{{ message }}</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Search and Filter Bar -->
+            <div class="glass-box p-3 mb-4">
+                <form method="GET" action="{% url 'my_trips' %}" class="row g-2 align-items-center">
+                    <div class="col-lg-5 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-secondary" style="color: #9CA3AF;">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" 
+                                   name="q" 
+                                   class="form-control trip-input" 
+                                   placeholder="Search by destination, title, or interest..." 
+                                   value="{{ query }}">
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-6">
+                        <div class="d-flex flex-wrap gap-1">
+                            <a href="{% url 'my_trips' %}{% if query %}?q={{ query }}{% endif %}" 
+                               class="preset-chip {% if not selected_style %}active{% endif %}">
+                               All
+                            </a>
+                            {% for style in style_options %}
+                            <a href="{% url 'my_trips' %}?style={{ style }}{% if query %}&q={{ query }}{% endif %}" 
+                               class="preset-chip {% if selected_style == style %}active{% endif %}">
+                               {{ style }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12 text-lg-end">
+                        {% if query or selected_style %}
+                        <a href="{% url 'my_trips' %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                            <i class="fas fa-xmark me-1"></i> Clear Filters
+                        </a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Trips Grid -->
+        {% if trips %}
+        <div class="row g-4 mb-5">
+            {% for trip in trips %}
+            <div class="col-lg-4 col-md-6">
+                <div class="trip-card">
+                    <div class="trip-card-body">
+                        <!-- Card Top: Destination & Style Badge -->
+                        <div class="trip-card-top">
+                            <span class="badge-style {{ trip.get_style_badge_class }}">
+                                {{ trip.travel_style }}
+                            </span>
+                            <span class="trip-card-date">{{ trip.created_at|date:"M d, Y" }}</span>
+                        </div>
+
+                        <!-- Title -->
+                        <h4 class="trip-card-title mb-1">{{ trip.destination }}</h4>
+                        <div class="trip-card-dest">
+                            <i class="fas fa-location-dot"></i> {{ trip.title|default:trip.destination }}
+                        </div>
+
+                        <!-- Summary preview -->
+                        <p class="trip-card-desc">
+                            {{ trip.summary|truncatewords:20|default:"Personalized day-by-day travel plan featuring curated activities, timings, and cost estimates." }}
+                        </p>
+
+                        <!-- Metadata row -->
+                        <div class="trip-card-meta">
+                            <div class="trip-card-meta-item">
+                                <i class="fas fa-calendar-day"></i>
+                                <span>{{ trip.days }} Days</span>
+                            </div>
+                            <div class="trip-card-meta-item">
+                                <i class="fas fa-users"></i>
+                                <span>{{ trip.travelers }} Guest{% if trip.travelers > 1 %}s{% endif %}</span>
+                            </div>
+                            <div class="trip-card-meta-item">
+                                <i class="fas fa-wallet"></i>
+                                <span>{{ trip.formatted_budget }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="trip-card-actions mt-auto">
+                            <a href="{% url 'trip_detail' trip.id %}" class="btn btn-warning flex-grow-1 rounded-pill fw-bold text-dark">
+                                <i class="fas fa-eye me-1"></i> View Itinerary
+                            </a>
+                            <button type="button" 
+                                    class="btn btn-outline-danger rounded-circle p-2 d-flex align-items-center justify-content-center" 
+                                    style="width: 38px; height: 38px;"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteTripModal-{{ trip.id }}"
+                                    title="Delete Trip">
+                                <i class="fas fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Modal for Trip -->
+                <div class="modal fade" id="deleteTripModal-{{ trip.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content modal-content-custom">
+                            <div class="modal-header modal-header-custom">
+                                <h5 class="modal-title text-danger">
+                                    <i class="fas fa-triangle-exclamation me-2"></i> Delete Trip
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body py-4">
+                                <p class="mb-1 text-white">Are you sure you want to delete your trip to <strong>{{ trip.destination }}</strong>?</p>
+                                <p style="color: #9CA3AF; font-size: 0.9rem;" class="mb-0">This itinerary cannot be recovered once removed.</p>
+                            </div>
+
+                            <div class="modal-footer modal-footer-custom">
+                                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                                <form action="{% url 'delete_trip' trip.id %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">
+                                        <i class="fas fa-trash me-1"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-trips-state">
+            <i class="fas fa-map-location-dot"></i>
+            {% if query or selected_style %}
+            <h3>No matching trips found</h3>
+            <p>We couldn't find any trips matching your current search or filter criteria. Try searching for a different destination.</p>
+            <a href="{% url 'my_trips' %}" class="btn btn-outline-light rounded-pill px-4 me-2">Clear Filters</a>
+            {% else %}
+            <h3>No Saved Trips Yet</h3>
+            <p>You haven't generated any travel itineraries yet. Use our Smart Trip Planner to craft your next dream adventure in seconds!</p>
+            <a href="{% url 'plan_trip' %}" class="btn btn-warning rounded-pill px-5 py-3 fw-bold text-dark shadow">
+                <i class="fas fa-wand-magic-sparkles me-2"></i> Plan Your First Trip
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal: Delete All Trips Confirmation -->
+<div class="modal fade" id="deleteAllTripsModal" tabindex="-1" aria-labelledby="deleteAllTripsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(244, 63, 94, 0.4); border-radius: 20px; color: #FFFFFF;">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(244, 63, 94, 0.15); color: #F43F5E; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </div>
+                    <h5 class="modal-title fw-bold text-white" id="deleteAllTripsModalLabel">Delete All Saved Trips?</h5>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="text-light mb-0" style="font-size: 1rem; line-height: 1.6;">
+                    Are you sure you want to permanently delete <strong>all saved trips</strong> from your vault? This action cannot be undone.
+                </p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <form action="{% url 'delete_all_trips' %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold shadow">
+                        <i class="fas fa-trash-can me-1"></i> Yes, Delete All Trips
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

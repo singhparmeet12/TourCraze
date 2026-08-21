@@ -1,0 +1,285 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}{{ post.destination|default:"Travel Post" }} by @{{ post.author.username }} • TourCraze Community{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/community.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="community-wrapper">
+    <div class="container py-4" style="max-width: 720px;">
+        
+        <!-- Back button -->
+        <a href="{% url 'community_list' %}" class="btn btn-outline-light btn-sm rounded-pill mb-4 px-3">
+            <i class="fas fa-arrow-left me-1"></i> Back to Community Feed
+        </a>
+
+        <!-- Post Card -->
+        <article class="post-social-card" id="post-card-{{ post.id }}">
+            <!-- Post Header -->
+            <div class="post-header-row">
+                <a href="{% url 'creator_profile' post.author.username %}" class="post-author-link">
+                    <img src="{{ post.author.get_avatar }}" alt="{{ post.author.username }}" class="post-author-avatar">
+                    <div class="post-author-meta">
+                        <h6>
+                            {{ post.author.name|default:post.author.username }}
+                            {% if post.author.is_verified_creator %}
+                            <i class="fas fa-check-circle text-primary ms-1" title="Verified Travel Creator"></i>
+                            {% endif %}
+                        </h6>
+                        {% if post.destination %}
+                        <p class="post-location-tag">
+                            <i class="fas fa-location-dot"></i> {{ post.destination }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </a>
+
+                <div class="d-flex align-items-center gap-2">
+                    {% if user.is_authenticated and user != post.author %}
+                    <button class="btn-follow-toggle {% if is_following %}following{% endif %}" 
+                            data-user-id="{{ post.author.id }}">
+                        {% if is_following %}Following{% else %}+ Follow{% endif %}
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Post Media Container -->
+            <div class="post-media-container" data-post-id="{{ post.id }}">
+                <i class="fas fa-heart double-tap-heart"></i>
+
+                {% if post.post_type == 'VIDEO' and post.get_video_url %}
+                    <video class="post-video-player" controls loop playsinline autoplay muted>
+                        <source src="{{ post.get_video_url }}" type="video/mp4">
+                    </video>
+                    <span class="post-type-badge"><i class="fas fa-play"></i> REEL</span>
+                {% elif post.get_media_url %}
+                    <img src="{{ post.get_media_url }}" alt="Travel Photo" class="post-media-img">
+                {% endif %}
+            </div>
+
+            <!-- Action Bar -->
+            <div class="post-actions-bar">
+                <div class="post-actions-left">
+                    <button class="post-action-icon-btn btn-like-post {% if is_liked %}liked{% endif %}" data-post-id="{{ post.id }}">
+                        <i class="{% if is_liked %}fas{% else %}far{% endif %} fa-heart"></i>
+                    </button>
+                    <button class="post-action-icon-btn btn-share-link" data-url="{% url 'single_post' post.id %}">
+                        <i class="far fa-paper-plane"></i>
+                    </button>
+                </div>
+                <button class="post-action-icon-btn btn-save-post {% if is_saved %}saved{% endif %}" data-post-id="{{ post.id }}">
+                    <i class="{% if is_saved %}fas{% else %}far{% endif %} fa-bookmark"></i>
+                </button>
+            </div>
+
+            <!-- Post Body & Captions -->
+            <div class="post-body-container">
+                <div class="post-likes-counter" id="likes-count-{{ post.id }}">
+                    {{ post.likes.count }} likes
+                </div>
+
+                <div class="post-caption-text">
+                    <a href="{% url 'creator_profile' post.author.username %}" class="fw-bold text-white text-decoration-none me-1">
+                        {{ post.author.username }}
+                    </a>
+                    <span>{{ post.content }}</span>
+                </div>
+
+                <!-- Attached Smart Itinerary Banner -->
+                {% if post.trip %}
+                <div class="linked-itinerary-banner">
+                    <div class="linked-itinerary-left">
+                        <div class="itinerary-compass-icon">
+                            <i class="fas fa-compass"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-white fw-bold mb-0">{{ post.trip.title|default:post.trip.destination }}</h6>
+                            <small class="text-muted">{{ post.trip.days }} Days • {{ post.trip.travel_style }} • {{ post.trip.formatted_budget }}</small>
+                        </div>
+                    </div>
+                    <a href="{% url 'trip_detail' post.trip.id %}" class="btn-view-itinerary">
+                        View Full Plan <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                {% endif %}
+
+                <div class="post-timestamp-tag">
+                    {{ post.created_at|timesince }} ago
+                </div>
+            </div>
+
+            <!-- Comments Thread -->
+            <div class="comments-thread-box" id="comments-box-{{ post.id }}">
+                <h6 class="text-white fw-bold mb-3">Comments ({{ post.comments.count }})</h6>
+                <div class="comments-list" id="comments-list-{{ post.id }}">
+                    {% for comment in post.comments.all %}
+                    <div class="comment-row-item">
+                        <img src="{{ comment.author.get_avatar }}" alt="Avatar" class="comment-author-avatar">
+                        <div>
+                            <a href="{% url 'creator_profile' comment.author.username %}" class="comment-author-name">
+                                {{ comment.author.username }}
+                            </a>
+                            <span class="comment-text-content">{{ comment.content }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Inline Comment Input -->
+                <form class="inline-comment-form mt-3" data-post-id="{{ post.id }}">
+                    {% csrf_token %}
+                    <input type="text" 
+                           class="inline-comment-input" 
+                           placeholder="Add a travel comment..." 
+                           required 
+                           autocomplete="off">
+                    <button type="submit" class="btn-post-comment">Post</button>
+                </form>
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function getCsrfToken() {
+        const tokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        if (tokenInput) return tokenInput.value;
+        return '';
+    }
+
+    // Like Button
+    document.querySelectorAll('.btn-like-post').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            fetch(`/community/api/like/${postId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const icon = btn.querySelector('i');
+                    if (data.liked) {
+                        btn.classList.add('liked');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    } else {
+                        btn.classList.remove('liked');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    }
+                    const counter = document.getElementById(`likes-count-${postId}`);
+                    if (counter) counter.innerText = `${data.likes_count} likes`;
+                }
+            });
+        });
+    });
+
+    // Save Button
+    document.querySelectorAll('.btn-save-post').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            fetch(`/community/api/save/${postId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const icon = this.querySelector('i');
+                    if (data.saved) {
+                        this.classList.add('saved');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    } else {
+                        this.classList.remove('saved');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    }
+                }
+            });
+        });
+    });
+
+    // Follow Button
+    document.querySelectorAll('.btn-follow-toggle').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            fetch(`/community/api/follow/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    if (data.following) {
+                        btn.classList.add('following');
+                        btn.innerText = 'Following';
+                    } else {
+                        btn.classList.remove('following');
+                        btn.innerText = '+ Follow';
+                    }
+                }
+            });
+        });
+    });
+
+    // Comment Form
+    document.querySelectorAll('.inline-comment-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const postId = this.getAttribute('data-post-id');
+            const input = this.querySelector('.inline-comment-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const formData = new FormData();
+            formData.append('content', text);
+
+            fetch(`/community/api/comment/${postId}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCsrfToken() },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const list = document.getElementById(`comments-list-${postId}`);
+                    if (list) {
+                        const newCommentRow = document.createElement('div');
+                        newCommentRow.className = 'comment-row-item';
+                        newCommentRow.innerHTML = `
+                            <img src="${data.comment.avatar}" alt="Avatar" class="comment-author-avatar">
+                            <div>
+                                <a href="/community/creator/${data.comment.author}/" class="comment-author-name">
+                                    ${data.comment.author}
+                                </a>
+                                <span class="comment-text-content">${data.comment.content}</span>
+                            </div>
+                        `;
+                        list.appendChild(newCommentRow);
+                    }
+                    input.value = '';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

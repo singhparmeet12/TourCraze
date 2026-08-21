@@ -1,0 +1,60 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/tripsplit.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="tripsplit-page d-flex align-items-center justify-content-center py-5">
+    <div class="container" style="max-width: 580px;">
+        <div class="ts-card p-4 p-md-5 text-center">
+            
+            <div class="mb-3">
+                <span class="ts-badge ts-badge-gold">
+                    <i class="fa-solid fa-users"></i> Trip Invitation
+                </span>
+            </div>
+
+            <h2 class="fw-bold text-white mb-2">You've Been Invited to Join</h2>
+            <h3 class="display-6 fw-bolder mb-3" style="color: var(--ts-gold);">{{ trip.name }}</h3>
+
+            <p class="text-light opacity-75 mb-4">
+                {{ trip.destination|default:"Group Adventure" }} • {{ trip.members.count }} Members Active
+            </p>
+
+            <div class="p-3 rounded-3 text-start mb-4" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);">
+                <h6 class="text-white fw-bold mb-2">Current Group Members:</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for m in members %}
+                    <span class="badge bg-dark border border-secondary px-3 py-2 text-white">
+                        <i class="fa-solid fa-user me-1 text-warning"></i> {{ m.name }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if can_add_member %}
+            <form action="{% url 'tripsplit_join' trip.invite_code %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-3 text-start">
+                    <label class="form-label text-white fw-semibold">Enter Your Name to Join:</label>
+                    <input type="text" name="member_name" class="form-control ts-input" placeholder="e.g. Rahul, Priya, Alex" value="{% if request.user.is_authenticated %}{{ request.user.name|default:request.user.username }}{% endif %}" required>
+                </div>
+                <button type="submit" class="btn btn-ts-primary w-100 py-3 fw-bold fs-5">
+                    <i class="fa-solid fa-check-circle me-2"></i> Join Trip & View Expenses
+                </button>
+            </form>
+            {% else %}
+            <div class="alert alert-warning bg-dark border-warning text-white">
+                This trip has reached the maximum capacity of 10 members. You can still view the workspace below.
+            </div>
+            <a href="{% url 'tripsplit_workspace' trip.invite_code %}" class="btn btn-ts-primary w-100 py-3">
+                Open Workspace as Viewer
+            </a>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

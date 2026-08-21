@@ -1,0 +1,1387 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}TourCraze Community — Travel Stories, Reels & Itineraries{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/community.css' %}">
+<style>
+    /* ==========================================================================
+       TourCraze Modern Social Travel Community (Instagram + Facebook Hybrid)
+       Direct Embedded Styles for Instant High-End Rendering
+       ========================================================================== */
+    .community-wrapper {
+        background-color: #0c111f !important;
+        min-height: 100vh;
+        padding-top: 30px;
+        padding-bottom: 90px;
+        color: #E2E8F0 !important;
+    }
+
+    /* 3-Column Layout Grid */
+    .community-layout-grid {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 680px) 320px;
+        gap: 28px;
+        max-width: 1340px;
+        margin: 0 auto;
+        padding: 0 16px;
+        align-items: start;
+        justify-content: center;
+    }
+
+    /* Left Sidebar */
+    .sidebar-sticky-box {
+        position: sticky;
+        top: 90px;
+        background: #111827 !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 24px !important;
+        padding: 24px 18px !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .user-mini-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 18px;
+    }
+
+    .user-mini-avatar {
+        width: 52px !important;
+        height: 52px !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+        border: 2.5px solid #F8C922 !important;
+        flex-shrink: 0;
+    }
+
+    .nav-pill-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 18px;
+        border-radius: 16px;
+        color: #94A3B8 !important;
+        text-decoration: none !important;
+        font-weight: 600;
+        font-size: 0.98rem;
+        transition: all 0.2s ease;
+        margin-bottom: 6px;
+    }
+
+    .nav-pill-item i {
+        font-size: 1.2rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .nav-pill-item:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #FFFFFF !important;
+        transform: translateX(3px);
+    }
+
+    .nav-pill-item.active {
+        background: rgba(248, 201, 34, 0.16) !important;
+        color: #F8C922 !important;
+        border: 1px solid rgba(248, 201, 34, 0.35) !important;
+        font-weight: 700;
+    }
+
+    .btn-create-post-cta {
+        background: linear-gradient(135deg, #F8C922 0%, #FFD84D 100%) !important;
+        color: #0f172a !important;
+        font-weight: 800 !important;
+        font-size: 1.05rem !important;
+        border: none !important;
+        border-radius: 18px !important;
+        padding: 15px 20px !important;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 18px;
+        box-shadow: 0 10px 28px rgba(248, 201, 34, 0.4) !important;
+        transition: all 0.25s ease !important;
+        cursor: pointer;
+    }
+
+    .btn-create-post-cta:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 14px 34px rgba(248, 201, 34, 0.55) !important;
+    }
+
+    /* Stories Tray */
+    .stories-tray-box {
+        background: #111827 !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 24px !important;
+        padding: 20px 22px !important;
+        margin-bottom: 24px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .stories-scroll-container {
+        display: flex;
+        gap: 18px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scrollbar-width: none;
+    }
+
+    .stories-scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .story-circle-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        text-align: center;
+        width: 78px;
+        flex-shrink: 0;
+        transition: transform 0.25s ease;
+    }
+
+    .story-circle-item:hover {
+        transform: scale(1.08);
+    }
+
+    .story-ring-wrapper {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        padding: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 16px rgba(220, 39, 67, 0.35);
+    }
+
+    .story-avatar-img {
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+        border: 2.5px solid #111827 !important;
+    }
+
+    .story-username-label {
+        font-size: 0.8rem;
+        color: #E2E8F0;
+        margin-top: 8px;
+        width: 76px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 600;
+    }
+
+    /* Quick Composer */
+    .quick-composer-card {
+        background: #111827 !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 24px !important;
+        padding: 22px 24px !important;
+        margin-bottom: 24px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .composer-top-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .composer-input-trigger {
+        flex: 1;
+        background: #1a2236 !important;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        border-radius: 30px !important;
+        padding: 13px 22px !important;
+        color: #94A3B8 !important;
+        font-size: 0.98rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .composer-input-trigger:hover {
+        background: #242e47 !important;
+        border-color: #F8C922 !important;
+        color: #FFFFFF !important;
+    }
+
+    .composer-actions-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .composer-action-btn {
+        background: transparent !important;
+        border: none !important;
+        color: #94A3B8 !important;
+        font-weight: 600;
+        font-size: 0.92rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .composer-action-btn:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #FFFFFF !important;
+    }
+
+    /* Social Post Card */
+    .post-social-card {
+        background: #111827 !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 26px !important;
+        margin-bottom: 30px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .post-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px;
+    }
+
+    .post-author-link {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none !important;
+        color: #FFFFFF !important;
+    }
+
+    .post-author-avatar {
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+        border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .post-author-meta h6 {
+        margin: 0 0 2px;
+        font-size: 1.02rem;
+        font-weight: 700;
+        color: #FFFFFF !important;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .post-location-tag {
+        font-size: 0.85rem;
+        color: #38bdf8 !important;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 600;
+    }
+
+    .btn-follow-toggle {
+        background: rgba(56, 189, 248, 0.15) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.4) !important;
+        color: #38bdf8 !important;
+        font-weight: 700;
+        font-size: 0.84rem;
+        padding: 7px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-follow-toggle:hover {
+        background: #38bdf8 !important;
+        color: #0f172a !important;
+    }
+
+    .btn-follow-toggle.following {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: rgba(255, 255, 255, 0.25) !important;
+        color: #E2E8F0 !important;
+    }
+
+    /* Media Display */
+    .post-media-container {
+        position: relative;
+        width: 100%;
+        background: #000000;
+        min-height: 280px;
+        max-height: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .post-media-img {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 600px !important;
+        object-fit: cover !important;
+    }
+
+    .post-video-player {
+        width: 100% !important;
+        max-height: 600px !important;
+        object-fit: contain !important;
+        background: #000;
+    }
+
+    .post-type-badge {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        color: #FFFFFF;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Double Tap Heart Burst */
+    .double-tap-heart {
+        position: absolute;
+        font-size: 5.5rem;
+        color: #ef4444;
+        opacity: 0;
+        transform: scale(0);
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 10;
+        text-shadow: 0 0 30px rgba(239, 68, 68, 0.9);
+    }
+
+    .double-tap-heart.animate {
+        opacity: 1;
+        transform: scale(1.2);
+        animation: heartBurst 0.8s ease forwards;
+    }
+
+    @keyframes heartBurst {
+        0% { opacity: 0; transform: scale(0.3); }
+        50% { opacity: 1; transform: scale(1.3); }
+        100% { opacity: 0; transform: scale(1.8) translateY(-30px); }
+    }
+
+    /* Post Actions */
+    .post-actions-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 22px 10px;
+    }
+
+    .post-actions-left {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .post-action-icon-btn {
+        background: transparent !important;
+        border: none !important;
+        color: #E2E8F0 !important;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .post-action-icon-btn:hover {
+        transform: scale(1.18);
+        color: #FFFFFF !important;
+    }
+
+    .post-action-icon-btn.liked {
+        color: #ef4444 !important;
+    }
+
+    .post-action-icon-btn.saved {
+        color: #F8C922 !important;
+    }
+
+    /* Post Body */
+    .post-body-container {
+        padding: 0 22px 18px;
+    }
+
+    .post-likes-counter {
+        font-size: 0.96rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+        margin-bottom: 10px;
+    }
+
+    .post-caption-text {
+        font-size: 0.98rem;
+        color: #E2E8F0 !important;
+        line-height: 1.65;
+        margin-bottom: 12px;
+    }
+
+    .post-timestamp-tag {
+        font-size: 0.8rem;
+        color: #64748B !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Attached Itinerary Card */
+    .linked-itinerary-banner {
+        background: rgba(248, 201, 34, 0.08) !important;
+        border: 1.5px solid rgba(248, 201, 34, 0.35) !important;
+        border-radius: 18px !important;
+        padding: 14px 18px !important;
+        margin: 14px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .itinerary-compass-icon {
+        width: 42px;
+        height: 42px;
+        background: rgba(248, 201, 34, 0.2);
+        border-radius: 12px;
+        color: #F8C922;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .btn-view-itinerary {
+        background: #F8C922 !important;
+        color: #0f172a !important;
+        font-weight: 800 !important;
+        font-size: 0.88rem !important;
+        padding: 9px 18px !important;
+        border-radius: 20px !important;
+        text-decoration: none !important;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+    }
+
+    .btn-view-itinerary:hover {
+        background: #FFD84D !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(248, 201, 34, 0.45);
+    }
+
+    /* Comments Section */
+    .comments-thread-box {
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 16px 22px;
+        background: rgba(0, 0, 0, 0.15);
+    }
+
+    .comment-row-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+        font-size: 0.92rem;
+    }
+
+    .comment-author-avatar {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+        flex-shrink: 0;
+    }
+
+    .comment-author-name {
+        font-weight: 700;
+        color: #FFFFFF !important;
+        margin-right: 8px;
+        text-decoration: none !important;
+    }
+
+    .comment-text-content {
+        color: #CBD5E1 !important;
+        word-break: break-word;
+    }
+
+    .inline-comment-form {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 14px;
+    }
+
+    .inline-comment-input {
+        flex: 1;
+        background: #1a2236 !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 24px !important;
+        padding: 11px 20px !important;
+        color: #FFFFFF !important;
+        font-size: 0.92rem;
+    }
+
+    .inline-comment-input:focus {
+        background: #242e47 !important;
+        border-color: #F8C922 !important;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(248, 201, 34, 0.25) !important;
+    }
+
+    .btn-post-comment {
+        background: transparent !important;
+        border: none !important;
+        color: #F8C922 !important;
+        font-weight: 800 !important;
+        font-size: 0.95rem;
+        cursor: pointer;
+        padding: 0 10px;
+    }
+
+    /* Right Sidebar */
+    .suggested-creators-card {
+        background: #111827 !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 24px !important;
+        padding: 22px 20px !important;
+        margin-bottom: 24px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .sidebar-heading {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #FFFFFF !important;
+        margin-bottom: 18px;
+    }
+
+    .creator-suggestion-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+
+    .creator-suggestion-avatar {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+        border: 2px solid #F8C922 !important;
+    }
+
+    .trending-dest-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: #1a2236 !important;
+        border-radius: 14px;
+        margin-bottom: 10px;
+        text-decoration: none !important;
+        color: #FFFFFF !important;
+        transition: all 0.2s ease;
+    }
+
+    .trending-dest-item:hover {
+        background: #242e47 !important;
+        transform: translateX(4px);
+        color: #F8C922 !important;
+    }
+
+    /* Modal Dark Theme */
+    .custom-modal-dark .modal-content {
+        background: #111827 !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+        border-radius: 28px !important;
+        color: #E2E8F0 !important;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.75) !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+        .community-layout-grid {
+            grid-template-columns: 240px minmax(0, 1fr);
+        }
+        .right-discovery-col {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .community-layout-grid {
+            grid-template-columns: 1fr;
+        }
+        .left-navigation-col {
+            display: none;
+        }
+        .post-social-card {
+            border-radius: 18px !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="community-wrapper">
+    <div class="community-layout-grid">
+        
+        <!-- ===================================================================
+             LEFT NAVIGATION SIDEBAR (Sticky)
+             =================================================================== -->
+        <aside class="left-navigation-col">
+            <div class="sidebar-sticky-box">
+                
+                <!-- Current User Mini Card -->
+                <div class="user-mini-card">
+                    <img src="{% if user.is_authenticated %}{{ user.get_avatar }}{% else %}https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80{% endif %}" 
+                         alt="Avatar" 
+                         class="user-mini-avatar">
+                    <div class="overflow-hidden">
+                        <h6 class="text-white fw-bold mb-0 text-truncate">
+                            {% if user.is_authenticated %}{{ user.name|default:user.username }}{% else %}Guest Explorer{% endif %}
+                        </h6>
+                        <small class="text-muted">
+                            {% if user.is_authenticated %}@{{ user.username }}{% else %}Welcome to TourCraze{% endif %}
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="d-flex flex-column">
+                    <a href="{% url 'community_list' %}?tab=trending" class="nav-pill-item {% if current_tab == 'trending' %}active{% endif %}">
+                        <i class="fas fa-fire text-warning"></i>
+                        <span>Trending / For You</span>
+                    </a>
+                    <a href="{% url 'community_list' %}?tab=following" class="nav-pill-item {% if current_tab == 'following' %}active{% endif %}">
+                        <i class="fas fa-user-group text-info"></i>
+                        <span>Following</span>
+                    </a>
+                    <a href="{% url 'community_list' %}?tab=reels" class="nav-pill-item {% if current_tab == 'reels' %}active{% endif %}">
+                        <i class="fas fa-play text-danger"></i>
+                        <span>Travel Reels</span>
+                    </a>
+                    <a href="{% url 'community_list' %}?tab=hidden_gems" class="nav-pill-item {% if current_tab == 'hidden_gems' %}active{% endif %}">
+                        <i class="fas fa-gem text-info"></i>
+                        <span>Hidden Gems</span>
+                    </a>
+                    <a href="{% url 'community_list' %}?tab=itineraries" class="nav-pill-item {% if current_tab == 'itineraries' %}active{% endif %}">
+                        <i class="fas fa-route text-success"></i>
+                        <span>Shared Itineraries</span>
+                    </a>
+                    <a href="{% url 'plan_trip' %}" class="nav-pill-item">
+                        <i class="fas fa-wand-magic-sparkles text-warning"></i>
+                        <span>AI Trip Planner</span>
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'creator_profile' user.username %}" class="nav-pill-item">
+                        <i class="fas fa-circle-user text-primary"></i>
+                        <span>My Creator Profile</span>
+                    </a>
+                    {% endif %}
+                </nav>
+
+                <!-- Create Post CTA Button -->
+                <button type="button" class="btn-create-post-cta" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                    <i class="fas fa-plus-circle"></i> Create Travel Post
+                </button>
+            </div>
+        </aside>
+
+        <!-- ===================================================================
+             CENTER MAIN FEED STREAM
+             =================================================================== -->
+        <main class="center-feed-col">
+
+            <!-- 1. Instagram-Style Stories Tray -->
+            <section class="stories-tray-box">
+                <div class="stories-scroll-container">
+                    
+                    <!-- Add Your Story Trigger -->
+                    <div class="story-circle-item" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                        <div class="story-ring-wrapper" style="background: rgba(255, 255, 255, 0.15);">
+                            <div style="width: 100%; height: 100%; border-radius: 50%; background: #1a2236; display: flex; align-items: center; justify-content: center; color: #F8C922; font-size: 1.4rem;">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                        </div>
+                        <span class="story-username-label">Add Story</span>
+                    </div>
+
+                    <!-- Seeded Creator Stories -->
+                    {% for story in stories %}
+                    <div class="story-circle-item story-trigger-item" 
+                         data-story-creator="{{ story.creator.name|default:story.creator.username }}"
+                         data-story-handle="@{{ story.creator.username }}"
+                         data-story-avatar="{{ story.creator.get_avatar }}"
+                         data-story-dest="{{ story.destination }}"
+                         data-story-title="{{ story.title }}"
+                         data-story-media="{{ story.media_url }}">
+                        <div class="story-ring-wrapper">
+                            <img src="{{ story.creator.get_avatar }}" alt="{{ story.creator.username }}" class="story-avatar-img">
+                        </div>
+                        <span class="story-username-label">{{ story.creator.name|default:story.creator.username }}</span>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </section>
+
+            <!-- 2. Quick Post Composer Box -->
+            <section class="quick-composer-card">
+                <div class="composer-top-row">
+                    <img src="{% if user.is_authenticated %}{{ user.get_avatar }}{% else %}https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80{% endif %}" 
+                         alt="Avatar" 
+                         class="user-mini-avatar">
+                    <div class="composer-input-trigger" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                        Share your latest travel story, photos or reel...
+                    </div>
+                </div>
+                <div class="composer-actions-row">
+                    <button class="composer-action-btn" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                        <i class="fas fa-image text-success"></i> Photo
+                    </button>
+                    <button class="composer-action-btn" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                        <i class="fas fa-video text-danger"></i> Travel Reel
+                    </button>
+                    <button class="composer-action-btn" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                        <i class="fas fa-map-location-dot text-info"></i> Tag Location
+                    </button>
+                    <button class="composer-action-btn" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                        <i class="fas fa-compass text-warning"></i> Attach Itinerary
+                    </button>
+                </div>
+            </section>
+
+            <!-- 3. Feed Header & Status -->
+            <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+                <h4 class="text-white fw-bold mb-0">
+                    {% if current_tab == 'trending' %}🔥 Trending Travel Stories
+                    {% elif current_tab == 'following' %}👥 Following Feed
+                    {% elif current_tab == 'reels' %}🎥 Travel Reels & Videos
+                    {% elif current_tab == 'hidden_gems' %}💎 Underrated Hidden Gems
+                    {% elif current_tab == 'itineraries' %}🗺️ Member Itineraries
+                    {% else %}Travel Stories{% endif %}
+                </h4>
+                <div class="text-muted small">
+                    Showing {{ posts|length }} posts
+                </div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show text-dark fw-medium mb-4" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- 4. Posts Feed Loop -->
+            <div class="posts-feed-container" id="postsFeed">
+                {% if posts %}
+                    {% for post in posts %}
+                    <article class="post-social-card" id="post-card-{{ post.id }}">
+                        
+                        <!-- Post Header -->
+                        <div class="post-header-row">
+                            <a href="{% url 'creator_profile' post.author.username %}" class="post-author-link">
+                                <img src="{{ post.author.get_avatar }}" alt="{{ post.author.username }}" class="post-author-avatar">
+                                <div class="post-author-meta">
+                                    <h6>
+                                        {{ post.author.name|default:post.author.username }}
+                                        {% if post.author.is_verified_creator %}
+                                        <i class="fas fa-check-circle text-primary ms-1" title="Verified Travel Creator"></i>
+                                        {% endif %}
+                                    </h6>
+                                    {% if post.destination %}
+                                    <p class="post-location-tag">
+                                        <i class="fas fa-location-dot"></i> {{ post.destination }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </a>
+
+                            <div class="d-flex align-items-center gap-2">
+                                {% if user.is_authenticated and user != post.author %}
+                                <button class="btn-follow-toggle {% if post.author.id in following_user_ids %}following{% endif %}" 
+                                        data-user-id="{{ post.author.id }}">
+                                    {% if post.author.id in following_user_ids %}Following{% else %}+ Follow{% endif %}
+                                </button>
+                                {% endif %}
+                                <button class="btn btn-link text-muted p-0 ms-2 btn-share-post" data-post-id="{{ post.id }}">
+                                    <i class="fas fa-ellipsis"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Post Media Container -->
+                        <div class="post-media-container" data-post-id="{{ post.id }}">
+                            <i class="fas fa-heart double-tap-heart"></i>
+
+                            {% if post.post_type == 'VIDEO' and post.get_video_url %}
+                                <video class="post-video-player" controls loop playsinline preload="metadata">
+                                    <source src="{{ post.get_video_url }}" type="video/mp4">
+                                    Your browser does not support video playback.
+                                </video>
+                                <span class="post-type-badge"><i class="fas fa-play"></i> REEL</span>
+                            {% elif post.get_media_url %}
+                                <img src="{{ post.get_media_url }}" alt="Travel Photo" class="post-media-img" loading="lazy">
+                                {% if post.trip %}
+                                <span class="post-type-badge"><i class="fas fa-route"></i> ITINERARY ATTACHED</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Action Bar -->
+                        <div class="post-actions-bar">
+                            <div class="post-actions-left">
+                                <!-- Like Button -->
+                                <button class="post-action-icon-btn btn-like-post {% if post.id in liked_post_ids %}liked{% endif %}" data-post-id="{{ post.id }}">
+                                    <i class="{% if post.id in liked_post_ids %}fas{% else %}far{% endif %} fa-heart"></i>
+                                </button>
+                                
+                                <!-- Comment Button -->
+                                <button class="post-action-icon-btn btn-toggle-comments" data-post-id="{{ post.id }}">
+                                    <i class="far fa-comment"></i>
+                                </button>
+                                
+                                <!-- Share Button -->
+                                <button class="post-action-icon-btn btn-share-link" data-url="{% url 'single_post' post.id %}">
+                                    <i class="far fa-paper-plane"></i>
+                                </button>
+                            </div>
+
+                            <!-- Save / Bookmark Button -->
+                            <button class="post-action-icon-btn btn-save-post {% if post.id in saved_post_ids %}saved{% endif %}" data-post-id="{{ post.id }}">
+                                <i class="{% if post.id in saved_post_ids %}fas{% else %}far{% endif %} fa-bookmark"></i>
+                            </button>
+                        </div>
+
+                        <!-- Post Body & Captions -->
+                        <div class="post-body-container">
+                            <div class="post-likes-counter" id="likes-count-{{ post.id }}">
+                                {{ post.likes.count }} likes
+                            </div>
+
+                            <div class="post-caption-text">
+                                <a href="{% url 'creator_profile' post.author.username %}" class="fw-bold text-white text-decoration-none me-1">
+                                    {{ post.author.username }}
+                                </a>
+                                <span>{{ post.content }}</span>
+                            </div>
+
+                            <!-- Attached Smart Itinerary Banner -->
+                            {% if post.trip %}
+                            <div class="linked-itinerary-banner">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="itinerary-compass-icon">
+                                        <i class="fas fa-compass"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-white fw-bold mb-0">{{ post.trip.title|default:post.trip.destination }}</h6>
+                                        <small class="text-muted">{{ post.trip.days }} Days • {{ post.trip.travel_style }} • {{ post.trip.formatted_budget }}</small>
+                                    </div>
+                                </div>
+                                <a href="{% url 'trip_detail' post.trip.id %}" class="btn-view-itinerary">
+                                    View Full Plan <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                            {% endif %}
+
+                            <div class="post-timestamp-tag">
+                                {{ post.created_at|timesince }} ago
+                            </div>
+                        </div>
+
+                        <!-- Comments Thread -->
+                        <div class="comments-thread-box" id="comments-box-{{ post.id }}">
+                            <div class="comments-list" id="comments-list-{{ post.id }}">
+                                {% for comment in post.comments.all|slice:":4" %}
+                                <div class="comment-row-item">
+                                    <img src="{{ comment.author.get_avatar }}" alt="Avatar" class="comment-author-avatar">
+                                    <div>
+                                        <a href="{% url 'creator_profile' comment.author.username %}" class="comment-author-name">
+                                            {{ comment.author.username }}
+                                        </a>
+                                        <span class="comment-text-content">{{ comment.content }}</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Inline Comment Input -->
+                            <form class="inline-comment-form" data-post-id="{{ post.id }}">
+                                {% csrf_token %}
+                                <input type="text" 
+                                       class="inline-comment-input" 
+                                       placeholder="Add a travel comment..." 
+                                       required 
+                                       autocomplete="off">
+                                <button type="submit" class="btn-post-comment">Post</button>
+                            </form>
+                        </div>
+
+                    </article>
+                    {% endfor %}
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="text-center py-5">
+                        <div style="font-size: 3.5rem; color: #F8C922; margin-bottom: 16px;">
+                            <i class="fas fa-compass"></i>
+                        </div>
+                        <h4 class="text-white fw-bold">No travel posts found in this feed</h4>
+                        <p class="text-muted">Be the first explorer to share a story or trip!</p>
+                        <button class="btn btn-warning fw-bold px-4 py-2 rounded-pill mt-2" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                            <i class="fas fa-plus me-1"></i> Share First Story
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </main>
+
+        <!-- ===================================================================
+             RIGHT DISCOVERY SIDEBAR (Sticky)
+             =================================================================== -->
+        <aside class="right-discovery-col">
+            
+            <!-- Suggested Creators -->
+            <div class="suggested-creators-card">
+                <div class="sidebar-heading">
+                    <span>🌟 Top Travel Creators</span>
+                </div>
+                
+                {% for creator in suggested_creators %}
+                <div class="creator-suggestion-row">
+                    <a href="{% url 'creator_profile' creator.username %}" class="d-flex align-items-center gap-2 text-decoration-none text-white overflow-hidden me-2">
+                        <img src="{{ creator.get_avatar }}" alt="{{ creator.username }}" class="creator-suggestion-avatar">
+                        <div class="overflow-hidden">
+                            <h6 class="text-white fw-bold mb-0 text-truncate small">
+                                {{ creator.name|default:creator.username }}
+                                <i class="fas fa-check-circle text-primary small ms-1"></i>
+                            </h6>
+                            <p class="text-muted text-truncate small mb-0">{{ creator.bio|default:"Travel Creator" }}</p>
+                        </div>
+                    </a>
+                    <button class="btn-follow-toggle flex-shrink-0" data-user-id="{{ creator.id }}">+ Follow</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Trending Destinations -->
+            <div class="suggested-creators-card">
+                <div class="sidebar-heading">
+                    <span>📍 Trending Spots</span>
+                </div>
+                {% for dest in trending_destinations %}
+                <a href="{% url 'community_list' %}?dest={{ dest.name }}" class="trending-dest-item">
+                    <div>
+                        <div class="fw-bold text-white small">{{ dest.name }}</div>
+                        <small class="text-muted">{{ dest.count }}</small>
+                    </div>
+                    <span class="badge bg-dark text-warning border border-warning border-opacity-25">{{ dest.tag }}</span>
+                </a>
+                {% endfor %}
+            </div>
+
+            <!-- AI Trip Planner Mini Banner -->
+            <div class="suggested-creators-card" style="background: linear-gradient(135deg, rgba(248, 201, 34, 0.12) 0%, rgba(56, 189, 248, 0.12) 100%); border-color: rgba(248, 201, 34, 0.3);">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <span style="font-size: 2rem;">✨</span>
+                    <div>
+                        <h6 class="text-white fw-bold mb-0">Plan Your Next Trip</h6>
+                        <small class="text-warning">Generate Day-by-Day AI Itineraries</small>
+                    </div>
+                </div>
+                <p class="text-muted small mb-3">Get tailored routes, estimated costs, and morning/evening activities in seconds.</p>
+                <a href="{% url 'plan_trip' %}" class="btn btn-warning w-100 fw-bold rounded-pill">
+                    Launch Planner Studio ➔
+                </a>
+            </div>
+
+        </aside>
+
+    </div>
+</div>
+
+<!-- ===========================================================================
+     MODAL: Create New Travel Post / Reel
+     =========================================================================== -->
+<div class="modal fade custom-modal-dark" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white fw-bold" id="createPostModalLabel">
+                    <i class="fas fa-wand-magic-sparkles text-warning me-2"></i> Share a Travel Story or Reel
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    
+                    <!-- Destination & Style -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-7">
+                            <label class="form-label text-white fw-semibold"><i class="fas fa-location-dot text-danger me-1"></i> Destination</label>
+                            <input type="text" name="destination" class="form-control" placeholder="e.g. Spiti Valley, Goa, Kashmir, Bali..." required style="background: #1a2236; color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; height: 50px;">
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label text-white fw-semibold"><i class="fas fa-compass text-warning me-1"></i> Travel Style</label>
+                            <select name="travel_style" class="form-select" style="background: #1a2236; color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; height: 50px;">
+                                <option value="Adventure">🧗 Adventure</option>
+                                <option value="Relaxed" selected>🌴 Relaxed</option>
+                                <option value="Luxury">✨ Luxury</option>
+                                <option value="Budget">🎒 Budget</option>
+                                <option value="Family">👨‍👩‍👧‍👦 Family</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Caption Content -->
+                    <div class="mb-3">
+                        <label class="form-label text-white fw-semibold"><i class="fas fa-pen text-info me-1"></i> Your Travel Caption & Highlights</label>
+                        <textarea name="content" class="form-control" rows="4" placeholder="What made this journey unforgettable? Include tips, sights, weather & #hashtags..." required style="background: #1a2236; color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 14px;"></textarea>
+                    </div>
+
+                    <!-- Media Upload Tabs -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-white fw-semibold"><i class="fas fa-image text-success me-1"></i> High-Res Image Link (URL)</label>
+                            <input type="url" name="image_url" class="form-control" placeholder="https://images.unsplash.com/..." style="background: #1a2236; color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white fw-semibold"><i class="fas fa-video text-danger me-1"></i> Video Reel Link (MP4 URL)</label>
+                            <input type="url" name="video_url" class="form-control" placeholder="https://assets.mixkit.co/preview.mp4" style="background: #1a2236; color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;">
+                        </div>
+                    </div>
+
+                    <!-- Optional Attach Saved Smart Trip -->
+                    {% if user_saved_trips %}
+                    <div class="mb-3">
+                        <label class="form-label text-white fw-semibold"><i class="fas fa-route text-warning me-1"></i> Attach One of Your TourCraze Smart Trips (Optional)</label>
+                        <select name="trip_id" class="form-select" style="background: #1a2236; color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; height: 50px;">
+                            <option value="">-- Do not attach any trip --</option>
+                            {% for trip in user_saved_trips %}
+                            <option value="{{ trip.id }}">{{ trip.destination }} ({{ trip.days }} Days - {{ trip.formatted_budget }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.1);">
+                    <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning fw-bold rounded-pill px-4">
+                        <i class="fas fa-paper-plane me-1"></i> Publish Post
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ===========================================================================
+     MODAL: Full-Screen Instagram Story Viewer
+     =========================================================================== -->
+<div class="story-viewer-overlay" id="storyViewerModal">
+    <div class="story-box-phone">
+        
+        <!-- Progress Bar -->
+        <div class="story-progress-bar-container">
+            <div class="story-progress-fill" id="storyProgressFill"></div>
+        </div>
+
+        <!-- Header -->
+        <div class="story-header-overlay">
+            <div class="story-creator-info">
+                <img src="" alt="Story Avatar" class="story-creator-avatar" id="storyViewerAvatar">
+                <div>
+                    <div class="fw-bold text-white small" id="storyViewerName"></div>
+                    <small class="text-warning" id="storyViewerDest"></small>
+                </div>
+            </div>
+            <button class="story-close-btn" id="btnCloseStory"><i class="fas fa-xmark"></i></button>
+        </div>
+
+        <!-- Media View -->
+        <img src="" alt="Story Media" class="story-media-view" id="storyViewerImage">
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    function getCsrfToken() {
+        const tokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        if (tokenInput) return tokenInput.value;
+        const cookies = document.cookie.split(';');
+        for (let c of cookies) {
+            c = c.trim();
+            if (c.startsWith('csrftoken=')) {
+                return c.substring('csrftoken='.length);
+            }
+        }
+        return '';
+    }
+
+    // 1. AJAX Like
+    function handleLike(postId, buttonEl, triggerHeartAnim = false, containerEl = null) {
+        fetch(`/community/api/like/${postId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                const allButtons = document.querySelectorAll(`.btn-like-post[data-post-id="${postId}"]`);
+                allButtons.forEach(btn => {
+                    const icon = btn.querySelector('i');
+                    if (data.liked) {
+                        btn.classList.add('liked');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    } else {
+                        btn.classList.remove('liked');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    }
+                });
+
+                const counter = document.getElementById(`likes-count-${postId}`);
+                if (counter) counter.innerText = `${data.likes_count} likes`;
+
+                if (triggerHeartAnim && containerEl) {
+                    const heart = containerEl.querySelector('.double-tap-heart');
+                    if (heart) {
+                        heart.classList.remove('animate');
+                        void heart.offsetWidth;
+                        heart.classList.add('animate');
+                    }
+                }
+            }
+        })
+        .catch(err => console.error(err));
+    }
+
+    document.querySelectorAll('.btn-like-post').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            handleLike(postId, this);
+        });
+    });
+
+    document.querySelectorAll('.post-media-container').forEach(container => {
+        let lastTap = 0;
+        container.addEventListener('click', function(e) {
+            if (e.target.tagName === 'VIDEO') return;
+            const now = new Date().getTime();
+            const timesince = now - lastTap;
+            if (timesince < 350 && timesince > 0) {
+                const postId = this.getAttribute('data-post-id');
+                const btn = document.querySelector(`.btn-like-post[data-post-id="${postId}"]`);
+                handleLike(postId, btn, true, this);
+            }
+            lastTap = now;
+        });
+    });
+
+    // 2. AJAX Bookmark / Save
+    document.querySelectorAll('.btn-save-post').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            fetch(`/community/api/save/${postId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const icon = this.querySelector('i');
+                    if (data.saved) {
+                        this.classList.add('saved');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    } else {
+                        this.classList.remove('saved');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    }
+                }
+            });
+        });
+    });
+
+    // 3. AJAX Follow
+    document.querySelectorAll('.btn-follow-toggle').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            fetch(`/community/api/follow/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const allFollowBtns = document.querySelectorAll(`.btn-follow-toggle[data-user-id="${userId}"]`);
+                    allFollowBtns.forEach(b => {
+                        if (data.following) {
+                            b.classList.add('following');
+                            b.innerText = 'Following';
+                        } else {
+                            b.classList.remove('following');
+                            b.innerText = '+ Follow';
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    // 4. AJAX Comment
+    document.querySelectorAll('.inline-comment-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const postId = this.getAttribute('data-post-id');
+            const input = this.querySelector('.inline-comment-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const formData = new FormData();
+            formData.append('content', text);
+
+            fetch(`/community/api/comment/${postId}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCsrfToken() },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const list = document.getElementById(`comments-list-${postId}`);
+                    if (list) {
+                        const newCommentRow = document.createElement('div');
+                        newCommentRow.className = 'comment-row-item';
+                        newCommentRow.innerHTML = `
+                            <img src="${data.comment.avatar}" alt="Avatar" class="comment-author-avatar">
+                            <div>
+                                <a href="/community/creator/${data.comment.author}/" class="comment-author-name">
+                                    ${data.comment.author}
+                                </a>
+                                <span class="comment-text-content">${data.comment.content}</span>
+                            </div>
+                        `;
+                        list.appendChild(newCommentRow);
+                    }
+                    input.value = '';
+                }
+            });
+        });
+    });
+
+    // 5. Stories Modal Viewer
+    const storyOverlay = document.getElementById('storyViewerModal');
+    const storyAvatar = document.getElementById('storyViewerAvatar');
+    const storyName = document.getElementById('storyViewerName');
+    const storyDest = document.getElementById('storyViewerDest');
+    const storyImage = document.getElementById('storyViewerImage');
+    const storyProgress = document.getElementById('storyProgressFill');
+    const btnCloseStory = document.getElementById('btnCloseStory');
+    let storyTimeout = null;
+
+    document.querySelectorAll('.story-trigger-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const creator = this.getAttribute('data-story-creator');
+            const avatar = this.getAttribute('data-story-avatar');
+            const dest = this.getAttribute('data-story-dest');
+            const media = this.getAttribute('data-story-media');
+
+            storyName.innerText = creator;
+            storyAvatar.src = avatar;
+            storyDest.innerText = dest ? `📍 ${dest}` : '';
+            storyImage.src = media;
+
+            storyProgress.style.transition = 'none';
+            storyProgress.style.width = '0%';
+            storyOverlay.classList.add('active');
+
+            setTimeout(() => {
+                storyProgress.style.transition = 'width 4.5s linear';
+                storyProgress.style.width = '100%';
+            }, 50);
+
+            clearTimeout(storyTimeout);
+            storyTimeout = setTimeout(() => {
+                closeStory();
+            }, 4600);
+        });
+    });
+
+    function closeStory() {
+        storyOverlay.classList.remove('active');
+        clearTimeout(storyTimeout);
+    }
+
+    btnCloseStory?.addEventListener('click', closeStory);
+    storyOverlay?.addEventListener('click', function(e) {
+        if (e.target === storyOverlay) closeStory();
+    });
+
+    // 6. Share Link
+    document.querySelectorAll('.btn-share-link').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const path = this.getAttribute('data-url');
+            const fullUrl = window.location.origin + path;
+            navigator.clipboard.writeText(fullUrl).then(() => {
+                alert("✨ Post link copied to clipboard!");
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

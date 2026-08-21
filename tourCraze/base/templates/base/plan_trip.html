@@ -1,0 +1,1841 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/trip_planner.css' %}">
+<style>
+    /* ==========================================================================
+       High-End Trip Planner Studio Design System
+       ========================================================================== */
+    .planner-page {
+        background-color: #0c111f !important;
+        color: #E2E8F0 !important;
+        min-height: 100vh;
+        padding-bottom: 90px;
+    }
+
+    /* Hero Header */
+    .planner-hero-banner {
+        padding: 50px 0 25px;
+        text-align: center;
+    }
+
+    .planner-hero-banner h1 {
+        font-size: 2.9rem !important;
+        font-weight: 800 !important;
+        color: #FFFFFF !important;
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+    }
+
+    .planner-hero-banner p {
+        font-size: 1.15rem !important;
+        color: #94A3B8 !important;
+        max-width: 760px;
+        margin: 0 auto 24px;
+        line-height: 1.7;
+    }
+
+    /* Studio Mode Navigation Switcher */
+    .studio-mode-nav-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 35px;
+    }
+
+    .studio-mode-nav {
+        background: rgba(15, 23, 42, 0.9);
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        border-radius: 9999px;
+        padding: 6px;
+        display: inline-flex;
+        gap: 6px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(16px);
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .studio-tab-btn {
+        background: transparent;
+        border: none;
+        color: #94A3B8;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 12px 24px;
+        border-radius: 9999px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .studio-tab-btn:hover {
+        color: #FFFFFF;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .studio-tab-btn.active {
+        background: linear-gradient(135deg, #F8C922 0%, #F59E0B 100%);
+        color: #071021 !important;
+        box-shadow: 0 8px 24px rgba(248, 201, 34, 0.4);
+    }
+
+    .studio-tab-badge {
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.2);
+        color: inherit;
+        font-weight: 800;
+    }
+
+    .studio-tab-btn.active .studio-tab-badge {
+        background: rgba(7, 16, 33, 0.25);
+        color: #071021;
+    }
+
+    /* Main Studio Glass Box */
+    .studio-card-box {
+        background: #111827 !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 28px !important;
+        padding: 44px 48px !important;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55) !important;
+        margin-bottom: 40px;
+        backdrop-filter: blur(20px);
+    }
+
+    /* Form Section Dividers & Labels */
+    .form-group-section {
+        margin-bottom: 34px;
+    }
+
+    .studio-label {
+        color: #FFFFFF !important;
+        font-size: 0.98rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        text-transform: uppercase;
+    }
+
+    .studio-label i {
+        color: #F8C922;
+        font-size: 1.1rem;
+    }
+
+    /* Destination Input */
+    .studio-input-text {
+        background: #1a2236 !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+        color: #FFFFFF !important;
+        border-radius: 16px !important;
+        height: 58px;
+        padding: 0 22px !important;
+        font-size: 1.12rem !important;
+        font-weight: 500;
+        transition: all 0.25s ease;
+    }
+
+    .studio-input-text:focus {
+        background: #1e293b !important;
+        border-color: #F8C922 !important;
+        box-shadow: 0 0 0 4px rgba(248, 201, 34, 0.25) !important;
+        color: #FFFFFF !important;
+    }
+
+    .studio-input-text::placeholder {
+        color: #94A3B8 !important;
+        font-size: 1rem;
+    }
+
+    /* Autocomplete Floating Dropdown */
+    .autocomplete-box-wrapper {
+        position: relative;
+    }
+
+    .destination-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        background: #0f172a;
+        border: 1.5px solid rgba(255, 255, 255, 0.18);
+        border-radius: 18px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
+        z-index: 1050;
+        max-height: 380px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .dropdown-dest-item {
+        padding: 12px 18px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+        margin-bottom: 4px;
+    }
+
+    .dropdown-dest-item:hover, .dropdown-dest-item.active-item {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(248, 201, 34, 0.35);
+    }
+
+    .dest-icon-box {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.15rem;
+        background: rgba(248, 201, 34, 0.15);
+        color: #F8C922;
+        flex-shrink: 0;
+    }
+
+    .dest-name-title {
+        color: #FFFFFF !important;
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin: 0;
+    }
+
+    .dest-state-sub {
+        color: #94A3B8;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+    /* Preset Chip Rows */
+    .chip-collection-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .chip-label-tag {
+        font-size: 0.88rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .studio-preset-chip {
+        background: #1a2236;
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        color: #E2E8F0 !important;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        transition: all 0.2s ease;
+    }
+
+    .studio-preset-chip:hover {
+        background: #F8C922;
+        color: #0f172a !important;
+        border-color: #F8C922;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(248, 201, 34, 0.35);
+    }
+
+    .studio-preset-chip.chip-gem {
+        background: rgba(56, 189, 248, 0.1);
+        border-color: rgba(56, 189, 248, 0.35);
+        color: #38bdf8 !important;
+    }
+
+    .studio-preset-chip.chip-gem:hover {
+        background: #38bdf8;
+        color: #0f172a !important;
+        border-color: #38bdf8;
+        box-shadow: 0 6px 18px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Travel Style 5-Column Grid */
+    .style-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+        margin-top: 10px;
+    }
+
+    .style-selection-card {
+        background: #1a2236;
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        padding: 22px 14px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .style-selection-card:hover {
+        background: #242e47;
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-3px);
+    }
+
+    .style-card-icon {
+        font-size: 2.2rem;
+        margin-bottom: 8px;
+        line-height: 1;
+    }
+
+    .style-card-title {
+        color: #FFFFFF !important;
+        font-size: 1.08rem !important;
+        font-weight: 800 !important;
+        margin: 0 0 4px;
+    }
+
+    .style-card-desc {
+        color: #94A3B8 !important;
+        font-size: 0.8rem !important;
+        font-weight: 500;
+        margin: 0;
+        line-height: 1.35;
+    }
+
+    input[type="radio"]:checked + .style-selection-card {
+        background: rgba(248, 201, 34, 0.14) !important;
+        border-color: #F8C922 !important;
+        box-shadow: 0 0 24px rgba(248, 201, 34, 0.28) !important;
+        transform: translateY(-4px);
+    }
+
+    input[type="radio"]:checked + .style-selection-card .style-card-title {
+        color: #F8C922 !important;
+    }
+
+    /* Stepper Input Groups */
+    .studio-stepper-group {
+        display: flex;
+        align-items: center;
+        background: #1a2236;
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        overflow: hidden;
+        height: 58px;
+    }
+
+    .studio-stepper-btn {
+        width: 54px;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: none;
+        color: #FFFFFF;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease;
+    }
+
+    .studio-stepper-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #F8C922;
+    }
+
+    .studio-stepper-value {
+        flex: 1;
+        background: transparent !important;
+        border: none !important;
+        color: #FFFFFF !important;
+        font-size: 1.35rem !important;
+        font-weight: 800 !important;
+        text-align: center;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* Budget Input */
+    .studio-budget-group {
+        display: flex;
+        align-items: center;
+        background: #1a2236;
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        height: 58px;
+        padding: 0 16px;
+    }
+
+    .studio-budget-prefix {
+        color: #F8C922;
+        font-size: 1.35rem;
+        font-weight: 800;
+        margin-right: 10px;
+    }
+
+    .studio-budget-input {
+        background: transparent !important;
+        border: none !important;
+        color: #FFFFFF !important;
+        font-size: 1.25rem !important;
+        font-weight: 800 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        width: 100%;
+    }
+
+    .quick-budget-pill {
+        background: #1a2236;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #E2E8F0;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 5px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .quick-budget-pill:hover {
+        background: #F8C922;
+        color: #0f172a;
+        border-color: #F8C922;
+    }
+
+    /* Interests Grid */
+    .interests-tags-flex {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .interest-tag-pill {
+        background: #1a2236;
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 30px;
+        padding: 12px 24px;
+        color: #E2E8F0 !important;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .interest-tag-pill:hover {
+        background: #242e47;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    input[type="checkbox"]:checked + .interest-tag-pill {
+        background: rgba(56, 189, 248, 0.2) !important;
+        border-color: #38bdf8 !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 0 18px rgba(56, 189, 248, 0.35) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Prominent Call to Action Button */
+    .btn-studio-generate {
+        background: linear-gradient(135deg, #F8C922 0%, #FFD84D 100%) !important;
+        color: #0f172a !important;
+        font-size: 1.3rem !important;
+        font-weight: 800 !important;
+        padding: 20px 60px !important;
+        border-radius: 20px !important;
+        border: none !important;
+        box-shadow: 0 14px 40px rgba(248, 201, 34, 0.4) !important;
+        transition: all 0.3s ease !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        cursor: pointer;
+    }
+
+    .btn-studio-generate:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 20px 50px rgba(248, 201, 34, 0.55) !important;
+        background: linear-gradient(135deg, #FFD84D 0%, #F8C922 100%) !important;
+    }
+
+    /* ==========================================================================
+       AI Destination Decision Quiz Styles
+       ========================================================================== */
+    .quiz-card-wrapper {
+        background: #111827;
+        border: 1.5px solid rgba(255, 255, 255, 0.14);
+        border-radius: 28px;
+        padding: 44px 48px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+        margin-bottom: 40px;
+    }
+
+    .quiz-progress-bar-wrap {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 9999px;
+        height: 8px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .quiz-progress-fill {
+        background: linear-gradient(90deg, #F8C922, #38BDF8);
+        height: 100%;
+        width: 20%;
+        transition: width 0.4s ease;
+    }
+
+    .quiz-question-title {
+        color: #FFFFFF;
+        font-size: 1.65rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .quiz-question-subtitle {
+        color: #94A3B8;
+        font-size: 1.05rem;
+        margin-bottom: 28px;
+    }
+
+    .quiz-options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 35px;
+    }
+
+    .quiz-choice-card {
+        background: #1a2236;
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        padding: 24px 18px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+    }
+
+    .quiz-choice-card:hover {
+        background: #242e47;
+        border-color: rgba(248, 201, 34, 0.5);
+        transform: translateY(-4px);
+    }
+
+    .quiz-choice-card.selected {
+        background: rgba(248, 201, 34, 0.14) !important;
+        border-color: #F8C922 !important;
+        box-shadow: 0 0 24px rgba(248, 201, 34, 0.3) !important;
+        transform: translateY(-4px);
+    }
+
+    .quiz-choice-icon {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+        line-height: 1;
+    }
+
+    .quiz-choice-title {
+        color: #FFFFFF;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+
+    .quiz-choice-desc {
+        color: #94A3B8;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+    .quiz-choice-card.selected .quiz-choice-title {
+        color: #F8C922;
+    }
+
+    /* Quiz Match Results Cards */
+    .quiz-match-card {
+        background: #1a2236;
+        border: 1.5px solid rgba(255, 255, 255, 0.14);
+        border-radius: 22px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .quiz-match-card:hover {
+        transform: translateY(-6px);
+        border-color: #F8C922;
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 25px rgba(248, 201, 34, 0.2);
+    }
+
+    .quiz-match-img-wrap {
+        position: relative;
+        height: 200px;
+        background: #0F172A;
+    }
+
+    .quiz-match-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .quiz-score-badge {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: #10B981;
+        color: #071021;
+        font-weight: 800;
+        font-size: 0.85rem;
+        padding: 5px 12px;
+        border-radius: 9999px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .quiz-match-body {
+        padding: 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* ==========================================================================
+       Radius & Distance Getaway Finder Styles
+       ========================================================================== */
+    .radius-explorer-wrapper {
+        background: #111827;
+        border: 1.5px solid rgba(255, 255, 255, 0.14);
+        border-radius: 28px;
+        padding: 40px 48px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+        margin-bottom: 40px;
+    }
+
+    .radius-control-dock {
+        background: rgba(26, 34, 54, 0.85);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 22px;
+        padding: 26px;
+        margin-bottom: 30px;
+    }
+
+    .custom-range-slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 10px;
+        border-radius: 5px;
+        background: linear-gradient(90deg, #F8C922, #38BDF8);
+        outline: none;
+        cursor: pointer;
+    }
+
+    .custom-range-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        border: 4px solid #F8C922;
+        box-shadow: 0 0 14px rgba(248, 201, 34, 0.7);
+        cursor: pointer;
+        transition: transform 0.15s ease;
+    }
+
+    .custom-range-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+    }
+
+    .radius-tier-pill {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #E2E8F0;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .radius-tier-pill:hover, .radius-tier-pill.active {
+        background: #F8C922;
+        color: #071021;
+        border-color: #F8C922;
+        font-weight: 700;
+    }
+
+    .radius-place-card {
+        background: #1a2236;
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .radius-place-card:hover {
+        transform: translateY(-6px);
+        border-color: #38bdf8;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.25);
+    }
+
+    .transit-badge {
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #38bdf8;
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 5px 12px;
+        border-radius: 12px;
+    }
+
+    .distance-tag-badge {
+        background: #F8C922;
+        color: #071021;
+        font-weight: 800;
+        font-size: 0.82rem;
+        padding: 5px 10px;
+        border-radius: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+        .style-cards-grid { grid-template-columns: repeat(3, 1fr); }
+        .studio-card-box, .quiz-card-wrapper, .radius-explorer-wrapper { padding: 32px 24px !important; }
+        .planner-hero-banner h1 { font-size: 2.3rem !important; }
+    }
+
+    @media (max-width: 576px) {
+        .style-cards-grid { grid-template-columns: repeat(2, 1fr); }
+        .planner-hero-banner h1 { font-size: 1.9rem !important; }
+        .btn-studio-generate { width: 100%; padding: 18px 24px !important; font-size: 1.15rem !important; }
+        .studio-tab-btn { padding: 8px 16px; font-size: 0.85rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="planner-page">
+    <div class="container py-4">
+        
+        <!-- Hero Header -->
+        <div class="planner-hero-banner">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 shadow-sm">
+                <i class="fas fa-wand-magic-sparkles me-1"></i> AI-POWERED SMART ITINERARY STUDIO
+            </span>
+            <h1>Design Your Perfect Journey</h1>
+            <p>Whether you have an exact dream destination in mind, want our AI Quiz to discover where your soul wants to go, or want to explore weekend getaways by distance from your city.</p>
+
+            <!-- Mode Switcher Navigation -->
+            <div class="studio-mode-nav-wrapper">
+                <div class="studio-mode-nav" role="tablist">
+                    <button type="button" class="studio-tab-btn active" id="tabBtnPlanner" onclick="switchStudioMode('planner')">
+                        <i class="fa-solid fa-sliders"></i> Custom Studio Planner
+                    </button>
+                    <button type="button" class="studio-tab-btn" id="tabBtnQuiz" onclick="switchStudioMode('quiz')">
+                        <i class="fa-solid fa-compass"></i> Undecided? Take Vibe Quiz <span class="studio-tab-badge">✨ 60s Match</span>
+                    </button>
+                    <button type="button" class="studio-tab-btn" id="tabBtnRadius" onclick="switchStudioMode('radius')">
+                        <i class="fa-solid fa-location-crosshairs"></i> Getaways by Distance <span class="studio-tab-badge">📍 KM Slider</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {% if messages %}
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-10">
+                {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show d-flex align-items-center justify-content-between shadow-lg" 
+                     style="background: linear-gradient(135deg, #064E3B 0%, #047857 100%); border: 1px solid #10B981; border-radius: 16px; color: #FFFFFF !important; padding: 16px 20px;" role="alert">
+                    <div class="d-flex align-items-center gap-2">
+                        <span style="font-size: 1.25rem;">✨</span>
+                        <span class="fw-semibold" style="color: #FFFFFF !important; font-size: 1.05rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">{{ message }}</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ===================================================================
+             MODE 1: CUSTOM STUDIO PLANNER FORM
+             =================================================================== -->
+        <div id="modePlannerSection" class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="studio-card-box">
+                    <form method="POST" action="{% url 'plan_trip' %}" id="tripPlannerForm">
+                        {% csrf_token %}
+
+                        <!-- Section 1: Destination Search with Autocomplete -->
+                        <div class="form-group-section">
+                            <label class="studio-label" for="id_destination">
+                                <i class="fas fa-map-pin"></i> Where do you want to go?
+                            </label>
+                            
+                            <div class="autocomplete-box-wrapper">
+                                <input type="text" 
+                                       name="destination" 
+                                       id="id_destination" 
+                                       class="form-control studio-input-text" 
+                                       placeholder="Start typing (e.g., Spiti, Dawki, Gokarna, Manali, Kashmir, Paris, Bali...)" 
+                                       value="{{ form.destination.value|default:'' }}" 
+                                       required 
+                                       autocomplete="off">
+                                
+                                <!-- Floating Dropdown Menu -->
+                                <div id="destinationDropdown" class="destination-dropdown-menu d-none"></div>
+                            </div>
+
+                            {% if form.destination.errors %}
+                            <div class="text-danger small mt-1">{{ form.destination.errors.0 }}</div>
+                            {% endif %}
+
+                            <!-- Quick Preset Chips: Trending -->
+                            <div class="chip-collection-row">
+                                <span class="chip-label-tag text-warning">
+                                    <i class="fas fa-fire me-1"></i>Trending:
+                                </span>
+                                <button type="button" class="studio-preset-chip" data-dest="Manali" data-days="5" data-budget="20000" data-style="Adventure"><i class="fas fa-mountain"></i> Manali</button>
+                                <button type="button" class="studio-preset-chip" data-dest="Goa" data-days="4" data-budget="25000" data-style="Relaxed"><i class="fas fa-umbrella-beach"></i> Goa</button>
+                                <button type="button" class="studio-preset-chip" data-dest="Kashmir" data-days="6" data-budget="35000" data-style="Luxury"><i class="fas fa-snowflake"></i> Kashmir</button>
+                                <button type="button" class="studio-preset-chip" data-dest="Jaipur" data-days="3" data-budget="15000" data-style="Family"><i class="fas fa-landmark"></i> Jaipur</button>
+                                <button type="button" class="studio-preset-chip" data-dest="Kerala" data-days="5" data-budget="28000" data-style="Relaxed"><i class="fas fa-water"></i> Kerala</button>
+                                <button type="button" class="studio-preset-chip" data-dest="Rishikesh" data-days="3" data-budget="12000" data-style="Adventure"><i class="fas fa-person-hiking"></i> Rishikesh</button>
+                                <button type="button" class="studio-preset-chip" data-dest="Ladakh" data-days="7" data-budget="40000" data-style="Adventure"><i class="fas fa-road"></i> Ladakh</button>
+                            </div>
+
+                            <!-- Quick Preset Chips: Underrated Hidden Gems -->
+                            <div class="chip-collection-row">
+                                <span class="chip-label-tag text-info">
+                                    <i class="fas fa-gem me-1"></i>Hidden Gems:
+                                </span>
+                                <button type="button" class="studio-preset-chip chip-gem" data-dest="Spiti Valley" data-days="6" data-budget="25000" data-style="Adventure"><i class="fas fa-mountain"></i> Spiti Valley</button>
+                                <button type="button" class="studio-preset-chip chip-gem" data-dest="Dawki & Meghalaya" data-days="5" data-budget="24000" data-style="Adventure"><i class="fas fa-water"></i> Meghalaya</button>
+                                <button type="button" class="studio-preset-chip chip-gem" data-dest="Gokarna & Honnavar" data-days="4" data-budget="16000" data-style="Relaxed"><i class="fas fa-umbrella-beach"></i> Gokarna</button>
+                                <button type="button" class="studio-preset-chip chip-gem" data-dest="Chopta & Tungnath" data-days="3" data-budget="12000" data-style="Adventure"><i class="fas fa-person-hiking"></i> Chopta</button>
+                                <button type="button" class="studio-preset-chip chip-gem" data-dest="Jibhi & Tirthan Valley" data-days="4" data-budget="15000" data-style="Relaxed"><i class="fas fa-tree"></i> Jibhi</button>
+                                <button type="button" class="studio-preset-chip chip-gem" data-dest="Ziro Valley" data-days="4" data-budget="18000" data-style="Relaxed"><i class="fas fa-seedling"></i> Ziro</button>
+                                <button type="button" class="studio-preset-chip chip-gem" data-dest="Hampi" data-days="3" data-budget="11000" data-style="Relaxed"><i class="fas fa-monument"></i> Hampi</button>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Travel Style 5-Card Grid -->
+                        <div class="form-group-section">
+                            <label class="studio-label">
+                                <i class="fas fa-compass"></i> Select Travel Style
+                            </label>
+                            
+                            <div class="style-cards-grid">
+                                <label class="m-0 cursor-pointer">
+                                    <input type="radio" name="travel_style" value="Relaxed" class="d-none" {% if form.travel_style.value == 'Relaxed' or not form.travel_style.value %}checked{% endif %}>
+                                    <div class="style-selection-card">
+                                        <div class="style-card-icon">🌴</div>
+                                        <h6 class="style-card-title">Relaxed</h6>
+                                        <p class="style-card-desc">Scenic & Leisure</p>
+                                    </div>
+                                </label>
+
+                                <label class="m-0 cursor-pointer">
+                                    <input type="radio" name="travel_style" value="Adventure" class="d-none" {% if form.travel_style.value == 'Adventure' %}checked{% endif %}>
+                                    <div class="style-selection-card">
+                                        <div class="style-card-icon">🧗</div>
+                                        <h6 class="style-card-title">Adventure</h6>
+                                        <p class="style-card-desc">Thrills & Treks</p>
+                                    </div>
+                                </label>
+
+                                <label class="m-0 cursor-pointer">
+                                    <input type="radio" name="travel_style" value="Luxury" class="d-none" {% if form.travel_style.value == 'Luxury' %}checked{% endif %}>
+                                    <div class="style-selection-card">
+                                        <div class="style-card-icon">✨</div>
+                                        <h6 class="style-card-title">Luxury</h6>
+                                        <p class="style-card-desc">VIP & Fine Dining</p>
+                                    </div>
+                                </label>
+
+                                <label class="m-0 cursor-pointer">
+                                    <input type="radio" name="travel_style" value="Budget" class="d-none" {% if form.travel_style.value == 'Budget' %}checked{% endif %}>
+                                    <div class="style-selection-card">
+                                        <div class="style-card-icon">🎒</div>
+                                        <h6 class="style-card-title">Budget</h6>
+                                        <p class="style-card-desc">Smart & Economical</p>
+                                    </div>
+                                </label>
+
+                                <label class="m-0 cursor-pointer">
+                                    <input type="radio" name="travel_style" value="Family" class="d-none" {% if form.travel_style.value == 'Family' %}checked{% endif %}>
+                                    <div class="style-selection-card">
+                                        <div class="style-card-icon">👨‍👩‍👧‍👦</div>
+                                        <h6 class="style-card-title">Family</h6>
+                                        <p class="style-card-desc">All Ages & Cozy</p>
+                                    </div>
+                                </label>
+                            </div>
+                            {% if form.travel_style.errors %}
+                            <div class="text-danger small mt-1">{{ form.travel_style.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Section 3: Duration, Travelers & Budget in 3 Columns -->
+                        <div class="form-group-section">
+                            <div class="row g-4">
+                                
+                                <!-- Duration (Days) -->
+                                <div class="col-md-4">
+                                    <label class="studio-label" for="id_days">
+                                        <i class="fas fa-calendar-day"></i> Duration (Days)
+                                    </label>
+                                    <div class="studio-stepper-group">
+                                        <button class="studio-stepper-btn" type="button" id="btnDaysMinus"><i class="fas fa-minus"></i></button>
+                                        <input type="number" 
+                                               name="days" 
+                                               id="id_days" 
+                                               class="form-control studio-stepper-value" 
+                                               value="{{ form.days.value|default:'4' }}" 
+                                               min="1" 
+                                               max="14" 
+                                               required>
+                                        <button class="studio-stepper-btn" type="button" id="btnDaysPlus"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                    <div style="color: #94A3B8; font-size: 0.85rem;" class="mt-2">Choose between 1 to 14 days</div>
+                                    {% if form.days.errors %}
+                                    <div class="text-danger small mt-1">{{ form.days.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Number of Travelers -->
+                                <div class="col-md-4">
+                                    <label class="studio-label" for="id_travelers">
+                                        <i class="fas fa-user-group"></i> Travelers
+                                    </label>
+                                    <div class="studio-stepper-group">
+                                        <button class="studio-stepper-btn" type="button" id="btnTravelersMinus"><i class="fas fa-minus"></i></button>
+                                        <input type="number" 
+                                               name="travelers" 
+                                               id="id_travelers" 
+                                               class="form-control studio-stepper-value" 
+                                               value="{{ form.travelers.value|default:'2' }}" 
+                                               min="1" 
+                                               max="20" 
+                                               required>
+                                        <button class="studio-stepper-btn" type="button" id="btnTravelersPlus"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                    <div style="color: #94A3B8; font-size: 0.85rem;" class="mt-2">Solo, couple, or group (1-20)</div>
+                                    {% if form.travelers.errors %}
+                                    <div class="text-danger small mt-1">{{ form.travelers.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Approximate Budget (₹) -->
+                                <div class="col-md-4">
+                                    <label class="studio-label" for="id_budget">
+                                        <i class="fas fa-wallet"></i> Approx. Budget (₹)
+                                    </label>
+                                    <div class="studio-budget-group">
+                                        <span class="studio-budget-prefix">₹</span>
+                                        <input type="number" 
+                                               name="budget" 
+                                               id="id_budget" 
+                                               class="form-control studio-budget-input" 
+                                               placeholder="25000" 
+                                               value="{{ form.budget.value|default:'25000' }}" 
+                                               min="1000" 
+                                               step="500" 
+                                               required>
+                                    </div>
+                                    <div class="d-flex gap-2 mt-2 flex-wrap">
+                                        <button type="button" class="quick-budget-pill" data-b="15000">₹15k</button>
+                                        <button type="button" class="quick-budget-pill" data-b="25000">₹25k</button>
+                                        <button type="button" class="quick-budget-pill" data-b="50000">₹50k</button>
+                                        <button type="button" class="quick-budget-pill" data-b="100000">₹100k</button>
+                                    </div>
+                                    {% if form.budget.errors %}
+                                    <div class="text-danger small mt-1">{{ form.budget.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Interest Multi-Select -->
+                        <div class="form-group-section">
+                            <label class="studio-label">
+                                <i class="fas fa-heart"></i> Select Interests (Optional)
+                            </label>
+                            <div class="interests-tags-flex">
+                                {% for interest in interest_options %}
+                                <label class="m-0 cursor-pointer">
+                                    <input type="checkbox" name="interests" value="{{ interest }}" class="d-none" {% if interest in selected_interests %}checked{% endif %}>
+                                    <span class="interest-tag-pill">
+                                        {% if interest == 'Food' %}🍕
+                                        {% elif interest == 'Nature' %}🌲
+                                        {% elif interest == 'History' %}🏛️
+                                        {% elif interest == 'Shopping' %}🛍️
+                                        {% elif interest == 'Nightlife' %}🍸
+                                        {% elif interest == 'Adventure Sports' %}🪂
+                                        {% elif interest == 'Photography' %}📷
+                                        {% elif interest == 'Wellness & Spa' %}🧘
+                                        {% else %}✨{% endif %}
+                                        {{ interest }}
+                                    </span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Section 5: Trip Start Date (Optional) -->
+                        <div class="form-group-section mb-5">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="studio-label" for="id_start_date">
+                                        <i class="fas fa-calendar-alt"></i> Trip Start Date (Optional)
+                                    </label>
+                                    <input type="date" 
+                                           name="start_date" 
+                                           id="id_start_date" 
+                                           class="form-control studio-input-text" 
+                                           value="{{ form.start_date.value|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 6: Prominent Submit Button -->
+                        <div class="text-center pt-2">
+                            <button type="submit" class="btn-studio-generate" id="btnSubmitTrip">
+                                <i class="fas fa-wand-magic-sparkles"></i> Generate Smart Itinerary
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             MODE 2: AI DESTINATION DECISION QUIZ
+             =================================================================== -->
+        <div id="modeQuizSection" class="row justify-content-center d-none">
+            <div class="col-lg-10">
+                <div class="quiz-card-wrapper">
+                    
+                    <!-- Progress Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small text-warning fw-bold uppercase tracking-wider" id="quizStepNumber">QUESTION 1 OF 5</span>
+                        <span class="small text-secondary" id="quizStepCategory">Companion Selection</span>
+                    </div>
+                    <div class="quiz-progress-bar-wrap">
+                        <div class="quiz-progress-fill" id="quizProgressBar"></div>
+                    </div>
+
+                    <!-- Step Container -->
+                    <div id="quizQuestionsContainer">
+                        <!-- Rendered via JS -->
+                    </div>
+
+                    <!-- Match Results Container -->
+                    <div id="quizResultsContainer" class="d-none">
+                        <div class="text-center mb-4">
+                            <span class="badge bg-success text-dark px-3 py-1 rounded-pill fw-bold mb-2">🎯 AI VIBE MATCH COMPLETE</span>
+                            <h3 class="text-white fw-bold mb-1">Your Perfect Match Destinations</h3>
+                            <p class="text-secondary small">Based on your companion, vibe, landscape, and budget preferences.</p>
+                        </div>
+
+                        <div class="row g-4 mb-4" id="quizMatchCardsGrid">
+                            <!-- Injected dynamically -->
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <button type="button" class="btn btn-outline-warning rounded-pill px-4 py-2 fw-semibold me-2" onclick="restartQuiz()">
+                                <i class="fa-solid fa-rotate-left me-1"></i> Retake Quiz
+                            </button>
+                            <button type="button" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold" onclick="switchStudioMode('planner')">
+                                <i class="fa-solid fa-sliders me-1"></i> Open Custom Studio
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             MODE 3: GETAWAYS BY DISTANCE & RADIUS EXPLORER
+             =================================================================== -->
+        <div id="modeRadiusSection" class="row justify-content-center d-none">
+            <div class="col-lg-10">
+                <div class="radius-explorer-wrapper">
+                    
+                    <div class="text-center mb-4">
+                        <span class="badge bg-info text-dark px-3 py-1 rounded-pill fw-bold mb-2">🚗 DISTANCE-BASED EXPLORER</span>
+                        <h3 class="text-white fw-bold mb-1">Discover Getaways by Distance</h3>
+                        <p class="text-secondary small">Pick your starting city, drag the distance slider, and explore incredible destinations within range.</p>
+                    </div>
+
+                    <!-- Control Dock -->
+                    <div class="radius-control-dock">
+                        <div class="row g-4 align-items-center mb-4">
+                            
+                            <!-- Origin City Selection -->
+                            <div class="col-md-6">
+                                <label class="studio-label"><i class="fa-solid fa-city"></i> Departing From</label>
+                                <div class="d-flex gap-2">
+                                    <select id="radiusOriginSelect" class="form-select studio-input-text">
+                                        {% for hub in departure_hubs %}
+                                        <option value="{{ hub.name }}" data-lat="{{ hub.lat }}" data-lng="{{ hub.lng }}" {% if hub.name == 'Delhi NCR' %}selected{% endif %}>
+                                            {{ hub.name }} ({{ hub.state }})
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="button" id="btnDetectLocation" class="btn btn-outline-warning rounded-3 px-3" title="Use My Current GPS Location">
+                                        <i class="fa-solid fa-location-crosshairs"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Distance Slider & Indicator -->
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="studio-label mb-0"><i class="fa-solid fa-route"></i> Travel Radius</label>
+                                    <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold fs-6" id="radiusKmDisplay">Within 350 km</span>
+                                </div>
+                                <input type="range" class="custom-range-slider" id="radiusKmSlider" min="100" max="1500" step="25" value="350">
+                                <div class="d-flex justify-content-between text-secondary small mt-1">
+                                    <span>100 km</span>
+                                    <span>500 km</span>
+                                    <span>1,000 km</span>
+                                    <span>1,500+ km</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Quick Distance Tier Pills -->
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="small text-secondary fw-bold me-1">Quick Tiers:</span>
+                            <button type="button" class="radius-tier-pill" data-km="250" onclick="setRadiusTier(250, this)">🚗 < 250 km (Weekend Road Trips)</button>
+                            <button type="button" class="radius-tier-pill active" data-km="350" onclick="setRadiusTier(350, this)">🛣️ < 350 km (Overnight Escapes)</button>
+                            <button type="button" class="radius-tier-pill" data-km="600" onclick="setRadiusTier(600, this)">🚆 < 600 km (Long Weekends)</button>
+                            <button type="button" class="radius-tier-pill" data-km="1200" onclick="setRadiusTier(1200, this)">✈️ 1000+ km (All-India Expeditions)</button>
+                        </div>
+                    </div>
+
+                    <!-- Category Pills inside Radius Explorer -->
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                        <div class="d-flex gap-2 flex-wrap" id="radiusCatPills">
+                            <button type="button" class="btn btn-sm btn-outline-light rounded-pill active px-3" data-cat="all" onclick="filterRadiusCategory('all', this)">✨ All Types (<span id="radiusTotalCount">0</span>)</button>
+                            <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3" data-cat="mountains" onclick="filterRadiusCategory('mountains', this)">🏔️ Mountains</button>
+                            <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3" data-cat="beach" onclick="filterRadiusCategory('beach', this)">🏖️ Beaches</button>
+                            <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3" data-cat="heritage" onclick="filterRadiusCategory('heritage', this)">🏰 Heritage</button>
+                            <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3" data-cat="nature" onclick="filterRadiusCategory('nature', this)">🌲 Nature & Safari</button>
+                        </div>
+                        <span class="small text-secondary">Live driving routes calculated</span>
+                    </div>
+
+                    <!-- Radius Results Grid -->
+                    <div class="row g-4" id="radiusPlacesGrid">
+                        <!-- Rendered dynamically -->
+                    </div>
+
+                    <!-- Empty State for Radius -->
+                    <div id="radiusEmptyState" class="text-center py-5 d-none">
+                        <i class="fa-solid fa-compass fs-1 text-secondary mb-3"></i>
+                        <h5 class="text-white">No destinations found within this range</h5>
+                        <p class="text-secondary small">Try dragging the distance slider further or select another departure city.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Loading State Overlay Modal -->
+<div class="planner-loading-overlay" id="plannerLoader">
+    <div class="loader-compass">
+        <i class="fas fa-compass"></i>
+    </div>
+    <h3 class="loading-title">Crafting Your Dream Trip...</h3>
+    <p class="loading-subtitle" id="loaderStatusText">Analyzing destination highlights and seasonal routes...</p>
+    <div class="spinner-border text-warning mt-3" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<!-- Embedded JSON Data for Studio Interactivity -->
+{{ geo_destinations|json_script:"geo-destinations-json" }}
+{{ departure_hubs|json_script:"departure-hubs-json" }}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Embedded Geo & Hub Data
+    const rawDestinations = JSON.parse(document.getElementById('geo-destinations-json')?.textContent || '[]');
+    const rawHubs = JSON.parse(document.getElementById('departure-hubs-json')?.textContent || '[]');
+
+    const geoDestinations = Array.isArray(rawDestinations) ? rawDestinations : [];
+    const departureHubs = Array.isArray(rawHubs) ? rawHubs : [];
+
+    // =========================================================================
+    // 1. Studio Mode Switching Logic
+    // =========================================================================
+    window.switchStudioMode = function(mode) {
+        document.querySelectorAll('.studio-tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('modePlannerSection').classList.add('d-none');
+        document.getElementById('modeQuizSection').classList.add('d-none');
+        document.getElementById('modeRadiusSection').classList.add('d-none');
+
+        if (mode === 'planner') {
+            document.getElementById('tabBtnPlanner').classList.add('active');
+            document.getElementById('modePlannerSection').classList.remove('d-none');
+        } else if (mode === 'quiz') {
+            document.getElementById('tabBtnQuiz').classList.add('active');
+            document.getElementById('modeQuizSection').classList.remove('d-none');
+            if (!quizState.started) {
+                renderQuizQuestion(quizState.currentStep);
+            }
+        } else if (mode === 'radius') {
+            document.getElementById('tabBtnRadius').classList.add('active');
+            document.getElementById('modeRadiusSection').classList.remove('d-none');
+            updateRadiusExplorer();
+        }
+    };
+
+    // =========================================================================
+    // 2. Stepper & Input Interactions for Planner Form
+    // =========================================================================
+    const daysInput = document.getElementById('id_days');
+    const travelersInput = document.getElementById('id_travelers');
+    const budgetInput = document.getElementById('id_budget');
+    const destInput = document.getElementById('id_destination');
+
+    document.getElementById('btnDaysMinus')?.addEventListener('click', () => {
+        let val = parseInt(daysInput.value) || 1;
+        if (val > 1) daysInput.value = val - 1;
+    });
+    document.getElementById('btnDaysPlus')?.addEventListener('click', () => {
+        let val = parseInt(daysInput.value) || 1;
+        if (val < 14) daysInput.value = val + 1;
+    });
+
+    document.getElementById('btnTravelersMinus')?.addEventListener('click', () => {
+        let val = parseInt(travelersInput.value) || 1;
+        if (val > 1) travelersInput.value = val - 1;
+    });
+    document.getElementById('btnTravelersPlus')?.addEventListener('click', () => {
+        let val = parseInt(travelersInput.value) || 1;
+        if (val < 20) travelersInput.value = val + 1;
+    });
+
+    document.querySelectorAll('.quick-budget-pill').forEach(btn => {
+        btn.addEventListener('click', function() {
+            budgetInput.value = this.getAttribute('data-b');
+        });
+    });
+
+    // Preset Destination chips
+    document.querySelectorAll('.studio-preset-chip').forEach(chip => {
+        chip.addEventListener('click', function() {
+            destInput.value = this.getAttribute('data-dest');
+            if (this.hasAttribute('data-days')) daysInput.value = this.getAttribute('data-days');
+            if (this.hasAttribute('data-budget')) budgetInput.value = this.getAttribute('data-budget');
+            const style = this.getAttribute('data-style');
+            if (style) {
+                const radio = document.querySelector(`input[name="travel_style"][value="${style}"]`);
+                if (radio) radio.checked = true;
+            }
+            destInput.focus();
+            hideDropdown();
+        });
+    });
+
+    // =========================================================================
+    // 3. Real-Time Autocomplete Dropdown
+    // =========================================================================
+    const dropdown = document.getElementById('destinationDropdown');
+    let currentResults = [];
+    let activeIndex = -1;
+    let debounceTimer = null;
+
+    function hideDropdown() {
+        dropdown.classList.add('d-none');
+        dropdown.innerHTML = '';
+        activeIndex = -1;
+    }
+
+    function showDropdown(results, query) {
+        if (!results || results.length === 0) {
+            hideDropdown();
+            return;
+        }
+
+        currentResults = results;
+        activeIndex = -1;
+        dropdown.innerHTML = '';
+
+        results.forEach((item, idx) => {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'dropdown-dest-item';
+            itemEl.setAttribute('data-index', idx);
+
+            let highlightedName = item.name;
+            if (query) {
+                const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                highlightedName = item.name.replace(regex, '<mark>$1</mark>');
+            }
+
+            itemEl.innerHTML = `
+                <div class="d-flex align-items-center gap-3">
+                    <div class="dest-icon-box"><i class="fas ${item.icon || 'fa-map-pin'}"></i></div>
+                    <div>
+                        <h6 class="dest-name-title">${highlightedName}</h6>
+                        <p class="dest-state-sub">${item.state || ''}</p>
+                    </div>
+                </div>
+                <span class="${item.badge_class || 'badge-top'}">${item.tag || '⭐ Recommended'}</span>
+            `;
+
+            itemEl.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                selectDestination(item);
+            });
+
+            dropdown.appendChild(itemEl);
+        });
+
+        dropdown.classList.remove('d-none');
+    }
+
+    function selectDestination(item) {
+        destInput.value = item.name;
+        if (item.days) daysInput.value = item.days;
+        if (item.budget) budgetInput.value = item.budget;
+        if (item.style) {
+            const radio = document.querySelector(`input[name="travel_style"][value="${item.style}"]`);
+            if (radio) radio.checked = true;
+        }
+        hideDropdown();
+        destInput.focus();
+    }
+
+    destInput?.addEventListener('input', function() {
+        const q = this.value.trim();
+        clearTimeout(debounceTimer);
+        if (q.length === 0) {
+            fetchDestinations('');
+            return;
+        }
+        debounceTimer = setTimeout(() => {
+            fetchDestinations(q);
+        }, 180);
+    });
+
+    destInput?.addEventListener('focus', function() {
+        fetchDestinations(this.value.trim());
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!destInput?.contains(e.target) && !dropdown?.contains(e.target)) {
+            hideDropdown();
+        }
+    });
+
+    function fetchDestinations(query) {
+        fetch(`/api/destination-autocomplete/?q=${encodeURIComponent(query)}`)
+            .then(res => res.json())
+            .then(data => showDropdown(data.results, query))
+            .catch(() => hideDropdown());
+    }
+
+    // =========================================================================
+    // 4. AI Destination Decision Quiz Engine
+    // =========================================================================
+    const quizQuestions = [
+        {
+            id: 'companion',
+            stepNum: 'QUESTION 1 OF 5',
+            category: 'Companion Selection',
+            title: 'Who are you exploring with on this trip?',
+            subtitle: 'Choose your traveling crew so we can match suitable destinations & activities.',
+            options: [
+                { value: 'solo', icon: '🎒', title: 'Solo Explorer', desc: 'Freedom, cafes, self-discovery & treks' },
+                { value: 'couples', icon: '💑', title: 'Romantic Couple', desc: 'Cozy views, sunsets & intimate stays' },
+                { value: 'friends', icon: '👯', title: 'Squad / Friends', desc: 'Nightlife, road trips & adventures' },
+                { value: 'family', icon: '👨‍👩‍👧‍👦', title: 'Family with Kids', desc: 'Safe, scenic, comfortable & easy pace' }
+            ]
+        },
+        {
+            id: 'landscape',
+            stepNum: 'QUESTION 2 OF 5',
+            category: 'Soul Landscape',
+            title: 'What natural backdrop is calling your soul?',
+            subtitle: 'Pick the scenery where you want to wake up each morning.',
+            options: [
+                { value: 'mountains', icon: '🏔️', title: 'High Snow Peaks & Pine Hills', desc: 'Himalayan breezes & mountain passes' },
+                { value: 'beach', icon: '🏖️', title: 'Tropical Coast & Golden Sands', desc: 'Ocean sunsets, waves & beach shacks' },
+                { value: 'heritage', icon: '🏰', title: 'Palaces, Forts & Ghats', desc: 'Ancient royalty, history & spirituality' },
+                { value: 'nature', icon: '🌲', title: 'Rainforests & Tea Plantations', desc: 'Lush waterfalls, estates & wildlife' },
+                { value: 'desert', icon: '🏜️', title: 'Desert Dunes & Stargazing', desc: 'Golden sands & cultural desert camps' }
+            ]
+        },
+        {
+            id: 'vibe',
+            stepNum: 'QUESTION 3 OF 5',
+            category: 'Vacation Vibe & Pace',
+            title: 'What is your ideal vacation pace & vibe?',
+            subtitle: 'Tell us how you want to spend your days and afternoons.',
+            options: [
+                { value: 'adventure', icon: '🧗', title: 'High-Adrenaline Adventure', desc: 'Trekking, rafting, paragliding & skiing' },
+                { value: 'relaxed', icon: '☕', title: 'Slow, Scenic & Cozy', desc: 'Chilling at cafes, views & spa walks' },
+                { value: 'culture', icon: '📸', title: 'Cultural Discovery & Food', desc: 'Heritage sights, bustling bazaars & local dishes' },
+                { value: 'nightlife', icon: '🎉', title: 'Beach Clubs & Social Scene', desc: 'Sunset lounges, parties & live music' }
+            ]
+        },
+        {
+            id: 'days',
+            stepNum: 'QUESTION 4 OF 5',
+            category: 'Trip Duration',
+            title: 'How much time do you want to spend?',
+            subtitle: 'We will calibrate the route pacing according to your time frame.',
+            options: [
+                { value: 3, icon: '⚡', title: 'Weekend Sprint', desc: '2 to 3 Days (Quick Getaway)' },
+                { value: 5, icon: '🎒', title: 'Classic Vacation', desc: '4 to 5 Days (Balanced Discovery)' },
+                { value: 7, icon: '🗺️', title: 'Grand Expedition', desc: '6 to 8+ Days (Deep Immersion)' }
+            ]
+        },
+        {
+            id: 'budget',
+            stepNum: 'QUESTION 5 OF 5',
+            category: 'Budget Comfort',
+            title: 'What is your comfortable budget per person?',
+            subtitle: 'Helps us recommend appropriate stays, dining, and activity tiers.',
+            options: [
+                { value: 'budget', icon: '🪙', title: 'Budget Savvy', desc: 'Under ₹15,000 / person (Economical)' },
+                { value: 'mid', icon: '💎', title: 'Balanced Comfort', desc: '₹15,000 – ₹35,000 / person (Premium)' },
+                { value: 'luxury', icon: '👑', title: 'Luxury & Signature', desc: '₹35,000+ / person (VIP Palaces & Chalets)' }
+            ]
+        }
+    ];
+
+    let quizState = {
+        started: false,
+        currentStep: 0,
+        answers: {}
+    };
+
+    function renderQuizQuestion(stepIdx) {
+        quizState.started = true;
+        const q = quizQuestions[stepIdx];
+        const progressPct = ((stepIdx + 1) / quizQuestions.length) * 100;
+
+        document.getElementById('quizStepNumber').textContent = q.stepNum;
+        document.getElementById('quizStepCategory').textContent = q.category;
+        document.getElementById('quizProgressBar').style.width = `${progressPct}%`;
+
+        const container = document.getElementById('quizQuestionsContainer');
+        const selectedVal = quizState.answers[q.id];
+
+        let optionsHtml = '';
+        q.options.forEach(opt => {
+            const isSelected = selectedVal === opt.value;
+            optionsHtml += `
+                <div class="quiz-choice-card ${isSelected ? 'selected' : ''}" onclick="selectQuizOption('${q.id}', '${opt.value}')">
+                    <div class="quiz-choice-icon">${opt.icon}</div>
+                    <div class="quiz-choice-title">${opt.title}</div>
+                    <div class="quiz-choice-desc">${opt.desc}</div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = `
+            <div>
+                <h3 class="quiz-question-title">${q.title}</h3>
+                <p class="quiz-question-subtitle">${q.subtitle}</p>
+                <div class="quiz-options-grid">${optionsHtml}</div>
+                <div class="d-flex justify-content-between align-items-center pt-2">
+                    ${stepIdx > 0 ? `<button type="button" class="btn btn-outline-light rounded-pill px-4" onclick="quizPrevStep()"><i class="fa-solid fa-arrow-left me-1"></i> Back</button>` : `<div></div>`}
+                    <span class="small text-secondary">Click an option to proceed</span>
+                </div>
+            </div>
+        `;
+    }
+
+    window.selectQuizOption = function(questionId, value) {
+        quizState.answers[questionId] = value;
+        if (quizState.currentStep < quizQuestions.length - 1) {
+            quizState.currentStep++;
+            renderQuizQuestion(quizState.currentStep);
+        } else {
+            calculateAndShowQuizResults();
+        }
+    };
+
+    window.quizPrevStep = function() {
+        if (quizState.currentStep > 0) {
+            quizState.currentStep--;
+            renderQuizQuestion(quizState.currentStep);
+        }
+    };
+
+    window.restartQuiz = function() {
+        quizState = { started: true, currentStep: 0, answers: {} };
+        document.getElementById('quizQuestionsContainer').classList.remove('d-none');
+        document.getElementById('quizResultsContainer').classList.add('d-none');
+        renderQuizQuestion(0);
+    };
+
+    function calculateAndShowQuizResults() {
+        document.getElementById('quizQuestionsContainer').classList.add('d-none');
+        const resultsBox = document.getElementById('quizResultsContainer');
+        resultsBox.classList.remove('d-none');
+
+        const { companion, landscape, vibe, days, budget } = quizState.answers;
+        const targetDays = parseInt(days, 10) || 4;
+
+        // Score each destination
+        const scored = geoDestinations.map(d => {
+            let score = 50;
+            if (d.category === landscape) score += 25;
+            else if ((d.vibes || []).includes(landscape)) score += 15;
+
+            if ((d.vibes || []).includes(companion)) score += 15;
+            if ((d.vibes || []).includes(vibe)) score += 15;
+
+            const dayDiff = Math.abs((d.ideal_days || 4) - targetDays);
+            score += Math.max(0, 12 - dayDiff * 4);
+
+            if (d.budget_tier === budget) score += 10;
+
+            const matchPct = Math.min(99, Math.max(72, Math.round(score * 0.9 + 5)));
+            return { ...d, matchScore: matchPct };
+        });
+
+        scored.sort((a, b) => b.matchScore - a.matchScore);
+        const topMatches = scored.slice(0, 3);
+
+        const grid = document.getElementById('quizMatchCardsGrid');
+        grid.innerHTML = '';
+
+        topMatches.forEach(item => {
+            const cardCol = document.createElement('div');
+            cardCol.className = 'col-lg-4 col-md-6';
+            cardCol.innerHTML = `
+                <div class="quiz-match-card shadow-lg">
+                    <div class="quiz-match-img-wrap">
+                        <img src="${item.img}" alt="${item.name}" loading="lazy">
+                        <span class="quiz-score-badge">✨ ${item.matchScore}% Match</span>
+                    </div>
+                    <div class="quiz-match-body">
+                        <div>
+                            <span class="badge bg-dark text-warning border border-secondary px-2 py-1 rounded-pill small mb-2">${item.tag || '⭐ Handpicked'}</span>
+                            <h4 class="text-white fw-bold mb-1" style="font-size: 1.25rem;">${item.name}</h4>
+                            <div class="small text-warning mb-2"><i class="fa-solid fa-location-dot me-1"></i>${item.state}</div>
+                            <p class="small text-light opacity-75 mb-3" style="line-height: 1.5;">${item.description}</p>
+                            
+                            <div class="p-2 rounded-3 mb-3" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); font-size: 0.82rem;">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-secondary">Best Season:</span>
+                                    <strong class="text-white">${item.season}</strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-secondary">Est. Budget:</span>
+                                    <strong class="text-warning">₹${(item.avg_cost || 20000).toLocaleString()} / ${item.ideal_days} Days</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-warning w-100 rounded-pill py-2 fw-bold text-dark shadow"
+                                style="background: #F8C922; border: none;"
+                                onclick="applyDestinationToPlanner('${item.name.replace(/'/g, "\\'")}', ${item.ideal_days}, ${item.avg_cost || 20000}, '${item.style || 'Relaxed'}')">
+                            <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Select & Plan This Trip
+                        </button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(cardCol);
+        });
+    }
+
+    // =========================================================================
+    // 5. Getaways by Distance & Radius Explorer Engine
+    // =========================================================================
+    let currentRadiusKm = 350;
+    let currentRadiusCategory = 'all';
+    let currentOriginHub = departureHubs[0] || { name: 'Delhi NCR', lat: 28.6139, lng: 77.2090 };
+
+    const radiusSlider = document.getElementById('radiusKmSlider');
+    const radiusDisplay = document.getElementById('radiusKmDisplay');
+    const originSelect = document.getElementById('radiusOriginSelect');
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    function estimateTransit(dest, originLat, originLng) {
+        const aerial = calculateDistance(originLat, originLng, dest.lat, dest.lng);
+        const mult = dest.is_mountain ? 1.45 : 1.22;
+        const roadKm = Math.round(aerial * mult);
+
+        let mode = "🚗 Road Trip";
+        let desc = `${Math.max(2.5, (roadKm / 50).toFixed(1))} hrs drive`;
+
+        if (roadKm > 280 && roadKm <= 550) {
+            mode = "🛣️ Highway / 🚆 Train";
+            desc = `${(roadKm / 55).toFixed(1)} hrs drive / ~6 hrs train`;
+        } else if (roadKm > 550 && roadKm <= 900) {
+            mode = "🚆 Express Train / ✈️ Flight";
+            desc = "Overnight Train / ~1.5 hrs Flight";
+        } else if (roadKm > 900) {
+            mode = "✈️ Direct Flight";
+            desc = "2 to 3 hrs flight";
+        }
+
+        return { roadKm, mode, desc };
+    }
+
+    function updateRadiusExplorer() {
+        const originLat = currentOriginHub.lat;
+        const originLng = currentOriginHub.lng;
+
+        const results = [];
+        geoDestinations.forEach(d => {
+            if (currentRadiusCategory !== 'all' && d.category !== currentRadiusCategory) return;
+            const transit = estimateTransit(d, originLat, originLng);
+            if (transit.roadKm <= currentRadiusKm) {
+                results.push({ ...d, roadKm: transit.roadKm, transitMode: transit.mode, transitDesc: transit.desc });
+            }
+        });
+
+        results.sort((a, b) => a.roadKm - b.roadKm);
+
+        document.getElementById('radiusTotalCount').textContent = results.length;
+        const grid = document.getElementById('radiusPlacesGrid');
+        const emptyBox = document.getElementById('radiusEmptyState');
+
+        grid.innerHTML = '';
+        if (results.length === 0) {
+            emptyBox.classList.remove('d-none');
+            return;
+        }
+        emptyBox.classList.add('d-none');
+
+        results.forEach(item => {
+            const col = document.createElement('div');
+            col.className = 'col-lg-4 col-md-6';
+            col.innerHTML = `
+                <div class="radius-place-card shadow-lg">
+                    <div class="position-relative" style="height: 190px; background: #0F172A;">
+                        <img src="${item.img}" alt="${item.name}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
+                        <span class="position-absolute top-0 start-0 m-3 distance-tag-badge">
+                            📍 ${item.roadKm} km away
+                        </span>
+                        <span class="position-absolute top-0 end-0 m-3 transit-badge">
+                            ${item.transitMode}
+                        </span>
+                    </div>
+
+                    <div class="p-3 d-flex flex-column justify-content-between flex-grow-1">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h5 class="text-white fw-bold mb-0">${item.name}</h5>
+                            </div>
+                            <div class="small text-warning mb-2"><i class="fa-solid fa-location-dot me-1"></i>${item.state}</div>
+                            
+                            <div class="small text-secondary mb-2" style="font-size: 0.82rem;">
+                                <i class="fa-solid fa-clock text-info me-1"></i>${item.transitDesc} from ${currentOriginHub.name}
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-1 mb-3">
+                                ${(item.highlights || []).slice(0, 2).map(h => `<span class="badge px-2 py-1 rounded-pill" style="background: rgba(255,255,255,0.06); font-size: 0.75rem; color: #CBD5E1;">✓ ${h}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-top d-flex justify-content-between align-items-center" style="border-color: rgba(255,255,255,0.1) !important;">
+                            <div>
+                                <span class="small text-secondary d-block" style="font-size: 0.75rem;">Est. Budget</span>
+                                <strong class="text-white">₹${(item.avg_cost || 18000).toLocaleString()}</strong>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1 fw-bold"
+                                    onclick="applyDestinationToPlanner('${item.name.replace(/'/g, "\\'")}', ${item.ideal_days || 4}, ${item.avg_cost || 20000}, '${item.style || 'Relaxed'}')">
+                                <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Plan Trip Here
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(col);
+        });
+    }
+
+    radiusSlider?.addEventListener('input', function() {
+        currentRadiusKm = parseInt(this.value, 10);
+        radiusDisplay.textContent = `Within ${currentRadiusKm} km`;
+        document.querySelectorAll('.radius-tier-pill').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.getAttribute('data-km'), 10) === currentRadiusKm);
+        });
+        updateRadiusExplorer();
+    });
+
+    window.setRadiusTier = function(km, btn) {
+        currentRadiusKm = km;
+        radiusSlider.value = km;
+        radiusDisplay.textContent = `Within ${km} km`;
+        document.querySelectorAll('.radius-tier-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateRadiusExplorer();
+    };
+
+    originSelect?.addEventListener('change', function() {
+        const selectedOpt = this.options[this.selectedIndex];
+        currentOriginHub = {
+            name: selectedOpt.value,
+            lat: parseFloat(selectedOpt.getAttribute('data-lat')),
+            lng: parseFloat(selectedOpt.getAttribute('data-lng'))
+        };
+        updateRadiusExplorer();
+    });
+
+    window.filterRadiusCategory = function(cat, btn) {
+        currentRadiusCategory = cat;
+        document.querySelectorAll('#radiusCatPills button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateRadiusExplorer();
+    };
+
+    // Geolocation Support
+    document.getElementById('btnDetectLocation')?.addEventListener('click', function() {
+        const btn = this;
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser.');
+            return;
+        }
+
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                btn.innerHTML = '<i class="fa-solid fa-check text-success"></i>';
+                const userLat = pos.coords.latitude;
+                const userLng = pos.coords.longitude;
+
+                // Find closest known departure hub
+                let closestHub = departureHubs[0];
+                let minDist = Infinity;
+
+                departureHubs.forEach(h => {
+                    const dist = calculateDistance(userLat, userLng, h.lat, h.lng);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closestHub = h;
+                    }
+                });
+
+                currentOriginHub = closestHub;
+                if (originSelect) originSelect.value = closestHub.name;
+                updateRadiusExplorer();
+
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+                }, 2000);
+            },
+            (err) => {
+                btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+                alert('Could not determine exact location. Please select your departure city from the dropdown.');
+            }
+        );
+    });
+
+    // Transfer Chosen Destination into Custom Studio Planner
+    window.applyDestinationToPlanner = function(name, days, budget, style) {
+        destInput.value = name;
+        if (days) daysInput.value = days;
+        if (budget) budgetInput.value = budget;
+        if (style) {
+            const radio = document.querySelector(`input[name="travel_style"][value="${style}"]`);
+            if (radio) radio.checked = true;
+        }
+
+        switchStudioMode('planner');
+
+        // Smooth scroll down to the form
+        setTimeout(() => {
+            document.getElementById('modePlannerSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            destInput.focus();
+        }, 150);
+    };
+
+    // =========================================================================
+    // 6. Form Submission & Loading Overlay
+    // =========================================================================
+    const form = document.getElementById('tripPlannerForm');
+    const loader = document.getElementById('plannerLoader');
+    const statusText = document.getElementById('loaderStatusText');
+
+    const statusMessages = [
+        "Analyzing top sights, hidden gems & seasonal weather...",
+        "Curating optimized morning, afternoon & evening activities...",
+        "Balancing local travel logistics & activity timings...",
+        "Calculating budget breakdown and realistic expense estimates...",
+        "Finalizing your personalized day-by-day travel itinerary..."
+    ];
+
+    form?.addEventListener('submit', function(e) {
+        if (form.checkValidity()) {
+            loader.classList.add('active');
+            let index = 0;
+            setInterval(() => {
+                index = (index + 1) % statusMessages.length;
+                statusText.innerText = statusMessages[index];
+            }, 1200);
+        }
+    });
+
+});
+</script>
+{% endblock %}
