@@ -1,0 +1,471 @@
+/* ==========================================================================
+   TourCraze - High-End Luxury Trip Planner & Itinerary Design System
+   ========================================================================== */
+
+:root {
+    --tc-bg-dark: #0c111f;
+    --tc-bg-card: rgba(255, 255, 255, 0.05);
+    --tc-bg-card-hover: rgba(255, 255, 255, 0.08);
+    --tc-border: rgba(255, 255, 255, 0.12);
+    --tc-border-hover: rgba(255, 255, 255, 0.22);
+    
+    /* Vibrant High-Contrast Text Tokens */
+    --tc-text-white: #FFFFFF;
+    --tc-text-light: #E2E8F0;
+    --tc-text-muted: #94A3B8;
+    --tc-text-dim: #64748B;
+    
+    /* Accent Palette */
+    --tc-gold: #F8C922;
+    --tc-gold-light: #FFD84D;
+    --tc-gold-glow: rgba(248, 201, 34, 0.3);
+    
+    --tc-cyan: #38bdf8;
+    --tc-emerald: #4ade80;
+    --tc-purple: #c084fc;
+    --tc-orange: #fb923c;
+}
+
+/* Base Planner Layout */
+.planner-page {
+    background-color: var(--tc-bg-dark) !important;
+    min-height: 100vh;
+    color: var(--tc-text-light) !important;
+    padding-bottom: 90px;
+}
+
+/* ==========================================================================
+   Planner Studio & Hero Header
+   ========================================================================== */
+.planner-hero {
+    padding: 60px 0 35px;
+    text-align: center;
+}
+
+.planner-hero h1 {
+    font-weight: 800;
+    font-size: 2.85rem;
+    color: #FFFFFF !important;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
+
+.planner-hero p {
+    font-size: 1.18rem;
+    color: var(--tc-text-muted) !important;
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* Glass Card Box */
+.glass-box {
+    background: rgba(17, 24, 39, 0.75);
+    border: 1px solid var(--tc-border);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 44px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.3s ease;
+}
+
+.glass-box:hover {
+    border-color: var(--tc-border-hover);
+}
+
+/* Form Controls */
+.trip-input {
+    background: rgba(255, 255, 255, 0.07) !important;
+    border: 1px solid var(--tc-border) !important;
+    color: #FFFFFF !important;
+    border-radius: 14px !important;
+    padding: 14px 18px !important;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+}
+
+.trip-input:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: var(--tc-gold) !important;
+    box-shadow: 0 0 0 4px var(--tc-gold-glow) !important;
+    color: #FFFFFF !important;
+}
+
+.trip-input::placeholder {
+    color: var(--tc-text-muted) !important;
+    opacity: 1;
+}
+
+.form-label-custom {
+    color: #FFFFFF !important;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-label-custom i {
+    color: var(--tc-gold);
+}
+
+/* Preset Chips */
+.preset-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.preset-chip {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--tc-border);
+    color: #FFFFFF !important;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.preset-chip:hover, .preset-chip.active {
+    background: var(--tc-gold);
+    color: #0f172a !important;
+    border-color: var(--tc-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--tc-gold-glow);
+}
+
+/* Style Grid */
+.style-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 14px;
+    margin-top: 10px;
+}
+
+.style-card-label {
+    margin: 0;
+    cursor: pointer;
+    display: block;
+}
+
+.style-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--tc-border);
+    border-radius: 18px;
+    padding: 20px 14px;
+    text-align: center;
+    transition: all 0.25s ease;
+    height: 100%;
+}
+
+.style-card:hover {
+    border-color: var(--tc-border-hover);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.style-card .style-icon {
+    font-size: 1.9rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.style-card .style-title {
+    color: #FFFFFF !important;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin: 0 0 4px;
+}
+
+.style-card .style-subtitle {
+    color: var(--tc-text-muted) !important;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.style-card-label input[type="radio"]:checked + .style-card {
+    background: rgba(248, 201, 34, 0.16);
+    border-color: var(--tc-gold);
+    box-shadow: 0 0 24px rgba(248, 201, 34, 0.25);
+    transform: translateY(-3px);
+}
+
+.style-card-label input[type="radio"]:checked + .style-card .style-title {
+    color: var(--tc-gold) !important;
+}
+
+/* Interest Multi-Select Badges */
+.interests-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.interest-item-label {
+    cursor: pointer;
+    margin: 0;
+}
+
+.interest-item-label input[type="checkbox"] {
+    display: none;
+}
+
+.interest-pill {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--tc-border);
+    border-radius: 30px;
+    padding: 10px 20px;
+    color: #FFFFFF !important;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.interest-pill:hover {
+    border-color: var(--tc-border-hover);
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.interest-item-label input[type="checkbox"]:checked + .interest-pill {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: var(--tc-cyan);
+    color: #FFFFFF !important;
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Submit Button */
+.btn-generate-trip {
+    background: linear-gradient(135deg, var(--tc-gold) 0%, var(--tc-gold-light) 100%);
+    color: #0f172a !important;
+    font-weight: 800;
+    font-size: 1.2rem;
+    padding: 18px 44px;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 12px 32px var(--tc-gold-glow);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-generate-trip:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 45px rgba(248, 201, 34, 0.45);
+    background: linear-gradient(135deg, var(--tc-gold-light) 0%, var(--tc-gold) 100%);
+}
+
+/* Loading Overlay */
+.planner-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(12, 17, 31, 0.95);
+    backdrop-filter: blur(18px);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.planner-loading-overlay.active {
+    display: flex;
+}
+
+.loader-compass {
+    font-size: 4.5rem;
+    color: var(--tc-gold);
+    animation: rotateCompass 3s linear infinite;
+    margin-bottom: 24px;
+}
+
+@keyframes rotateCompass {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.loading-title {
+    color: #FFFFFF !important;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.loading-subtitle {
+    color: var(--tc-cyan) !important;
+    font-size: 1.15rem;
+    font-weight: 600;
+    min-height: 28px;
+}
+
+/* Style Badges */
+.badge-style {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-adventure { background: rgba(249, 115, 22, 0.2); color: #fb923c !important; border: 1px solid rgba(249, 115, 22, 0.4); }
+.badge-relaxed { background: rgba(56, 189, 248, 0.2); color: #38bdf8 !important; border: 1px solid rgba(56, 189, 248, 0.4); }
+.badge-luxury { background: rgba(248, 201, 34, 0.2); color: #F8C922 !important; border: 1px solid rgba(248, 201, 34, 0.4); }
+.badge-budget { background: rgba(34, 197, 94, 0.2); color: #4ade80 !important; border: 1px solid rgba(34, 197, 94, 0.4); }
+.badge-family { background: rgba(192, 132, 252, 0.2); color: #c084fc !important; border: 1px solid rgba(192, 132, 252, 0.4); }
+.badge-default { background: rgba(255, 255, 255, 0.2); color: #FFFFFF !important; }
+
+/* ==========================================================================
+   My Trips Dashboard Styles
+   ========================================================================== */
+.trips-dashboard-hero {
+    padding: 50px 0 25px;
+}
+
+.trip-card {
+    background: #111827;
+    border: 1px solid var(--tc-border);
+    border-radius: 22px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.trip-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--tc-border-hover);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
+}
+
+.trip-card-body {
+    padding: 28px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.trip-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    gap: 8px;
+}
+
+.trip-card-date {
+    color: var(--tc-text-muted) !important;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+.trip-card-title {
+    color: #FFFFFF !important;
+    font-size: 1.35rem !important;
+    font-weight: 800 !important;
+    margin: 0 0 8px;
+}
+
+.trip-card-dest {
+    color: var(--tc-gold) !important;
+    font-size: 1rem !important;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.trip-card-desc {
+    color: var(--tc-text-muted) !important;
+    font-size: 0.95rem !important;
+    line-height: 1.65 !important;
+    margin-bottom: 22px;
+    flex: 1;
+}
+
+.trip-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 0.92rem !important;
+    color: var(--tc-text-light) !important;
+    padding: 16px 0;
+    border-top: 1px solid var(--tc-border);
+    border-bottom: 1px solid var(--tc-border);
+    margin-bottom: 20px;
+}
+
+.trip-card-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.trip-card-meta-item i {
+    color: var(--tc-gold);
+}
+
+.trip-card-meta-item span {
+    color: #FFFFFF !important;
+    font-weight: 600;
+}
+
+.trip-card-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* Custom Modal */
+.modal-content-custom {
+    background: #0f172a !important;
+    border: 1px solid var(--tc-border) !important;
+    border-radius: 22px !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.modal-header-custom {
+    border-bottom: 1px solid var(--tc-border) !important;
+    padding: 20px 24px;
+}
+
+.modal-footer-custom {
+    border-top: 1px solid var(--tc-border) !important;
+    padding: 16px 24px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 991px) {
+    .planner-hero h1 { font-size: 2.3rem; }
+    .glass-box { padding: 28px; }
+}
+
+@media (max-width: 767px) {
+    .planner-hero h1 { font-size: 1.9rem; }
+}

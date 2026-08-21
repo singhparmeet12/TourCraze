@@ -1,0 +1,155 @@
+*{
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(18px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+    padding: 14px 40px;
+}
+
+.navbar-brand-custom{
+    color: white !important;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.nav-link{
+    color: rgba(255,255,255,0.75) !important;
+    margin-left: 10px;
+    margin-right: 2px;
+    transition: all 0.25s ease;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.nav-link i {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.nav-link:hover{
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+.nav-link:hover i {
+    opacity: 1;
+    transform: scale(1.12);
+}
+
+.avatar1{
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+
+    border: 2px solid rgba(255,255,255,0.25);
+}
+
+.style-search{
+    display:flex;
+    align-items:center;
+}
+
+.style-search a{
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.style-search p{
+    margin:0;
+    color:white;
+    font-size:14px;
+    font-weight:600;
+}
+
+.block-span{
+    font-size:12px;
+    color:rgba(255,255,255,0.75);
+}
+
+body{
+    background:
+    radial-gradient(circle at top left,#1e3a8a 0%,transparent 30%),
+    radial-gradient(circle at top right,#0ea5e9 0%,transparent 25%),
+    #0f172a;
+
+    color: #E5E7EB !important;
+    min-height:100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #FFFFFF !important;
+}
+
+p, span, div, label {
+    color: inherit;
+}
+
+.navbar-brand-custom{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.navbar-brand-custom i{
+    color:#38bdf8;
+    font-size:1.3rem;
+}
+
+/* ==========================================================================
+   Mobile Responsive Navigation (< 991px & < 576px)
+   ========================================================================== */
+@media (max-width: 991px) {
+    .navbar {
+        padding: 12px 18px;
+    }
+    .navbar-collapse {
+        background: rgba(15, 23, 42, 0.98);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        padding: 20px;
+        margin-top: 14px;
+        backdrop-filter: blur(24px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+    .nav-link {
+        margin: 4px 0;
+        padding: 11px 16px;
+        border-radius: 12px;
+        font-size: 1.02rem;
+        display: flex;
+    }
+    .nav-link:hover, .nav-link.active {
+        background: rgba(255, 255, 255, 0.08);
+        color: #FFFFFF !important;
+    }
+    .style-search {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
+        display: flex !important;
+        justify-content: center;
+    }
+    .style-search button {
+        display: inline-flex !important;
+        width: 100%;
+        justify-content: center;
+        padding: 11px 0;
+    }
+}
