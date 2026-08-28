@@ -93,12 +93,20 @@ WSGI_APPLICATION = 'tourCraze.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+IS_SERVERLESS = bool(
+    os.environ.get('VERCEL')
+    or os.environ.get('VERCEL_ENV')
+    or os.environ.get('AWS_LAMBDA_FUNCTION_NAME')
+    or not os.access(str(BASE_DIR), os.W_OK)
+)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/tmp/db.sqlite3' if os.environ.get('VERCEL') else (BASE_DIR / 'db.sqlite3'),
+        'NAME': '/tmp/db.sqlite3' if IS_SERVERLESS else (BASE_DIR / 'db.sqlite3'),
     }
 }
+
 
 
 
