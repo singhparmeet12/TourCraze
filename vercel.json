@@ -2,29 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "tourCraze/tourCraze/wsgi.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.11"
-      }
-    },
-    {
-      "src": "build_files.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "tourCraze/staticfiles"
-      }
+      "src": "api/index.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "/tourCraze/staticfiles/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "tourCraze/tourCraze/wsgi.py"
+      "dest": "api/index.py"
     }
   ]
 }

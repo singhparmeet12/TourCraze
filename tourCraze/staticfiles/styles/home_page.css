@@ -1,14 +1,18 @@
+/* ==========================================================================
+   TourCraze Homepage Stylesheet (Fully Responsive & Mobile-Optimized)
+   ========================================================================== */
+
 /* Fade-in animation */
 .fade-in {
     opacity: 1 !important;
     transform: translateY(0) !important;
-    animation: fadeInSmooth 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: fadeInSmooth 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes fadeInSmooth {
     from {
         opacity: 0;
-        transform: translateY(16px);
+        transform: translateY(14px);
     }
     to {
         opacity: 1;
@@ -16,29 +20,73 @@
     }
 }
 
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
 .hero-section {
-    background: url('/static/images/beach.jpg') no-repeat center center;
-    background-size: cover;
-    position: relative;
+    position: relative !important;
+    overflow: hidden !important;
+    background-color: #071021;
+    width: 100%;
 }
 
-.hero-section::after {
-    content: '';
+.hero-bg-container {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
+    z-index: 1;
     width: 100%;
     height: 100%;
-    background: rgba(12, 17, 31, 0.6); /* Dark overlay */
 }
 
-.hero-section .container {
-    position: relative;
+.hero-bg-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1), transform 12s ease-out;
+    will-change: opacity, transform;
+}
+
+.hero-bg-slide.active {
+    opacity: 1;
+    transform: scale(1);
     z-index: 2;
 }
 
-.text-primary-custom {
-    color: #F8C922 !important;
+.hero-vignette-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: linear-gradient(90deg, rgba(7, 16, 33, 0.94) 0%, rgba(7, 16, 33, 0.75) 50%, rgba(7, 16, 33, 0.4) 100%);
+    pointer-events: none;
+}
+
+.hero-section h1 {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    font-size: clamp(2rem, 5.5vw, 3.8rem);
+    line-height: 1.18;
+}
+
+.hero-section p.lead {
+    color: #E2E8F0 !important;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    max-width: 580px;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
 }
 
 .btn-primary {
@@ -53,48 +101,75 @@
     border-color: #e4b81e;
 }
 
-/* --- AI Planner Section --- */
+/* ==========================================================================
+   AI Planner Section
+   ========================================================================== */
 .ai-planner-section {
-    background-color: #0c111f;
+    background-color: #0c111f !important;
+    color: #E2E8F0 !important;
+    position: relative;
+    z-index: 10;
 }
+
 .ai-planner-box {
-    background-color: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(16px);
+    background: rgba(17, 24, 39, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(16px) !important;
+    padding: 36px 32px;
 }
+
 .ai-input {
-    background-color: rgba(255, 255, 255, 0.09) !important;
+    background-color: rgba(255, 255, 255, 0.08) !important;
     border: 1px solid rgba(255, 255, 255, 0.18) !important;
     color: #FFFFFF !important;
     font-weight: 500;
+    font-size: 1rem !important; /* Prevents auto-zoom on iOS */
+    border-radius: 12px;
 }
+
 .ai-input:focus {
-    background-color: rgba(255, 255, 255, 0.16) !important;
+    background-color: rgba(255, 255, 255, 0.15) !important;
     border-color: #F8C922 !important;
     color: #FFFFFF !important;
     box-shadow: 0 0 0 3px rgba(248, 201, 34, 0.35) !important;
 }
+
 .ai-input::placeholder {
     color: #9CA3AF !important;
     opacity: 1;
 }
+
 .ai-input option {
     background-color: #0f172a;
     color: #FFFFFF;
 }
 
+.destination-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75);
+    z-index: 1050;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 8px;
+    -webkit-overflow-scrolling: touch;
+}
 
-/* --- Trending Destinations Section --- */
+/* ==========================================================================
+   Trending Destinations Horizontal Scroller (Compact & Responsive)
+   ========================================================================== */
 .destinations-section {
     background-color: #0c111f;
     padding: 50px 0;
     overflow: hidden;
-}
-
-.destinations-section h2 {
-    color: #fff;
+    width: 100%;
 }
 
 .scroller {
@@ -102,8 +177,8 @@
     max-width: 100vw;
     overflow: hidden;
     position: relative;
-    -webkit-mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
-    mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+    -webkit-mask: linear-gradient(90deg, transparent, white 3%, white 97%, transparent);
+    mask: linear-gradient(90deg, transparent, white 3%, white 97%, transparent);
 }
 
 .scroller-inner {
@@ -111,10 +186,9 @@
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     align-items: stretch !important;
-    gap: 1.5rem !important; /* Space between cards */
-    padding-block: 1rem;
-    width: max-content !important; /* Allow the inner container to be as wide as its content */
-    animation: scroll 120s linear infinite !important;
+    gap: 1.25rem !important;
+    padding: 0.75rem 0 !important;
+    width: max-content !important;
     will-change: transform;
 }
 
@@ -122,38 +196,22 @@
     animation-play-state: paused;
 }
 
-@keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-@-webkit-keyframes scroll {
-    0% {
-        -webkit-transform: translateX(0);
-    }
-    100% {
-        -webkit-transform: translateX(-50%);
-    }
-}
-
+/* Base Destination Card Link (Desktop Default: 270px x 400px) */
 .destination-card-link {
     display: block !important;
-    flex: 0 0 300px !important;
-    width: 300px !important;
-    min-width: 300px !important;
-    max-width: 300px !important;
-    height: 450px !important;
+    flex: 0 0 270px !important;
+    width: 270px !important;
+    min-width: 270px !important;
+    max-width: 270px !important;
+    height: 400px !important;
     flex-shrink: 0 !important;
     cursor: pointer;
     text-decoration: none !important;
+    transition: transform 0.3s ease;
 }
 
 .destination-card-link:hover .destination-card {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
     box-shadow: 0 16px 32px rgba(248, 201, 34, 0.25);
 }
 
@@ -161,16 +219,19 @@
     position: relative;
     width: 100% !important;
     height: 100% !important;
-    border-radius: 15px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
     flex-shrink: 0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     background-color: #1a2338;
 }
 
-.destination-card img {
+.dest-card-img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
@@ -178,8 +239,8 @@
     transition: transform 0.5s ease;
 }
 
-.destination-card:hover img {
-    transform: scale(1.05);
+.destination-card:hover .dest-card-img {
+    transform: scale(1.06);
 }
 
 .card-content {
@@ -187,416 +248,447 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 1.5rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 70%, transparent 100%);
+    padding: 16px 18px;
+    background: linear-gradient(180deg, transparent 0%, rgba(12, 17, 31, 0.78) 35%, rgba(12, 17, 31, 0.98) 100%);
     color: white;
 }
 
-.card-content h4 {
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+.dest-card-title {
+    font-size: 1.18rem;
+    line-height: 1.3;
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-}
-
-.card-content p {
-    margin-bottom: 0.25rem;
-    font-size: 0.9rem;
-    opacity: 0.9;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 
 .rating-badge {
     background-color: #F8C922;
     color: #212529;
-    padding: 0.3rem 0.6rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
     white-space: nowrap;
 }
 
-.rating-badge .fa-star {
-    margin-right: 4px;
+.dest-card-state {
+    font-size: 0.84rem;
 }
 
-/* --- Why TourCraze Section --- */
-.why-tourcraze-section {
-    background-color: #f8f9fa; /* bg-light */
-}
-.feature-card {
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%;
-}
-.feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.1);
-}
-.feature-icon {
-    font-size: 2.5rem;
-    color: #F8C922;
-    margin-bottom: 1rem;
-}
-.feature-card h4 {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+.dest-card-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 0.8rem;
 }
 
-/* =========================
-   TripSplit Homepage Section
-========================= */
-
-.tripsplit-section {
-    position: relative;
-    background: linear-gradient(
-        135deg,
-        #0c111f 0%,
-        #111827 50%,
-        #1a2338 100%
-    );
-    overflow: hidden;
-}
-
-.tripsplit-main-heading {
-    font-size: 4rem;
-    font-weight: 800;
-    color: #F8C922;
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-.tripsplit-subheading {
-    font-size: 1.5rem;
-    color: #ffffff;
-    margin-bottom: 0;
-}
-
-.trip-benefits {
-    justify-content: center;
-}
-
-.tripsplit-section::before {
-    content: "";
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    background: rgba(248, 201, 34, 0.08);
-    border-radius: 50%;
-    top: -200px;
-    right: -150px;
-    filter: blur(100px);
-}
-
-.tripsplit-section::after {
-    content: "";
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: rgba(37, 99, 235, 0.08);
-    border-radius: 50%;
-    bottom: -150px;
-    left: -100px;
-    filter: blur(100px);
-}
-
-.tripsplit-preview-card {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.15);
-    backdrop-filter: blur(20px);
-    box-shadow:
-        0 10px 40px rgba(0,0,0,0.35),
-        0 0 30px rgba(248,201,34,0.05);
-}
-
-.btn-tripsplit {
-    background: linear-gradient(
-        135deg,
-        #F8C922,
-        #FFD84D
-    );
-    color: #111827;
-    border: none;
-    font-weight: 700;
-    padding: 14px 28px;
-    border-radius: 14px;
-    box-shadow: 0 10px 25px rgba(248,201,34,0.35);
-    transition: all 0.3s ease;
-}
-
-.btn-tripsplit:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(248,201,34,0.45);
-}
-
-.trip-benefits {
-    display: flex;
-    flex-wrap: wrap;    
-    gap: 12px;
-}
-
-.benefit-badge {
-    padding: 10px 16px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: #fff;
-    font-size: 0.9rem;
-    transition: 0.3s ease;
-}
-
-
-
-.benefit-badge:hover {
-    transform: translateY(-2px);
-    background: rgba(255,255,255,0.12);
-}
-
-.tripsplit-preview-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 24px;
-    padding: 30px;
-    backdrop-filter: blur(12px);
-    transition: 0.3s ease;
-}
-
-.tripsplit-preview-card:hover {
-    transform: translateY(-5px);
-}
-
-.preview-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
-.preview-top h4 {
-    color: #fff;
-    margin: 0;
-}
-
-.preview-top span {
-    color: rgba(255,255,255,0.7);
-}
-
-.preview-total {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.preview-total h2 {
-    color: #F8C922;
-    font-size: 3rem;
-    font-weight: 800;
-}
-
-.preview-total p {
-    color: rgba(255,255,255,0.6);
-    margin: 0;
-}
-
-.preview-expenses {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.expense-row {
-    display: flex;
-    justify-content: space-between;
-    color: white;
-    padding: 12px 0;
-}
-
-.preview-divider {
-    height: 1px;
-    background: rgba(255,255,255,0.12);
-    margin: 25px 0;
-}
-
-.preview-settlement {
-    text-align: center;
-}
-
-.preview-settlement p {
-    color: #22c55e;
-    font-weight: 700;
-}
-
-.preview-settlement strong {
-    color: white;
-    font-size: 1.05rem;
-}
-
-@media (max-width: 768px) {
-
-    .trip-benefits {
-        justify-content: center;
-    }
-
-    .preview-top {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-    }
-
-    .preview-total h2 {
-        font-size: 2rem;
-    }
-}
-
-/* --- Travel Gallery Section --- */
+/* ==========================================================================
+   Travel Gallery ("Get Inspired" Section)
+   ========================================================================== */
 .gallery-section {
-    background-color: #0c111f;
+    background-color: #0c111f !important;
+    padding: 60px 0 !important;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
+
 .masonry-grid {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    grid-auto-rows: 240px !important;
+    grid-auto-rows: 230px !important;
     grid-auto-flow: dense !important;
-    gap: 1.5rem !important;
+    gap: 1.25rem !important;
     max-width: 1100px !important;
     margin: 0 auto !important;
     width: 100% !important;
 }
+
 .grid-item {
     overflow: hidden;
     border-radius: 18px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     position: relative;
+    display: block;
 }
+
 .grid-item a {
     display: block;
     width: 100%;
     height: 100%;
+    text-decoration: none;
+    position: relative;
 }
+
 .grid-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
     transition: transform 0.4s ease, filter 0.4s ease;
 }
+
 .grid-item:hover img {
-    transform: scale(1.1);
-    filter: brightness(0.8);
+    transform: scale(1.08);
+    filter: brightness(0.85);
 }
-.grid-item.wide {
-    grid-column: span 2;
-}
+
 .grid-item.tall {
     grid-row: span 2;
 }
 
-/* --- Community Preview Section --- */
-.community-preview-section {
-    background-color: #f8f9fa;
-}
-.community-card {
-    background: #fff;
-    border-radius: 15px;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
-    height: 100%;
-}
-.author-img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: -4rem auto 1rem;
-    border: 5px solid #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-.author-name {
-    color: #F8C922;
-    font-weight: bold;
-    margin-top: 1rem;
-}
-
-/* --- Partners Section --- */
-.partners-section {
-    background-color: #f8f9fa;
-}
-.partner-logos {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+.gallery-overlay-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 5px 12px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    display: inline-flex;
     align-items: center;
-    gap: 2rem;
-}
-.partner-logos img {
-    max-height: 40px;
-    filter: grayscale(100%);
-    opacity: 0.6;
-    transition: filter 0.3s ease, opacity 0.3s ease;
-}
-.partner-logos img:hover {
-    filter: grayscale(0%);
-    opacity: 1;
+    gap: 5px;
 }
 
-/* --- Final CTA & Footer --- */
-.final-cta-section {
-    background-color: #0c111f;
-}
-.site-footer {
-    background-color: #0c111f;
-    color: rgba(255, 255, 255, 0.7);
-}
-.footer-heading {
-    color: #fff;
-    font-weight: 600;
-}
-.footer-links li a {
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-.footer-links li a:hover {
-    color: #F8C922;
-}
-.social-icons a {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 1.5rem;
-    margin-right: 1rem;
-    transition: color 0.3s ease;
-}
-.social-icons a:hover {
-    color: #F8C922;
-}
-.site-footer hr {
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Showcase section from home_page.html */
-.showcase-card {
-    background: #fff;
-    border-radius: 15px;
+/* ==========================================================================
+   TripSplit SaaS Feature Section
+   ========================================================================== */
+.tripsplit-section {
+    position: relative;
+    background: radial-gradient(circle at 80% 20%, rgba(248, 201, 34, 0.08) 0%, transparent 60%), #080d1a;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
-}
-.showcase-card img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-}
-.price {
-    font-weight: bold;
-    color: #02529C;
-}
-.amenities span {
-    margin-right: 15px;
-    color: #6c757d;
-    font-size: 0.9rem;
 }
 
-/* Stats section */
-.stats-section {
-    background-color: #0c111f;
+/* ==========================================================================
+   Featured Stays & Sanctuaries Section
+   ========================================================================== */
+.featured-stays-section {
+    background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0c111f 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+.stay-card {
+    border-radius: 20px;
+    overflow: hidden;
+    background: #1E293B;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stay-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   Community Preview Section
+   ========================================================================== */
+.community-preview-section {
+    background-color: #FFFFFF !important;
+    color: #1E293B !important;
+    border-top: 1px solid #E2E8F0;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.home-comm-card {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.home-comm-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.08);
+    border-color: #CBD5E1;
+}
+
+/* ==========================================================================
+   Partners & Footer
+   ========================================================================== */
+.partners-section {
+    background-color: #F8FAFC !important;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.final-cta-section {
+    background: linear-gradient(180deg, #0c111f 0%, #071021 100%);
+}
+
+.site-footer {
+    background-color: #071021;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   MEDIA QUERIES - TABLETS & MID-SIZED DEVICES (< 991px)
+   ========================================================================== */
+@media (max-width: 991px) {
+    .hero-section .display-3 {
+        font-size: 2.6rem !important;
+    }
+    
+    .destination-card-link {
+        flex: 0 0 230px !important;
+        width: 230px !important;
+        min-width: 230px !important;
+        max-width: 230px !important;
+        height: 350px !important;
+    }
+    
+    .dest-card-title {
+        font-size: 1.05rem;
+    }
+
+    .card-content {
+        padding: 14px;
+    }
+
+    .masonry-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        grid-auto-rows: 200px !important;
+    }
+}
+
+/* ==========================================================================
+   MEDIA QUERIES - SMARTPHONES & MOBILE SCREENS (< 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Prevent any body side-scrolling */
+    body, html {
+        overflow-x: hidden !important;
+    }
+
+    /* Hero Section Mobile */
+    .hero-section {
+        min-height: auto !important;
+        padding-top: 20px;
+        padding-bottom: 30px;
+    }
+
+    .hero-section .row {
+        min-height: auto !important;
+    }
+
+    .hero-section .py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .hero-section h1 {
+        font-size: 2.1rem !important;
+        line-height: 1.22 !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .hero-section p.lead {
+        font-size: 0.98rem !important;
+        margin-bottom: 1.8rem !important;
+    }
+
+    .hero-buttons {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 12px !important;
+    }
+
+    .hero-buttons .btn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 13px 20px !important;
+        font-size: 1rem !important;
+    }
+
+    /* AI Planner Box Mobile */
+    .ai-planner-box {
+        padding: 20px 16px !important;
+        border-radius: 18px !important;
+    }
+
+    .ai-planner-section h2 {
+        font-size: 1.65rem !important;
+    }
+
+    .ai-planner-section p {
+        font-size: 0.95rem !important;
+    }
+
+    .ai-planner-box button[type="submit"] {
+        width: 100% !important;
+        padding: 14px 20px !important;
+        font-size: 1.05rem !important;
+    }
+
+    /* Compact Horizontal Sliding Destinations on Mobile */
+    .destinations-section {
+        padding: 35px 0 !important;
+    }
+
+    .destinations-section h2 {
+        font-size: 1.6rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .scroller-inner {
+        gap: 0.85rem !important;
+        padding: 0.5rem 0 !important;
+    }
+
+    .destination-card-link {
+        flex: 0 0 190px !important;
+        width: 190px !important;
+        min-width: 190px !important;
+        max-width: 190px !important;
+        height: 280px !important;
+    }
+
+    .destination-card {
+        border-radius: 14px !important;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .card-content {
+        padding: 10px 12px !important;
+        background: linear-gradient(180deg, transparent 0%, rgba(12, 17, 31, 0.85) 30%, rgba(12, 17, 31, 0.99) 100%) !important;
+    }
+
+    .dest-card-title {
+        font-size: 0.94rem !important;
+        margin-bottom: 2px !important;
+    }
+
+    .rating-badge {
+        font-size: 0.72rem !important;
+        padding: 2px 6px !important;
+        border-radius: 8px !important;
+    }
+
+    .dest-card-state {
+        font-size: 0.74rem !important;
+        margin-bottom: 3px !important;
+    }
+
+    .dest-card-footer {
+        font-size: 0.72rem !important;
+        padding-top: 4px !important;
+        margin-top: 4px !important;
+    }
+
+    /* 2-Column Pinterest Photo Mosaic for "Get Inspired" Gallery */
+    .gallery-section {
+        padding: 40px 0 !important;
+    }
+
+    .gallery-section h2 {
+        font-size: 1.65rem !important;
+    }
+
+    .masonry-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        grid-auto-rows: 135px !important;
+        gap: 0.75rem !important;
+    }
+
+    .grid-item {
+        border-radius: 14px !important;
+    }
+
+    .grid-item.tall {
+        grid-row: span 2 !important;
+    }
+
+    .gallery-overlay-badge {
+        font-size: 0.75rem !important;
+        padding: 3px 8px !important;
+        bottom: 8px !important;
+        left: 8px !important;
+    }
+
+    /* TripSplit Section Mobile */
+    .tripsplit-section {
+        padding: 40px 0 !important;
+    }
+
+    .tripsplit-section h2 {
+        font-size: 1.75rem !important;
+    }
+
+    .tripsplit-section .lead {
+        font-size: 0.98rem !important;
+    }
+
+    .tripsplit-section .btn {
+        width: 100% !important;
+        margin-bottom: 6px;
+    }
+
+    /* Stays Section Mobile */
+    .featured-stays-section {
+        padding: 40px 0 !important;
+    }
+
+    .featured-stays-section h2 {
+        font-size: 1.65rem !important;
+    }
+
+    .featured-stays-section .btn-outline-warning {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* Community Section Mobile */
+    .community-preview-section {
+        padding: 40px 0 !important;
+    }
+
+    .community-preview-section h2 {
+        font-size: 1.65rem !important;
+    }
+
+    .community-preview-section .btn-warning {
+        width: 100% !important;
+        padding: 13px 20px !important;
+    }
+
+    /* Final CTA Mobile */
+    .final-cta-section {
+        padding: 45px 0 !important;
+    }
+
+    .final-cta-section h2 {
+        font-size: 1.75rem !important;
+    }
+
+    .final-cta-section .btn-warning {
+        width: 100% !important;
+        padding: 14px 20px !important;
+    }
+}
+
+/* ==========================================================================
+   EXTRA SMALL MOBILE SCREENS (< 400px - iPhone SE, Compact Androids)
+   ========================================================================== */
+@media (max-width: 400px) {
+    .destination-card-link {
+        flex: 0 0 170px !important;
+        width: 170px !important;
+        min-width: 170px !important;
+        max-width: 170px !important;
+        height: 255px !important;
+    }
+
+    .dest-card-title {
+        font-size: 0.88rem !important;
+    }
+
+    .card-content {
+        padding: 8px 10px !important;
+    }
+
+    .masonry-grid {
+        grid-auto-rows: 120px !important;
+        gap: 0.5rem !important;
+    }
+}

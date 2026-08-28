@@ -96,20 +96,10 @@ WSGI_APPLICATION = 'tourCraze.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': '/tmp/db.sqlite3' if os.environ.get('VERCEL') else (BASE_DIR / 'db.sqlite3'),
     }
 }
 
-if os.environ.get('DATABASE_URL'):
-    try:
-        import dj_database_url
-        DATABASES['default'] = dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    except Exception:
-        pass
 
 
 
