@@ -4,195 +4,21 @@
 {% block styles %}
 <link rel="stylesheet" href="{% static 'styles/home_page.css' %}">
 <style>
-    /* Guarantee Full Visibility of Hero & Content */
-    .fade-in {
-        opacity: 1 !important;
-        transform: none !important;
-        visibility: visible !important;
-    }
-
-    .hero-section {
-        position: relative;
-        z-index: 1;
-    }
-
-    .hero-section .container {
-        position: relative;
-        z-index: 2;
-    }
-
-    .hero-section h1 {
-        color: #FFFFFF !important;
-        font-weight: 800 !important;
-        letter-spacing: -0.5px;
-        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
-    }
-
-    .hero-section p {
-        color: #E2E8F0 !important;
-        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
-    }
-
-    .ai-planner-section {
-        background-color: #0c111f !important;
-        color: #E2E8F0 !important;
-    }
-
-    .ai-planner-box {
-        background: rgba(17, 24, 39, 0.8) !important;
-        border: 1px solid rgba(255, 255, 255, 0.16) !important;
-        border-radius: 24px !important;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
-        backdrop-filter: blur(16px) !important;
-    }
-
-    /* Travel Gallery Masonry Layout (Cards placed beside each other) */
-    .gallery-section {
-        background-color: #0c111f !important;
-        padding: 60px 0 !important;
-    }
-
-    .masonry-grid {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        grid-auto-rows: 240px !important;
-        grid-auto-flow: dense !important;
-        gap: 1.5rem !important;
-        max-width: 1100px !important;
-        margin: 0 auto !important;
-    }
-
-    .grid-item {
-        overflow: hidden !important;
-        border-radius: 18px !important;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
-        transition: transform 0.35s ease, box-shadow 0.35s ease !important;
-        position: relative !important;
-        display: block !important;
-    }
-
-    .grid-item:hover {
-        transform: translateY(-8px) !important;
-        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.6) !important;
-    }
-
-    .grid-item.tall {
-        grid-row: span 2 !important;
-    }
-
-    .grid-item a {
-        display: block !important;
-        width: 100% !important;
-        height: 100% !important;
-        text-decoration: none !important;
-    }
-
-    .grid-item img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-        display: block !important;
-    }
-
-    /* Scroller Layout */
-    .scroller {
-        width: 100% !important;
-        max-width: 100vw !important;
-        overflow: hidden !important;
-        position: relative !important;
-        -webkit-mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
-        mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
-    }
-
-    .scroller-inner {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        align-items: stretch !important;
-        gap: 1.5rem !important;
-        width: max-content !important;
-        padding: 1rem 0 !important;
-        will-change: transform;
-    }
-
     /* Dynamic Hero Scenery Background Slideshow */
-    .hero-section {
-        position: relative !important;
-        overflow: hidden !important;
-        background-color: #071021;
-    }
-
-    .hero-bg-container {
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        width: 100%;
-        height: 100%;
-    }
-
-    .hero-bg-slide {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-        opacity: 0;
-        transform: scale(1.06);
-        transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1), transform 12s ease-out;
-        will-change: opacity, transform;
-    }
-
-    .hero-bg-slide.active {
-        opacity: 1;
-        transform: scale(1);
-        z-index: 2;
-    }
-
     .hero-bg-slide.slide-1 {
         background-image: url("{% static 'images/beach.jpg' %}");
     }
-
     .hero-bg-slide.slide-2 {
         background-image: url("{% static 'images/huge mountain.jpg' %}");
     }
-
     .hero-bg-slide.slide-3 {
         background-image: url("{% static 'images/landscape road.jpg' %}");
     }
-
     .hero-bg-slide.slide-4 {
         background-image: url("{% static 'images/jaipur.jpg' %}");
     }
-
     .hero-bg-slide.slide-5 {
         background-image: url("{% static 'images/mountain road.jpg' %}");
-    }
-
-    /* Mobile Responsive Optimizations (< 991px & < 768px) */
-    @media (max-width: 991px) {
-        .hero-section .display-3 { font-size: 2.7rem !important; }
-        .masonry-grid { grid-template-columns: repeat(2, 1fr) !important; }
-    }
-
-    @media (max-width: 768px) {
-        .hero-section { min-height: auto; padding-top: 40px; }
-        .hero-section .display-3 { font-size: 2.15rem !important; line-height: 1.25 !important; }
-        .hero-section p.lead { font-size: 1.02rem !important; }
-        .hero-buttons { flex-direction: column; width: 100%; }
-        .hero-buttons .btn { width: 100%; justify-content: center; }
-        .ai-planner-box { padding: 22px 16px !important; border-radius: 20px !important; }
-        .masonry-grid { grid-template-columns: 1fr !important; grid-auto-rows: 210px !important; gap: 1rem !important; }
-        .grid-item.tall { grid-row: span 1 !important; }
-    }
-
-    .hero-vignette-overlay {
-        position: absolute;
-        inset: 0;
-        z-index: 3;
-        background: linear-gradient(90deg, rgba(7, 16, 33, 0.92) 0%, rgba(7, 16, 33, 0.68) 48%, rgba(7, 16, 33, 0.3) 100%);
-        pointer-events: none;
     }
 </style>
 {% endblock %}
@@ -347,30 +173,40 @@
 <section id="get-inspired" class="gallery-section py-5">
     <div class="container fade-in">
         <h2 class="display-6 fw-bold text-center text-white mb-2">Get Inspired</h2>
-        <p class="text-center mb-5 mx-auto fw-medium"
+        <p class="text-center mb-4 mb-md-5 mx-auto fw-medium"
             style="color: #FDE047; font-size: 1.05rem; max-width: 650px; letter-spacing: 0.2px;">
             Click any mood or landscape below to explore curated destinations & itineraries
         </p>
         <div class="masonry-grid">
             <div class="grid-item tall">
-                <a href="{% url 'category_view' 'mountains' %}"><img
-                        src="https://placehold.co/600x800/10b981/black?text=Mountains" alt="Mountains"></a>
+                <a href="{% url 'category_view' 'mountains' %}">
+                    <img src="https://placehold.co/600x800/10b981/black?text=Mountains" alt="Mountains">
+                    <span class="gallery-overlay-badge"><i class="fa-solid fa-mountain text-warning"></i> Mountains</span>
+                </a>
             </div>
             <div class="grid-item">
-                <a href="{% url 'category_view' 'beach' %}"><img
-                        src="https://placehold.co/600x400/f8a922/black?text=Beach" alt="Beach"></a>
+                <a href="{% url 'category_view' 'beach' %}">
+                    <img src="https://placehold.co/600x400/f8a922/black?text=Beach" alt="Beach">
+                    <span class="gallery-overlay-badge"><i class="fa-solid fa-umbrella-beach text-warning"></i> Beach</span>
+                </a>
             </div>
             <div class="grid-item">
-                <a href="{% url 'category_view' 'road-trip' %}"><img
-                        src="https://placehold.co/800x400/212529/white?text=Road+Trip" alt="Road Trip"></a>
+                <a href="{% url 'category_view' 'road-trip' %}">
+                    <img src="https://placehold.co/800x400/212529/white?text=Road+Trip" alt="Road Trip">
+                    <span class="gallery-overlay-badge"><i class="fa-solid fa-car-side text-warning"></i> Road Trip</span>
+                </a>
             </div>
             <div class="grid-item">
-                <a href="{% url 'category_view' 'waterfall' %}"><img
-                        src="https://placehold.co/600x400/02529C/white?text=Waterfall" alt="Waterfall"></a>
+                <a href="{% url 'category_view' 'waterfall' %}">
+                    <img src="https://placehold.co/600x400/02529C/white?text=Waterfall" alt="Waterfall">
+                    <span class="gallery-overlay-badge"><i class="fa-solid fa-water text-warning"></i> Waterfall</span>
+                </a>
             </div>
             <div class="grid-item">
-                <a href="{% url 'category_view' 'cafe' %}"><img
-                        src="https://placehold.co/600x400/f43f5e/black?text=Cafe" alt="Cafe"></a>
+                <a href="{% url 'category_view' 'cafe' %}">
+                    <img src="https://placehold.co/600x400/f43f5e/black?text=Cafe" alt="Cafe">
+                    <span class="gallery-overlay-badge"><i class="fa-solid fa-mug-hot text-warning"></i> Cafe</span>
+                </a>
             </div>
         </div>
     </div>
@@ -945,15 +781,20 @@
         const scrollerInner = document.querySelector('.scroller-inner');
         if (scroller && scrollerInner) {
             let scrollPos = 0;
-            const scrollSpeed = 0.9; // Smooth continuous ticker
             let isPaused = false;
+            
+            function getScrollSpeed() {
+                return window.innerWidth < 768 ? 0.65 : 0.9;
+            }
 
             scroller.addEventListener('mouseenter', () => { isPaused = true; });
             scroller.addEventListener('mouseleave', () => { isPaused = false; });
+            scroller.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
+            scroller.addEventListener('touchend', () => { isPaused = false; }, { passive: true });
 
             function animateTicker() {
                 if (!isPaused) {
-                    scrollPos += scrollSpeed;
+                    scrollPos += getScrollSpeed();
                     const halfWidth = scrollerInner.scrollWidth / 2;
                     if (halfWidth > 0 && scrollPos >= halfWidth) {
                         scrollPos = 0;
