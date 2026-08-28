@@ -39,31 +39,44 @@
 
     <div class="container position-relative" style="z-index: 5;">
         <div class="row align-items-center min-vh-100">
-            <div class="col-lg-7 text-start py-5">
+            <div class="col-lg-8 text-start py-5">
                 <div class="mb-3 fade-in">
-                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold shadow-sm"
-                        style="font-size: 0.85rem; letter-spacing: 0.5px;">
-                        ✨ SMART TRAVEL PLATFORM
+                    <span class="hero-brand-pill d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill fw-bold shadow-sm"
+                        style="background: rgba(15, 23, 42, 0.75); border: 1.5px solid rgba(248, 201, 34, 0.4); color: #F8C922; font-size: 0.9rem; backdrop-filter: blur(12px);">
+                        <i class="fa-solid fa-earth-americas"></i> TourCraze • Smart Travel Ecosystem
                     </span>
                 </div>
-                <h1 class="display-3 fw-bolder mb-4 fade-in" style="line-height: 1.18;">
-                    Plan Your Dream Journey <br>
-                    <span style="color: #F8C922; text-shadow: 0 0 25px rgba(248, 201, 34, 0.35);">In Seconds</span>
+                <h1 class="display-3 fw-bolder mb-3 fade-in" style="line-height: 1.15; letter-spacing: -0.5px;">
+                    Discover, Plan & Experience <br>
+                    <span style="background: linear-gradient(135deg, #F8C922 0%, #FFD84D 50%, #F59E0B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(248, 201, 34, 0.4));">
+                        Unforgettable Journeys
+                    </span>
                 </h1>
-                <p class="lead fs-5 mb-5 fade-in text-light"
-                    style="max-width: 580px; line-height: 1.6; animation-delay: 0.2s;">
-                    Discover, plan, and customize your perfect trip with tailored day-by-day itineraries and real budget
-                    estimates.
+                <p class="lead fs-5 mb-4 fade-in text-light"
+                    style="max-width: 620px; line-height: 1.65; color: #E2E8F0 !important; animation-delay: 0.15s;">
+                    The all-in-one platform for modern travelers. Generate smart day-by-day itineraries, explore boutique stays, and split group trip expenses effortlessly.
                 </p>
-                <div class="hero-buttons fade-in d-flex flex-wrap gap-3" style="animation-delay: 0.3s;">
-                    <a href="#ai-planner" class="btn btn-warning btn-lg px-4 py-3 rounded-pill fw-bold text-dark shadow"
-                        style="background: #F8C922; border: none; box-shadow: 0 8px 25px rgba(248, 201, 34, 0.35);">
-                        <i class="fas fa-wand-magic-sparkles me-2"></i>Start Planning Now
+                <div class="hero-buttons fade-in d-flex flex-wrap gap-3 mb-4" style="animation-delay: 0.25s;">
+                    <a href="#ai-planner" class="btn btn-warning btn-lg px-4 py-3 rounded-pill fw-bold text-dark shadow d-inline-flex align-items-center gap-2"
+                        style="background: linear-gradient(135deg, #F8C922 0%, #F59E0B 100%); border: none; box-shadow: 0 10px 30px rgba(248, 201, 34, 0.4); font-size: 1.05rem;">
+                        <i class="fas fa-wand-magic-sparkles"></i> Start Planning Now
                     </a>
-                    <a href="#destinations" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold"
-                        style="background: rgba(255, 255, 255, 0.1); border: 1.5px solid rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px);">
-                        <i class="fas fa-compass me-2"></i>Explore Destinations
+                    <a href="{% url 'all_destinations' %}" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-semibold d-inline-flex align-items-center gap-2"
+                        style="background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.35); backdrop-filter: blur(10px); font-size: 1.05rem;">
+                        <i class="fas fa-compass text-warning"></i> Explore Destinations
                     </a>
+                </div>
+                <!-- Quick Feature Chips -->
+                <div class="d-flex flex-wrap align-items-center gap-2 fade-in pt-2" style="animation-delay: 0.35s;">
+                    <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #E2E8F0; font-size: 0.82rem;">
+                        <i class="fa-solid fa-calendar-days text-warning me-1"></i> Smart Itineraries
+                    </span>
+                    <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #E2E8F0; font-size: 0.82rem;">
+                        <i class="fa-solid fa-receipt text-info me-1"></i> TripSplit Group Expenses
+                    </span>
+                    <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #E2E8F0; font-size: 0.82rem;">
+                        <i class="fa-solid fa-hotel text-success me-1"></i> Curated Stays
+                    </span>
                 </div>
             </div>
         </div>
