@@ -75,6 +75,17 @@
     line-height: 1.18;
 }
 
+.hero-gradient-text {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFFDF0 0%, #FFE57F 22%, #F8C922 55%, #F59E0B 85%, #EA580C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none !important;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5)) drop-shadow(0 4px 20px rgba(248, 201, 34, 0.4));
+    letter-spacing: -0.5px;
+}
+
 .hero-section p.lead {
     color: #E2E8F0 !important;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);

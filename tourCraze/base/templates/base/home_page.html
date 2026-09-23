@@ -20,6 +20,16 @@
     .hero-bg-slide.slide-5 {
         background-image: url("{% static 'images/mountain road.jpg' %}");
     }
+    .hero-gradient-text {
+        display: inline-block;
+        background: linear-gradient(135deg, #FFFDF0 0%, #FFE57F 22%, #F8C922 55%, #F59E0B 85%, #EA580C 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: none !important;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55)) drop-shadow(0 4px 20px rgba(248, 201, 34, 0.4));
+        letter-spacing: -0.5px;
+    }
 </style>
 {% endblock %}
 
@@ -48,7 +58,7 @@
                 </div>
                 <h1 class="display-3 fw-bolder mb-3 fade-in" style="line-height: 1.15; letter-spacing: -0.5px;">
                     Discover, Plan & Experience <br>
-                    <span style="background: linear-gradient(135deg, #F8C922 0%, #FFD84D 50%, #F59E0B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(248, 201, 34, 0.4));">
+                    <span class="hero-gradient-text">
                         Unforgettable Journeys
                     </span>
                 </h1>
